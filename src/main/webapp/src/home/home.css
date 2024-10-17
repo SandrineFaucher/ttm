@@ -1,0 +1,13 @@
+main{
+    display: flex;  
+    justify-content: center;
+    flex-direction: column;
+    margin: 30px;
+    align-items: center;
+  }
+  
+  .text{
+      margin-top: 40px;
+      text-align: center;
+      word-break: break-word;
+  }

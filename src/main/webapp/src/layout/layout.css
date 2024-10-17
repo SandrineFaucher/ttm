@@ -1,0 +1,192 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+li{
+    list-style: none;
+}
+
+header{
+    background-color: rgb(245, 237, 237);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+a{
+  text-align: center;
+  text-decoration: none;
+}
+.logo-entreprise{
+  margin-top: 30px;
+  width: 25%;
+  text-align: center;
+}
+.div-logo-ttm{
+  display: flex;
+  justify-content: center;
+}
+.logo-ttm{
+  margin-top: 30px;
+  width: 28%;
+  align-items: center;
+  
+}
+
+.icon-user{
+  color: #e31766;
+  font-size: 27px;
+}
+nav{
+    width: 100%;
+    display:flex;
+    justify-content: space-between;
+    text-align: center;
+    padding: 10px;
+}
+
+nav ul{
+    display: flex;
+    justify-content: center;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgb(245, 237, 237);
+    padding: 1rem;
+  }
+
+  .nav-links {
+    display: none;
+    flex-direction: row;
+    justify-content: space-around;
+    width: 100%;
+    text-align: center;
+    list-style: none;
+  }
+  
+  .nav-links li {
+    margin: 1rem 0;
+  }
+  
+  .nav-links li a {
+    color: #e31766;
+    text-decoration: none;
+  }
+  
+  .burger-icon {
+    display: block;
+    cursor: pointer;
+    font-size: 2rem;
+    color: #e31766;
+    margin-right: 20px;
+  }
+  /* Apparition des icons en taille mobile et disparition des noms */
+  
+  .icon {
+    display: block;
+  }
+  .page-name {
+    display: none;
+  }
+
+  /* Styles pour afficher les liens en mode mobile lorsque le menu burger est activé */
+  .nav-links.open {
+    display: flex;
+  }
+
+  .footer-line{
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(245, 237, 237);
+    justify-content: space-around;
+  }
+  .footer-bloc1{
+    margin: 15px;
+    text-align: center;
+  }
+  .footer-bloc1 img{
+    max-height: 50px;
+  }
+  .footer-bloc2{
+    margin: 15px;
+    color: #e31766;
+    text-align: center;
+    align-content: center;
+  }
+  
+  .footer-bloc3{
+    margin: 15px;
+    text-align: center;
+    align-content: center;
+  }
+  .footer-bloc3 a{
+    color: #e31766;
+    margin: 15px;
+    text-align: center;
+  }
+  .footer-bloc4{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    margin: 15px;
+    align-content: center;
+    font-size: x-large;
+    color: #e31766;
+  }
+  .social-link{
+    color:#e31766;
+  }
+/* --------MEDIA QUERIES------- */
+
+  /* Styles pour les écrans de taille moyenne (tablettes) */
+  @media (min-width: 768px) {
+    .burger-icon {
+      display: none;
+    }
+  
+    .nav-links {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+    }
+  
+    .nav-links li {
+      margin: 0 1rem;
+    }
+
+    /* changement des icons en nom de pages */
+    .icon {
+      display: none;
+    }
+
+    .page-name {
+      display: block;
+    }
+    .logo-entreprise{
+      width: 40%;
+    }
+    .footer-line{
+      flex-direction: row;
+    }
+    .social-icon{
+      width: 50px;
+    }
+  }
+  
+  /* Styles pour les écrans de grande taille (ordinateurs de bureau) */
+  @media (min-width: 1024px) {
+    .navbar {
+      padding: 1rem 2rem;
+    }
+  
+    .nav-links li {
+      margin: 0 1.5rem;
+    }
+  }
+  
+  
