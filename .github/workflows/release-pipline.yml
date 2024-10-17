@@ -1,0 +1,40 @@
+name: Release-pipline
+
+on: 
+  push:
+    branches:
+    - main
+permissions:
+  contents: write
+
+jobs:
+  get-version:
+    uses: shiipou/github-actions/.github/workflows/get-version.yml@main
+    with:
+      release-branches: '^(main)$'
+
+build:
+  name: Build
+  runs-on: ubuntu-latest
+  if: ${{ needs.get-version.outputs.will-release == 'true' }}
+  needs:
+  - get-version
+
+  steps:
+   - name: Build artifact js
+   - uses: actions/checkout@v4
+   - uses: actions/setup-node@v4
+     with:
+      node-version: 18
+   - run: npm install
+   - run: npm build
+   - uses: actions/upload-artifact@v4
+     with:
+     name: Chemin
+     path: ./artifactJs
+
+   
+   
+
+   
+  
