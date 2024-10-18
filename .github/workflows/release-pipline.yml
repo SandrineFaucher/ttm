@@ -31,21 +31,18 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18
-          
-      - name: Configure npm to use public registry
-        run: npm config set registry https://registry.npmjs.org/
       
       - name: Install dependencies
         run: cd src/main/webapp && npm install
 
       - name: Build webapp
         run: cd src/main/webapp && npm run build
-     
+          
       - name: Copy webapp-build to Spring Boot static folder
         run: |
           mkdir -p src/main/resources/static/
           cp -r src/main/webapp/dist/* src/main/resources/static/
-     
+
       - name: Install Java
         uses: actions/setup-java@v4
         with:
