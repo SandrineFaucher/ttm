@@ -35,15 +35,9 @@ jobs:
 
       - name: Build webapp
         run: cd src/main/webapp && npm run build
-
-      - name: Ensure write permissions for build directory
-        run: chmod -R 755 src/main/webapp/build
-
-      - name: Ensure write permissions for static directory
-        run: chmod -R 755 src/main/resources/static
      
       - name: Copy webapp-build to Spring Boot static folder
-        run: cp -r src/main/webapp/build/* src/main/resources/static/
+        run: cp -r src/main/webapp/build src/main/resources/static/
      
       - name: Install Java
         uses: actions/setup-java@v4
