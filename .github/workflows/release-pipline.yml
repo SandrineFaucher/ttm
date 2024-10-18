@@ -3,7 +3,8 @@ name: Release-pipline CI/CD
 on: 
   push:
     branches:
-    - main
+      - main
+
 permissions:
   contents: write
 
@@ -18,50 +19,45 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ needs.get-version.outputs.will-release == 'true' }}
     needs:
-    - get-version
+      - get-version
 
     steps:
-     - name: Checkout repository
-     - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-     - name: Setup Node.js
-     - uses: actions/setup-node@v4
-       with:
-         node-version: 18
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
 
-     - name: Install dependencies
-     - run: cd src/main/webapp && npm install
+      - name: Install dependencies
+        run: cd src/main/webapp && npm install
 
-     - name: Build webapp
-       run: cd src/main/webapp && npm run build
+      - name: Build webapp
+        run: cd src/main/webapp && npm run build
      
-     - name: Copy webapp-build to Spring Boot static folder
-     - run: cp -r webapp/build/* src/main/resources/static/
+      - name: Copy webapp-build to Spring Boot static folder
+        run: cp -r src/main/webapp/build/* src/main/resources/static/
      
-     - name: Install java
-     - uses: actions/setup-java@v4
-       with:
+      - name: Install Java
+        uses: actions/setup-java@v4
+        with:
           distribution: 'temurin'
           java-version: 17 
 
-     - name: Setup JDK 17
-       uses: actions/setup-java@v2
-       with:
-          distribution: 'temurin'
-          java-version: 17
-         
-     - name: Setup Gradle
-       uses: gradle/actions/setup-gradle@v4
-     - name: Checkout
-       uses: actions/checkout@v4
-     - name: Build with Gradle
-       env:
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+
+      - name: Build with Gradle
+        env:
           VERSION: "${{ needs.get-version.outputs.version }}"
-       run: ./gradlew bootjar
-     - uses: actions/upload-artifact@v4
-       with:
-        name: build-ttm
-        path: build/libs/
+        run: ./gradlew bootjar
+
+      - name: Upload Spring Boot artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-ttm
+          path: build/libs/*.jar
 
 
 
