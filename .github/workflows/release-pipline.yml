@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - 46-workflow-pipline-partie-2
 
 permissions:
   contents: write
@@ -13,7 +14,8 @@ jobs:
     uses: shiipou/github-actions/.github/workflows/get-version.yml@main
     with:
       release-branches: '^(main)$'
-          
+      prerelease-branches: '^(beta|46-workflow-pipline-partie-2)$'
+      
   build:
     name: Build
     runs-on: ubuntu-latest
@@ -40,7 +42,9 @@ jobs:
         run: cd src/main/webapp && npm run build
      
       - name: Copy webapp-build to Spring Boot static folder
-        run: cp -r src/main/webapp/build/* src/main/resources/static/
+        run: |
+          mkdir -p src/main/resources/static/
+          cp -r src/main/webapp/dist/* src/main/resources/static/
      
       - name: Install Java
         uses: actions/setup-java@v4
