@@ -34,8 +34,14 @@ jobs:
         run: cd src/main/webapp && npm install
 
       - name: Build webapp
-        run: cd src/main/webapp && npm build
-     
+        run: cd src/main/webapp && npm run build
+
+      - name: Upload build react
+        uses: actions/upload-artifact@v4
+        with:
+          name: build
+          path: /webapp/build
+          
       - name: Copy webapp-build to Spring Boot static folder
         run: cp -r src/main/webapp/build/* src/main/resources/static/
      
