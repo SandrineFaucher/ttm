@@ -35,9 +35,12 @@ jobs:
 
       - name: Build webapp
         run: cd src/main/webapp && npm run build
+
+      - name: List files in webapp directory
+        run: ls -la src/main/webapp
      
       - name: Copy webapp-build to Spring Boot static folder
-        run: cp -r src/main/webapp/build src/main/resources/static/
+        run: cp -r src/main/webapp/build/* src/main/resources/static/
      
       - name: Install Java
         uses: actions/setup-java@v4
