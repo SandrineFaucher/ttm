@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - 46-workflow-pipline-partie-2
 
 permissions:
   contents: write
@@ -13,7 +14,8 @@ jobs:
     uses: shiipou/github-actions/.github/workflows/get-version.yml@main
     with:
       release-branches: '^(main)$'
-          
+      prerelease-branches: '^(beta|46-workflow-pipline-partie-2)$'
+      
   build:
     name: Build
     runs-on: ubuntu-latest
