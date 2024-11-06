@@ -1,7 +1,8 @@
 package com.simplon.ttm.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 
@@ -34,7 +35,6 @@ public class methodesUsersTests {
         User godparent = User.builder()
                 .id(1L)
                 .username("Parain")
-                .email("parain@test.fr")
                 .password("parain123")
                 .role(UserRole.GODPARENT)
                 .creationDate(date)
@@ -46,9 +46,11 @@ public class methodesUsersTests {
             .build();
 
         //when
-        User user = userServiceImpl.saveGodparent(godparentDto);
+        when(userRepository.save(any(User.class))).thenReturn(godparent);
+        
 
         //then
+        User user = userServiceImpl.saveGodparent(godparentDto);
         assertEquals(godparent, user);
     }
 }
