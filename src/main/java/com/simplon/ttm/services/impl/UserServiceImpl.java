@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
     }
 
     public User saveAdmin(RegisterDto user) {
-        User admin = User.builder()
+            User admin = User.builder()
                 .username(user.getUsername())
                 .password(user.getPassword())
                 .role(UserRole.ADMIN)
@@ -48,9 +48,13 @@ public class UserServiceImpl implements UserService {
             return userRepository.save(admin);
     }
 
-    public User saveUser(RegisterDto userDto) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'saveUser'");
+    public User saveUser(RegisterDto user) {
+            User simpleUser = User.builder()
+                .username(user.getUsername())
+                .password(user.getPassword())
+                .role(UserRole.USER)
+                .build();
+            return userRepository.save(simpleUser);
     }
 }
 
