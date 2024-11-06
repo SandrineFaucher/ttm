@@ -48,10 +48,33 @@ public class methodesUsersTests {
         //when
         when(userRepository.save(any(User.class))).thenReturn(godparent);
         
-
         //then
         User user = userServiceImpl.saveGodparent(godparentDto);
         assertEquals(godparent, user);
+    }
+
+    @Test
+    void saveLeaderProject(){
+        //given
+        LocalDate date = LocalDate.parse("2024-11-06");
+        User leaderProject = User.builder()
+                .id(1L)
+                .username("Parain")
+                .password("parain123")
+                .role(UserRole.LEADERPROJECT)
+                .creationDate(date)
+                .build();
+        RegisterDto leaderProjectDto = RegisterDto.builder()
+                .username("Parain")
+                .password("parain123")
+                .role(UserRole.LEADERPROJECT)
+                .build();
+        //when
+        when(userRepository.save(any(User.class))).thenReturn(leaderProject);
+
+        //then
+        User user = userServiceImpl.saveLeaderProject(leaderProjectDto);
+        assertEquals(leaderProjectDto, user);
     }
 }
 
