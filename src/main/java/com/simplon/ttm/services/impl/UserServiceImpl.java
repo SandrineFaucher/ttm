@@ -47,5 +47,10 @@ public class UserServiceImpl implements UserService {
                 .build();
             return userRepository.save(admin);
     }
+
+    public User saveUser(RegisterDto userDto) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'saveUser'");
+    }
 }
 

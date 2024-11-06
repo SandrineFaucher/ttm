@@ -102,6 +102,31 @@ public class methodesUsersTests {
 
         assertEquals(admin, user);
     }
+
+    @Test
+    void saveUser(){
+        //given
+        LocalDate date = LocalDate.parse("2024-11-06");
+        User user = User.builder()
+                .id(1L)
+                .username("User")
+                .password("user123")
+                .role(UserRole.USER)
+                .creationDate(date)
+                .build();
+        RegisterDto userDto = RegisterDto.builder()
+                .username("User")
+                .password("user123")
+                .role(UserRole.USER)
+                .build();
+        //when
+        when(userRepository.save(any(User.class))).thenReturn(user);
+
+        //then
+        User userTest = userServiceImpl.saveUser(userDto);
+
+        assertEquals(userTest, user);
+    }
 }
 
 
