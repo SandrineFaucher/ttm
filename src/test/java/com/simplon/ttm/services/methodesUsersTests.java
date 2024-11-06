@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -180,6 +181,21 @@ public class methodesUsersTests {
         User godparentTestRole = userServiceImpl.getUserByRole(UserRole.GODPARENT);
         assertEquals(godparentTestRole.getUsername(), "Parain");
     };
+
+    @Test
+    void getUserbyUsername()
+    {
+        //given
+        LocalDate date = LocalDate.parse("2024-11-05");
+        User userByName = new User(1L, "faucher", "sandrine@test.fr","test123", UserRole.USER, date);
+
+        //when
+        when(userRepository.findByUsername("faucher")).thenReturn(Optional.of(userByName));
+
+        //then
+        Optional<User> user = userServiceImpl.getUserByUsername("faucher");
+        assertEquals("faucher", user.orElseThrow().getUsername());
+    }
 }
 
 
