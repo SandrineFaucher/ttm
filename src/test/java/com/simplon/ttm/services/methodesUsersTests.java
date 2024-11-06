@@ -59,14 +59,14 @@ public class methodesUsersTests {
         LocalDate date = LocalDate.parse("2024-11-06");
         User leaderProject = User.builder()
                 .id(1L)
-                .username("Parain")
-                .password("parain123")
+                .username("LeaderProect")
+                .password("lp123")
                 .role(UserRole.LEADERPROJECT)
                 .creationDate(date)
                 .build();
         RegisterDto leaderProjectDto = RegisterDto.builder()
-                .username("Parain")
-                .password("parain123")
+                .username("Leaderproject")
+                .password("lp123")
                 .role(UserRole.LEADERPROJECT)
                 .build();
         //when
@@ -74,8 +74,11 @@ public class methodesUsersTests {
 
         //then
         User user = userServiceImpl.saveLeaderProject(leaderProjectDto);
-        assertEquals(leaderProjectDto, user);
+
+        assertEquals(leaderProject, user);
     }
+
+    
 }
 
 

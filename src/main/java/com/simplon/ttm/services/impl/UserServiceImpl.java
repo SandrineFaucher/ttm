@@ -20,8 +20,7 @@ public class UserServiceImpl implements UserService {
     }
 
     public User saveGodparent(RegisterDto user) {
-        // TODO Auto-generated method stub
-        
+           
             User godeparent = User.builder()
                 .username(user.getUsername())
                 .password(user.getPassword())
@@ -29,6 +28,15 @@ public class UserServiceImpl implements UserService {
                 .build();
             return userRepository.save(godeparent);
      
+    }
+
+    public User saveLeaderProject(RegisterDto user){
+            User leaderProject = User.builder()
+                .username(user.getUsername())
+                .password(user.getPassword())
+                .role(UserRole.LEADERPROJECT)
+                .build();
+            return userRepository.save(leaderProject);
     }
 }
 
