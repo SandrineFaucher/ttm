@@ -38,5 +38,14 @@ public class UserServiceImpl implements UserService {
                 .build();
             return userRepository.save(leaderProject);
     }
+
+    public User saveAdmin(RegisterDto user) {
+        User admin = User.builder()
+                .username(user.getUsername())
+                .password(user.getPassword())
+                .role(UserRole.ADMIN)
+                .build();
+            return userRepository.save(admin);
+    }
 }
 
