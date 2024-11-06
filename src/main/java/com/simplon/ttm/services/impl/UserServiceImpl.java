@@ -1,5 +1,7 @@
 package com.simplon.ttm.services.impl;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -56,5 +58,11 @@ public class UserServiceImpl implements UserService {
                 .build();
             return userRepository.save(simpleUser);
     }
+
+    
+    public User getUserByRole(UserRole role) {
+            return userRepository.findByRole(role);
+        }
 }
+
 

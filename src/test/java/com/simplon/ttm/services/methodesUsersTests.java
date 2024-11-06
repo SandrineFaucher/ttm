@@ -162,10 +162,10 @@ public class methodesUsersTests {
                 .creationDate(date)
                 .build();
         //when
-        when(userRepository.findByRole(UserRole.USER)).thenReturn(Optional.of(user));
-        when(userRepository.findByRole(UserRole.ADMIN)).thenReturn(Optional.of(admin));
-        when(userRepository.findByRole(UserRole.LEADERPROJECT)).thenReturn(Optional.of(leaderProject));
-        when(userRepository.findByRole(UserRole.GODPARENT)).thenReturn(Optional.of(godparent));
+        when(userRepository.findByRole(UserRole.USER)).thenReturn(user);
+        when(userRepository.findByRole(UserRole.ADMIN)).thenReturn(admin);
+        when(userRepository.findByRole(UserRole.LEADERPROJECT)).thenReturn(leaderProject);
+        when(userRepository.findByRole(UserRole.GODPARENT)).thenReturn(godparent);
 
         //then
         User userTestRole = userServiceImpl.getUserByRole(UserRole.USER);
@@ -174,7 +174,7 @@ public class methodesUsersTests {
         User adminTestRole = userServiceImpl.getUserByRole(UserRole.ADMIN);
         assertEquals(adminTestRole.getUsername(), "Admin");
 
-        User leaderTestRole  = userServiceImpl.getUserByROle(UserRole.LEADERPROJECT);
+        User leaderTestRole  = userServiceImpl.getUserByRole(UserRole.LEADERPROJECT);
         assertEquals(leaderTestRole.getUsername(), "LeaderProect");
 
         User godparentTestRole = userServiceImpl.getUserByRole(UserRole.GODPARENT);
