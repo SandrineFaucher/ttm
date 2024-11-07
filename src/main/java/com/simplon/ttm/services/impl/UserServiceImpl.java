@@ -59,15 +59,18 @@ public class UserServiceImpl implements UserService {
             return userRepository.save(simpleUser);
     }
 
-    public User getUserByRole(UserRole role) {
+    public Optional<User> getUserByRole(UserRole role) {
             return userRepository.findByRole(role);
         }
 
     
     public Optional<User> getUserByUsername(String username) {
-        
             return userRepository.findByUsername(username);
         }
+
+    public Optional<User> getUserById(Long id) {
+        return userRepository.findById(id);
+    }
 }
 
     
