@@ -10,7 +10,7 @@ import com.simplon.ttm.models.UserRole;
 
 public interface UserRepository extends JpaRepository <User, Long>{
 
-    User findByRole(UserRole role);
+    Optional<User> findByRole(UserRole role);
 
     Optional<User>findByUsername(String username);
     

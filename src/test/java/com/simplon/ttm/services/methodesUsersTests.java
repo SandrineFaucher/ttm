@@ -162,23 +162,23 @@ public class methodesUsersTests {
                 .creationDate(date)
                 .build();
         //when
-        when(userRepository.findByRole(UserRole.USER)).thenReturn(user);
-        when(userRepository.findByRole(UserRole.ADMIN)).thenReturn(admin);
-        when(userRepository.findByRole(UserRole.LEADERPROJECT)).thenReturn(leaderProject);
-        when(userRepository.findByRole(UserRole.GODPARENT)).thenReturn(godparent);
+        when(userRepository.findByRole(UserRole.USER)).thenReturn(Optional.of(user));
+        when(userRepository.findByRole(UserRole.ADMIN)).thenReturn(Optional.of(admin));
+        when(userRepository.findByRole(UserRole.LEADERPROJECT)).thenReturn(Optional.of(leaderProject));
+        when(userRepository.findByRole(UserRole.GODPARENT)).thenReturn(Optional.of(godparent));
 
         //then
-        User userTestRole = userServiceImpl.getUserByRole(UserRole.USER);
-        assertEquals(userTestRole.getUsername(), "User");
+        Optional<User> userTestRole = userServiceImpl.getUserByRole(UserRole.USER);
+        assertEquals(userTestRole.orElseThrow().getUsername(), "User");
 
-        User adminTestRole = userServiceImpl.getUserByRole(UserRole.ADMIN);
-        assertEquals(adminTestRole.getUsername(), "Admin");
+        Optional<User> adminTestRole = userServiceImpl.getUserByRole(UserRole.ADMIN);
+        assertEquals(adminTestRole.orElseThrow().getUsername(), "Admin");
 
-        User leaderTestRole  = userServiceImpl.getUserByRole(UserRole.LEADERPROJECT);
-        assertEquals(leaderTestRole.getUsername(), "LeaderProect");
+        Optional<User> leaderTestRole  = userServiceImpl.getUserByRole(UserRole.LEADERPROJECT);
+        assertEquals(leaderTestRole.orElseThrow().getUsername(), "LeaderProect");
 
-        User godparentTestRole = userServiceImpl.getUserByRole(UserRole.GODPARENT);
-        assertEquals(godparentTestRole.getUsername(), "Parain");
+        Optional<User> godparentTestRole = userServiceImpl.getUserByRole(UserRole.GODPARENT);
+        assertEquals(godparentTestRole.orElseThrow().getUsername(), "Parain");
     };
 
     @Test
@@ -186,8 +186,14 @@ public class methodesUsersTests {
     {
         //given
         LocalDate date = LocalDate.parse("2024-11-05");
-        User userByName = new User(1L, "faucher", "sandrine@test.fr","test123", UserRole.USER, date);
-
+        User userByName = User.builder()
+                .id(1L)
+                .username("faucher")
+                .password("test123")
+                .role(UserRole.USER)
+                .creationDate(date)
+                .build();
+                
         //when
         when(userRepository.findByUsername("faucher")).thenReturn(Optional.of(userByName));
 
@@ -195,6 +201,25 @@ public class methodesUsersTests {
         Optional<User> user = userServiceImpl.getUserByUsername("faucher");
         assertEquals("faucher", user.orElseThrow().getUsername());
     }
+
+    @Test
+    void getUserbyId()
+    {
+        //given
+        User userById = User.builder()
+                .id(1L)
+                .username("faucher")
+                .password("test123")
+                .role(UserRole.ADMIN) 
+                .build();      
+        //when
+        when(userRepository.findById(1L)).thenReturn(Optional.of(userById));
+
+        //then
+        Optional<User> user = userServiceImpl.getUserById(1L);
+        assertEquals("sandrine@test.fr", user.orElseThrow().getEmail());
+    }
+
 }
 
 

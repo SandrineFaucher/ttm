@@ -1,40 +1,29 @@
 package com.simplon.ttm.models;
 
-import java.time.LocalDate;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+
 @Entity
 @Getter @Setter
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 
-public class User {
-    
+
+public class Sector {
+
     @Id
     @GeneratedValue
     private Long id;
 
-    private String username;
+    private String content;
 
-    private String email;
-
-    private String password;
-
-    private UserRole role;
-
-    private LocalDate creationDate;
-
-    @OneToOne(mappedBy = "user")
-    private Profil profil;
 
 }
