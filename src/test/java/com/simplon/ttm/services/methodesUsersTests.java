@@ -1,10 +1,14 @@
 package com.simplon.ttm.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -30,6 +34,9 @@ public class methodesUsersTests {
     private UserServiceImpl userServiceImpl;
 
     @Test
+    /**
+     * Teste la méthode qui crée un parain
+     */
     void saveGodparent(){
         //given
         LocalDate date = LocalDate.parse("2024-11-06");
@@ -55,6 +62,9 @@ public class methodesUsersTests {
     }
 
     @Test
+    /**
+     * Teste la méthode qui crée un porteur de projet 
+     */
     void saveLeaderProject(){
         //given
         LocalDate date = LocalDate.parse("2024-11-06");
@@ -80,6 +90,9 @@ public class methodesUsersTests {
     }
 
     @Test
+    /**
+     * Teste la méthode qui crée un admin
+     */
     void saveAdmin(){
         //given
         LocalDate date = LocalDate.parse("2024-11-06");
@@ -105,6 +118,9 @@ public class methodesUsersTests {
     }
 
     @Test
+    /**
+     * Teste la méthode qui crée un user (ex : employé initiative Deux-Sèvres)
+     */
     void saveUser(){
         //given
         LocalDate date = LocalDate.parse("2024-11-06");
@@ -130,6 +146,9 @@ public class methodesUsersTests {
     }
 
     @Test 
+    /**
+     * Teste la méthode qui récupère un user par son role
+     */
     void getUserByRole(){
         //given
         LocalDate date = LocalDate.parse("2024-11-06");
@@ -182,6 +201,9 @@ public class methodesUsersTests {
     };
 
     @Test
+    /**
+     * Teste la méthode qui récupère un user par son username
+     */
     void getUserbyUsername()
     {
         //given
@@ -189,9 +211,6 @@ public class methodesUsersTests {
         User userByName = User.builder()
                 .id(1L)
                 .username("faucher")
-                .password("test123")
-                .role(UserRole.USER)
-                .creationDate(date)
                 .build();
                 
         //when
@@ -203,6 +222,9 @@ public class methodesUsersTests {
     }
 
     @Test
+    /**
+     * Teste la méthode qui récupère un user par son id
+     */
     void getUserbyId()
     {
         //given
@@ -217,9 +239,32 @@ public class methodesUsersTests {
 
         //then
         Optional<User> user = userServiceImpl.getUserById(1L);
-        assertEquals("sandrine@test.fr", user.orElseThrow().getEmail());
+        assertEquals("test123", user.orElseThrow().getPassword());
     }
 
+    @Test
+    /**
+     * Teste la méthode qui sauve deux users par leur id dans une table intermédiaire
+     */
+    void saveMatch(){
+        //given
+        // construction de deux users avec des id différents
+        User user1 = User.builder().id(1L).user1(new HashSet<>()).user2(new HashSet<>()).build();
+        User user2 = User.builder().id(3L).user1(new HashSet<>()).user2(new HashSet<>()).build();
+
+        //when
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user1));
+        when(userRepository.findById(3L)).thenReturn(Optional.of(user2));
+
+        //then
+        boolean result = userServiceImpl.saveMatch(1L, 3L);
+        assertTrue(result);
+        verify(userRepository).findById(1L);
+        verify(userRepository).findById(3L);
+        verify(userRepository).save(user1);
+        verify(userRepository).save(user2);
+
+    }
 }
 
 
