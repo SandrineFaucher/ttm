@@ -71,6 +71,30 @@ public class UserServiceImpl implements UserService {
     public Optional<User> getUserById(Long id) {
         return userRepository.findById(id);
     }
+
+    /**
+     * Service qui permet de sauver un match entre deux users
+     * @param userId1
+     * @param userId2
+     * @return
+     */
+    public boolean saveMatch(long userId1, long userId2) {
+        Optional <User> userA = userRepository.findById(userId1);
+        Optional<User> userB = userRepository.findById(userId2);
+
+        if(userA.isPresent() && userB.isPresent()){
+            User user1 = userA.get();
+            User user2 = userB.get();
+
+            user1.getUser1().add(user2);
+            user2.getUser2().add(user1);
+    
+            userRepository.save(user1);
+            userRepository.save(user2);
+            return true;
+        }
+        return false;
+    }
 }
 
     
