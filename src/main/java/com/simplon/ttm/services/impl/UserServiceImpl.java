@@ -76,7 +76,7 @@ public class UserServiceImpl implements UserService {
      * Service qui permet de sauver un match entre deux users
      * @param userId1
      * @param userId2
-     * @return
+     * @return boolean
      */
     public boolean saveMatch(long userId1, long userId2) {
         Optional <User> userA = userRepository.findById(userId1);

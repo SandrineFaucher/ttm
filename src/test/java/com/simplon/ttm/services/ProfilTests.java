@@ -28,7 +28,7 @@ import com.simplon.ttm.repositories.ProfilRepository;
 import com.simplon.ttm.repositories.UserRepository;
 import com.simplon.ttm.services.impl.ProfilServiceImpl;
 
-public class methodesProfiTests {
+public class ProfilTests {
 
         @ExtendWith(MockitoExtension.class)
 
