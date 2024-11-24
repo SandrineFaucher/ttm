@@ -14,8 +14,6 @@ import com.simplon.ttm.models.UserRole;
 public interface ProfilRepository extends JpaRepository <Profil, Long> {
 
 
-    Object findAllByRegion = null;
-
     List<Profil> findAllByUserRole(UserRole userRole);
 
     Profil findByUserId(Long userId);

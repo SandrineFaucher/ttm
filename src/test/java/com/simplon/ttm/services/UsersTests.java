@@ -3,7 +3,6 @@ package com.simplon.ttm.services;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -23,7 +22,7 @@ import com.simplon.ttm.models.UserRole;
 import com.simplon.ttm.repositories.UserRepository;
 import com.simplon.ttm.services.impl.UserServiceImpl;
 
-public class methodesUsersTests {
+public class UsersTests {
 
     @ExtendWith(MockitoExtension.class)
        
@@ -207,7 +206,6 @@ public class methodesUsersTests {
     void getUserbyUsername()
     {
         //given
-        LocalDate date = LocalDate.parse("2024-11-05");
         User userByName = User.builder()
                 .id(1L)
                 .username("faucher")
