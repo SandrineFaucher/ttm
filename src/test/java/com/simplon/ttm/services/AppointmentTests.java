@@ -2,7 +2,8 @@ package com.simplon.ttm.services;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
+
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
@@ -40,7 +41,7 @@ public class AppointmentTests {
      * teste la sauvegarde d'un rendez-vous entre deux users
      */
     @Test
-    void saveAppointment(){
+    void saveAppointment() {
         //given
         User user1 = User.builder()
                 .id(1L)
@@ -55,8 +56,8 @@ public class AppointmentTests {
         List<User> participants = List.of(user1, user2);
         Appointment appointment = Appointment.builder()
                 .id(2L)
-                .hour(LocalTime.of(14,30))
-                .date(LocalDate.of(2024,11,24))
+                .hour(LocalTime.of(14, 30))
+                .date(LocalDate.of(2024, 11, 24))
                 .location("Niort")
                 .participants(participants)
                 .build();
@@ -75,7 +76,41 @@ public class AppointmentTests {
         assertEquals(2, appointmentSaved.getParticipants().size());
         assertEquals("Sandrine", appointmentSaved.getParticipants().get(0).getUsername());
         assertEquals("Lola", appointmentSaved.getParticipants().get(1).getUsername());
-
     }
 
+    @Test
+    void getAppointmentByParticipantId() {
+        // given
+        User user1 = User.builder()
+                .id(1L)
+                .username("Sandrine")
+                .role(UserRole.GODPARENT)
+                .build();
+        User user2 = User.builder()
+                .id(2L)
+                .username("Lola")
+                .role(UserRole.LEADERPROJECT)
+                .build();
+        List<User> participants = List.of(user1, user2);
+
+        Appointment appointment = Appointment.builder()
+                .id(2L)
+                .hour(LocalTime.of(14, 30))
+                .date(LocalDate.of(2024, 11, 24))
+                .location("Niort")
+                .participants(participants)
+                .build();
+        //when
+        when(appointmentRepository.findAppointmentsByParticipantId(user2.getId()))
+                .thenReturn(List.of(appointment));
+        //then
+        List<Appointment> result = appointmentServiceImpl.getAppointmentsByParticipantId(user2.getId());
+
+        // then
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals("Sandrine", result.get(0).getParticipants().get(0).getUsername());
+        assertEquals(appointment, result.get(0));
+
+    }
 }
