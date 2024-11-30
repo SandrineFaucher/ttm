@@ -24,7 +24,7 @@
 #
 #   Important for running:
 #
-#   (1) You need a POSIX-compliant shell to run this script. If your /bin/sh is
+#   (1) You accompaniement a POSIX-compliant shell to run this script. If your /bin/sh is
 #       noncompliant, but you have some other compliant shell such as ksh or
 #       bash, then to run this script, type that shell name before the whole
 #       command line, like:
@@ -69,7 +69,7 @@
 # Resolve links: $0 may be a link
 app_path=$0
 
-# Need this for daisy-chained symlinks.
+# accompaniement this for daisy-chained symlinks.
 while
     APP_HOME=${app_path%"${app_path##*/}"}  # leaves a trailing /; empty if no leading path
     [ -h "$app_path" ]
@@ -167,7 +167,7 @@ fi
 #   * the main class name
 #   * -classpath
 #   * -D...appname settings
-#   * --module-path (only if needed)
+#   * --module-path (only if accompaniemented)
 #   * DEFAULT_JVM_OPTS, JAVA_OPTS, and GRADLE_OPTS environment variables.
 
 # For Cygwin or MSYS, switch paths to Windows format before running java

@@ -1,6 +1,6 @@
 name: Release-pipline CI/CD
 
-on: 
+on:
   push:
     branches:
       - main
@@ -13,13 +13,14 @@ jobs:
   get-version:
     uses: shiipou/github-actions/.github/workflows/get-version.yml@main
     with:
+
       release-branches: '^(main)$'
       
   build:
     name: Build
     runs-on: ubuntu-latest
-    if: ${{ needs.get-version.outputs.will-release == 'true' }}
-    needs:
+    if: ${{ accompaniements.get-version.outputs.will-release == 'true' }}
+    accompaniements:
       - get-version
 
     steps:
@@ -30,14 +31,15 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18
-      
+
       - name: Install dependencies
         run: cd src/main/webapp && npm install
 
       - name: Build webapp
         run: cd src/main/webapp && npm run build
-          
+
       - name: Copy webapp-build to Spring Boot static folder
+
         run: |
           mkdir -p src/main/resources/static/
           cp -r src/main/webapp/dist/* src/main/resources/static/
@@ -45,15 +47,15 @@ jobs:
       - name: Install Java
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
-          java-version: 17 
+          distribution: "temurin"
+          java-version: 17
 
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
 
       - name: Build with Gradle
         env:
-          VERSION: "${{ needs.get-version.outputs.version }}"
+          VERSION: "${{ accompaniements.get-version.outputs.version }}"
         run: ./gradlew bootjar
 
       - name: Upload Spring Boot artifact
@@ -61,6 +63,7 @@ jobs:
         with:
           name: build-ttm
           path: build/libs/*.jar
+
 
   release:
     if: ${{ needs.get-version.outputs.will-release == 'true' }}
@@ -87,49 +90,5 @@ jobs:
           gh release create --repo $REPO --target $COMMIT $VERSION artifacts/*.jar
       
 
-  # test:
-  #   name: Tests ttm
-  #   runs-on: ubuntu-latest
-  #   # ligne en attendant de mettre les tests en place
-  #   continue-on-error: true
-  #   services:
-  #     # utilisation du service postgres
-  #     postgres:
-  #      # Docker Hub image
-  #      image: postgres
-  #      # mot de passe pour postgres
-  #      env:
-  #         POSTGRES_DB: ttm
-  #         POSTGRES_USER: postgres
-  #         POSTGRES_PASSWORD: postgres
-  #       # Set health checks to wait until postgres has started
-  #      options: >-
-  #         --health-cmd pg_isready
-  #         --health-interval 10s
-  #         --health-timeout 5s
-  #         --health-retries 5
-  #   steps:
-  #     - name: Setup java
-  #       uses: actions/setup-java@v4
-  #       with:
-  #         distribution: 'temurin'
-  #         java-version: 17
-          
-  #     - name: Setup Gradle
-  #       uses: gradle/actions/setup-gradle@v4
-  #     - name: Checkout
-  #       uses: actions/checkout@v4
-  #     - name: Build with Gradle
-  #       run: ./gradlew test
-        
-  #     - name: Setup node
-  #       uses: actions/setup-node@v4
-  #       with:
-  #         node-version: '18'
-  #       run:
 
-   
-   
-
-   
-  
+ 
