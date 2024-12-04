@@ -46,7 +46,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         if (userId == null) {
             throw new IllegalArgumentException("userId cannot be null");
         }
-        List<Appointment> appointments = appointmentRepository.findAppointmentsByParticipantId(userId);
+        List<Appointment> appointments = appointmentRepository.findAppointmentsByParticipants_Id(userId);
         if (appointments.isEmpty()) {
             throw new EntityNotFoundException("No appointment for userId : " + userId);
         }

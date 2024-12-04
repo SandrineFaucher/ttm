@@ -3,6 +3,9 @@ package com.simplon.ttm.services.impl;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.simplon.ttm.dto.RegisterDto;
@@ -15,17 +18,20 @@ import com.simplon.ttm.services.UserService;
 public class UserServiceImpl implements UserService {
     
     private UserRepository userRepository;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository){
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder){
+
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public User saveGodparent(RegisterDto user) {
            
             User godeparent = User.builder()
                 .username(user.getUsername())
-                .password(user.getPassword())
+                .password(passwordEncoder.encode(user.getPassword()))
                 .role(UserRole.GODPARENT)
                 .build();
             return userRepository.save(godeparent);
@@ -35,7 +41,7 @@ public class UserServiceImpl implements UserService {
     public User saveLeaderProject(RegisterDto user){
             User leaderProject = User.builder()
                 .username(user.getUsername())
-                .password(user.getPassword())
+                .password(passwordEncoder.encode(user.getPassword()))
                 .role(UserRole.LEADERPROJECT)
                 .build();
             return userRepository.save(leaderProject);
@@ -44,7 +50,7 @@ public class UserServiceImpl implements UserService {
     public User saveAdmin(RegisterDto user) {
             User admin = User.builder()
                 .username(user.getUsername())
-                .password(user.getPassword())
+                .password(passwordEncoder.encode(user.getPassword()))
                 .role(UserRole.ADMIN)
                 .build();
             return userRepository.save(admin);
@@ -53,7 +59,7 @@ public class UserServiceImpl implements UserService {
     public User saveUser(RegisterDto user) {
             User simpleUser = User.builder()
                 .username(user.getUsername())
-                .password(user.getPassword())
+                .password(passwordEncoder.encode(user.getPassword()))
                 .role(UserRole.USER)
                 .build();
             return userRepository.save(simpleUser);
@@ -70,6 +76,25 @@ public class UserServiceImpl implements UserService {
 
     public Optional<User> getUserById(Long id) {
         return userRepository.findById(id);
+    }
+
+    /**
+     * méthode qui permet d'extraire l'utilisateur authentifié
+     * @param authentication
+     * @return user authenticated
+     */
+    public Optional<User> from(Authentication authentication) {
+        if(authentication == null){
+            return Optional.empty();
+        }
+
+        Object principal = authentication.getPrincipal();//renvoie true s'il y a un principal
+        if(!(principal instanceof UserDetails)){
+            return Optional.empty();
+        }
+
+        UserDetails userDetails = (UserDetails)principal;
+        return userRepository.findByUsername(userDetails.getUsername());
     }
 
     /**

@@ -8,5 +8,5 @@ import com.simplon.ttm.models.Appointment;
 
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
 
-    List<Appointment> findAppointmentsByParticipantId(Long userId);
+    List<Appointment> findAppointmentsByParticipants_Id(Long userId);
 }

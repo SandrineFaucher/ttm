@@ -101,7 +101,7 @@ public class AppointmentTests {
                 .participants(participants)
                 .build();
         //when
-        when(appointmentRepository.findAppointmentsByParticipantId(user2.getId()))
+        when(appointmentRepository.findAppointmentsByParticipants_Id(user2.getId()))
                 .thenReturn(List.of(appointment));
         //then
         List<Appointment> result = appointmentServiceImpl.getAppointmentsByParticipantId(user2.getId());
