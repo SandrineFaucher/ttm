@@ -15,6 +15,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.simplon.ttm.dto.RegisterDto;
 import com.simplon.ttm.models.User;
@@ -29,6 +30,9 @@ public class UsersTests {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private PasswordEncoder passwordEncoder;
+
     @InjectMocks
     private UserServiceImpl userServiceImpl;
 
@@ -42,13 +46,14 @@ public class UsersTests {
         User godparent = User.builder()
                 .id(1L)
                 .username("Parain")
-                .password("parain123")
+                .password(passwordEncoder.encode("parain123"))
                 .role(UserRole.GODPARENT)
                 .creationDate(date)
                 .build();
         RegisterDto godparentDto = RegisterDto.builder()
             .username("Parain")
-            .password("parain123")
+            .password(passwordEncoder.encode("parain123"))
+            .passwordConfirm(passwordEncoder.encode("parain123"))
             .role(UserRole.GODPARENT)
             .build();
 
@@ -70,13 +75,14 @@ public class UsersTests {
         User leaderProject = User.builder()
                 .id(1L)
                 .username("LeaderProect")
-                .password("lp123")
+                .password(passwordEncoder.encode("lp123"))
                 .role(UserRole.LEADERPROJECT)
                 .creationDate(date)
                 .build();
         RegisterDto leaderProjectDto = RegisterDto.builder()
                 .username("Leaderproject")
-                .password("lp123")
+                .password(passwordEncoder.encode("lp123"))
+                .passwordConfirm(passwordEncoder.encode("lp123"))
                 .role(UserRole.LEADERPROJECT)
                 .build();
         //when
@@ -98,13 +104,14 @@ public class UsersTests {
         User admin = User.builder()
                 .id(1L)
                 .username("Admin")
-                .password("admin123")
+                .password(passwordEncoder.encode("admin123"))
                 .role(UserRole.ADMIN)
                 .creationDate(date)
                 .build();
         RegisterDto admintDto = RegisterDto.builder()
                 .username("Admin")
-                .password("admin123")
+                .password(passwordEncoder.encode("admin123"))
+                .passwordConfirm(passwordEncoder.encode("admin123"))
                 .role(UserRole.ADMIN)
                 .build();
         //when
@@ -126,13 +133,14 @@ public class UsersTests {
         User user = User.builder()
                 .id(1L)
                 .username("User")
-                .password("user123")
+                .password(passwordEncoder.encode("user123"))
                 .role(UserRole.USER)
                 .creationDate(date)
                 .build();
         RegisterDto userDto = RegisterDto.builder()
                 .username("User")
-                .password("user123")
+                .password(passwordEncoder.encode("user123"))
+                .passwordConfirm(passwordEncoder.encode("user123"))
                 .role(UserRole.USER)
                 .build();
         //when
@@ -154,28 +162,24 @@ public class UsersTests {
         User user = User.builder()
                 .id(1L)
                 .username("User")
-                .password("user123")
                 .role(UserRole.USER)
                 .creationDate(date)
                 .build();
         User admin = User.builder()
                 .id(1L)
                 .username("Admin")
-                .password("admin123")
                 .role(UserRole.ADMIN)
                 .creationDate(date)
                 .build();
         User leaderProject = User.builder()
                 .id(1L)
                 .username("LeaderProect")
-                .password("lp123")
                 .role(UserRole.LEADERPROJECT)
                 .creationDate(date)
                 .build();
         User godparent = User.builder()
                 .id(1L)
                 .username("Parain")
-                .password("parain123")
                 .role(UserRole.GODPARENT)
                 .creationDate(date)
                 .build();
@@ -229,7 +233,6 @@ public class UsersTests {
         User userById = User.builder()
                 .id(1L)
                 .username("faucher")
-                .password("test123")
                 .role(UserRole.ADMIN) 
                 .build();      
         //when
@@ -237,7 +240,7 @@ public class UsersTests {
 
         //then
         Optional<User> user = userServiceImpl.getUserById(1L);
-        assertEquals("test123", user.orElseThrow().getPassword());
+        assertEquals(UserRole.ADMIN, user.orElseThrow().getRole());
     }
 
     @Test
