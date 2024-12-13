@@ -26,13 +26,14 @@ public class AdminController {
      * @param userMapping
      * @return user with role
      */
-    @PostMapping("/register/save")
+    @PostMapping("/admin/register")
     public String registerUser(@Valid @ModelAttribute RegisterDto userMapping) {
         System.out.println("Ok");
         if(!userMapping.getPassword().equals(userMapping.getPasswordConfirm())){
             return "redirect:/register?error";
         }
-        userService.saveUser(userMapping);
+        userService.saveUserWithRole(userMapping);
         return "redirect:/register/success";
     }
+
 }

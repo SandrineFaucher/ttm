@@ -33,11 +33,8 @@ public class SpringSecurity {
                     .csrf(csrf -> csrf.disable())
                     .authorizeHttpRequests(requests -> {
                         requests
-                                .requestMatchers("/register/**").permitAll() //.hasRole("ADMIN")
-                                .requestMatchers("/login").permitAll() // Accessible à tous les utilisateuurs
-                                .requestMatchers("/admin/**").hasRole("ADMIN") // Nécessite le rôle ADMIN
-                                .requestMatchers("/godparent/**").hasRole("GODPARENT") // Nécessite le rôle USER
-                                .requestMatchers("/leaderproject/**").hasRole("LEADERPROJECT") // Nécessite le rôle USER
+                                .requestMatchers("/admin/register/**").permitAll() //.hasRole("ADMIN")
+                                .requestMatchers("/login", "/users/**").permitAll() // Accessible à tous les utilisateuurs
                                 .anyRequest().authenticated(); // Toute autre requête doit être authentifiée
                     })
                     .formLogin(form -> form
