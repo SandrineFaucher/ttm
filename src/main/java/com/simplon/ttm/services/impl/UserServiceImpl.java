@@ -1,10 +1,13 @@
 package com.simplon.ttm.services.impl;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -27,48 +30,46 @@ public class UserServiceImpl implements UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User saveGodparent(RegisterDto user) {
-           
-            User godeparent = User.builder()
-                .username(user.getUsername())
-                .password(passwordEncoder.encode(user.getPassword()))
-                .role(UserRole.GODPARENT)
-                .build();
-            return userRepository.save(godeparent);
-     
-    }
-
-    public User saveLeaderProject(RegisterDto user){
-            User leaderProject = User.builder()
-                .username(user.getUsername())
-                .password(passwordEncoder.encode(user.getPassword()))
-                .role(UserRole.LEADERPROJECT)
-                .build();
-            return userRepository.save(leaderProject);
-    }
-
-    public User saveAdmin(RegisterDto user) {
-            User admin = User.builder()
-                .username(user.getUsername())
-                .password(passwordEncoder.encode(user.getPassword()))
-                .role(UserRole.ADMIN)
-                .build();
-            return userRepository.save(admin);
-    }
-
-    public User saveUser(RegisterDto user) {
-            User simpleUser = User.builder()
-                .username(user.getUsername())
-                .password(passwordEncoder.encode(user.getPassword()))
-                .role(UserRole.USER)
-                .build();
-            return userRepository.save(simpleUser);
-    }
-
-    public Optional<User> getUserByRole(UserRole role) {
-            return userRepository.findByRole(role);
+    public User saveUserWithRole(RegisterDto user) {
+        // Validation et conversion du champ role en UserRole
+        UserRole role;
+        try {
+            role = UserRole.valueOf(String.valueOf(user.getRole()).toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid role: " + user.getRole());
         }
 
+        // Création et sauvegarde de l'utilisateur
+        User newUser = User.builder()
+                .username(user.getUsername())
+                .password(passwordEncoder.encode(user.getPassword()))
+                .role(role)
+                .build();
+        return userRepository.save(newUser);
+    }
+
+    /**
+     * Méthode qui permet d'afficher les users avec le bon role au user connecté
+     * @param username
+     * @return
+     */
+    public List<User> getUsersVisibleToCurrentUser(String username) {
+        // Récupére l'utilisateur connecté
+        User currentUser = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+
+        // Détermine le rôle visible pour cet utilisateur
+        UserRole visibleRole;
+        if (currentUser.getRole() == UserRole.GODPARENT) {
+            visibleRole = UserRole.LEADERPROJECT;
+        } else if (currentUser.getRole() == UserRole.LEADERPROJECT) {
+            visibleRole = UserRole.GODPARENT;
+        } else {
+            throw new AccessDeniedException("Role not allowed to view users");
+        }
+        // Retourner les utilisateurs ayant le rôle visible
+        return userRepository.findByRole(visibleRole);
+    }
     
     public Optional<User> getUserByUsername(String username) {
             return userRepository.findByUsername(username);

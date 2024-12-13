@@ -1,6 +1,7 @@
 package com.simplon.ttm.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -38,10 +39,10 @@ public class UsersTests {
 
     @Test
     /**
-     * Teste la méthode qui crée un parain
+     * Teste la méthode qui crée un user avec son role
      */
-    void saveGodparent(){
-        //given
+    void saveUserWithRole(){
+        // Given
         LocalDate date = LocalDate.parse("2024-11-06");
         User godparent = User.builder()
                 .id(1L)
@@ -51,157 +52,24 @@ public class UsersTests {
                 .creationDate(date)
                 .build();
         RegisterDto godparentDto = RegisterDto.builder()
-            .username("Parain")
-            .password(passwordEncoder.encode("parain123"))
-            .passwordConfirm(passwordEncoder.encode("parain123"))
-            .role(UserRole.GODPARENT)
-            .build();
-
-        //when
-        when(userRepository.save(any(User.class))).thenReturn(godparent);
-        
-        //then
-        User user = userServiceImpl.saveGodparent(godparentDto);
-        assertEquals(godparent, user);
-    }
-
-    @Test
-    /**
-     * Teste la méthode qui crée un porteur de projet 
-     */
-    void saveLeaderProject(){
-        //given
-        LocalDate date = LocalDate.parse("2024-11-06");
-        User leaderProject = User.builder()
-                .id(1L)
-                .username("LeaderProect")
-                .password(passwordEncoder.encode("lp123"))
-                .role(UserRole.LEADERPROJECT)
-                .creationDate(date)
-                .build();
-        RegisterDto leaderProjectDto = RegisterDto.builder()
-                .username("Leaderproject")
-                .password(passwordEncoder.encode("lp123"))
-                .passwordConfirm(passwordEncoder.encode("lp123"))
-                .role(UserRole.LEADERPROJECT)
-                .build();
-        //when
-        when(userRepository.save(any(User.class))).thenReturn(leaderProject);
-
-        //then
-        User user = userServiceImpl.saveLeaderProject(leaderProjectDto);
-
-        assertEquals(leaderProject, user);
-    }
-
-    @Test
-    /**
-     * Teste la méthode qui crée un admin
-     */
-    void saveAdmin(){
-        //given
-        LocalDate date = LocalDate.parse("2024-11-06");
-        User admin = User.builder()
-                .id(1L)
-                .username("Admin")
-                .password(passwordEncoder.encode("admin123"))
-                .role(UserRole.ADMIN)
-                .creationDate(date)
-                .build();
-        RegisterDto admintDto = RegisterDto.builder()
-                .username("Admin")
-                .password(passwordEncoder.encode("admin123"))
-                .passwordConfirm(passwordEncoder.encode("admin123"))
-                .role(UserRole.ADMIN)
-                .build();
-        //when
-        when(userRepository.save(any(User.class))).thenReturn(admin);
-
-        //then
-        User user = userServiceImpl.saveAdmin(admintDto);
-
-        assertEquals(admin, user);
-    }
-
-    @Test
-    /**
-     * Teste la méthode qui crée un user (ex : employé initiative Deux-Sèvres)
-     */
-    void saveUser(){
-        //given
-        LocalDate date = LocalDate.parse("2024-11-06");
-        User user = User.builder()
-                .id(1L)
-                .username("User")
-                .password(passwordEncoder.encode("user123"))
-                .role(UserRole.USER)
-                .creationDate(date)
-                .build();
-        RegisterDto userDto = RegisterDto.builder()
-                .username("User")
-                .password(passwordEncoder.encode("user123"))
-                .passwordConfirm(passwordEncoder.encode("user123"))
-                .role(UserRole.USER)
-                .build();
-        //when
-        when(userRepository.save(any(User.class))).thenReturn(user);
-
-        //then
-        User userTest = userServiceImpl.saveUser(userDto);
-
-        assertEquals(userTest, user);
-    }
-
-    @Test 
-    /**
-     * Teste la méthode qui récupère un user par son role
-     */
-    void getUserByRole(){
-        //given
-        LocalDate date = LocalDate.parse("2024-11-06");
-        User user = User.builder()
-                .id(1L)
-                .username("User")
-                .role(UserRole.USER)
-                .creationDate(date)
-                .build();
-        User admin = User.builder()
-                .id(1L)
-                .username("Admin")
-                .role(UserRole.ADMIN)
-                .creationDate(date)
-                .build();
-        User leaderProject = User.builder()
-                .id(1L)
-                .username("LeaderProect")
-                .role(UserRole.LEADERPROJECT)
-                .creationDate(date)
-                .build();
-        User godparent = User.builder()
-                .id(1L)
                 .username("Parain")
-                .role(UserRole.GODPARENT)
-                .creationDate(date)
+                .password("parain123") // Gardez le mot de passe non encodé pour le DTO
+                .passwordConfirm("parain123") // Confirmez que les mots de passe correspondent
+                .role(UserRole.GODPARENT) // Transmettez le rôle comme chaîne
                 .build();
-        //when
-        when(userRepository.findByRole(UserRole.USER)).thenReturn(Optional.of(user));
-        when(userRepository.findByRole(UserRole.ADMIN)).thenReturn(Optional.of(admin));
-        when(userRepository.findByRole(UserRole.LEADERPROJECT)).thenReturn(Optional.of(leaderProject));
-        when(userRepository.findByRole(UserRole.GODPARENT)).thenReturn(Optional.of(godparent));
 
-        //then
-        Optional<User> userTestRole = userServiceImpl.getUserByRole(UserRole.USER);
-        assertEquals(userTestRole.orElseThrow().getUsername(), "User");
+        // When
+        when(passwordEncoder.encode("parain123")).thenReturn(godparent.getPassword());
+        when(userRepository.save(any(User.class))).thenReturn(godparent);
 
-        Optional<User> adminTestRole = userServiceImpl.getUserByRole(UserRole.ADMIN);
-        assertEquals(adminTestRole.orElseThrow().getUsername(), "Admin");
+        // Then
+        User user = userServiceImpl.saveUserWithRole(godparentDto);
+        assertNotNull(user); // Vérifie que l'utilisateur n'est pas null
+        assertEquals(godparent.getUsername(), user.getUsername()); // Vérifie le nom d'utilisateur
+        assertEquals(godparent.getRole(), user.getRole()); // Vérifie le rôle
+        assertEquals(godparent.getCreationDate(), user.getCreationDate()); // Vérifie la date de création
+    }
 
-        Optional<User> leaderTestRole  = userServiceImpl.getUserByRole(UserRole.LEADERPROJECT);
-        assertEquals(leaderTestRole.orElseThrow().getUsername(), "LeaderProect");
-
-        Optional<User> godparentTestRole = userServiceImpl.getUserByRole(UserRole.GODPARENT);
-        assertEquals(godparentTestRole.orElseThrow().getUsername(), "Parain");
-    };
 
     @Test
     /**
