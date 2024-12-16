@@ -2,7 +2,8 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-  }
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
 
 li{
     list-style: none;
@@ -39,6 +40,73 @@ a{
   color: #e31766;
   font-size: 27px;
 }
+/* Menu toggle sous l'icon-user */
+/* Conteneur principal */
+.profil {
+  position: relative;
+  display: inline-block;
+}
+
+/* Icône utilisateur */
+.icon-user {
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: #e31766;
+  transition: color 0.3s;
+}
+
+.icon-user:hover {
+  color: #333; /* Couleur au survol */
+}
+
+/* Menu déroulant */
+.menu {
+  position: absolute;
+  top: 100%; /* Place le menu sous l'icône */
+  right: 0;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  min-width: 30px;
+  z-index: 1000;
+}
+
+/* Liste du menu */
+.dropdown-content {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.dropdown-content li {
+  padding: 10px 15px;
+  border-bottom: 1px solid #eee;
+
+}
+
+.dropdown-content li:last-child {
+  border-bottom: none;
+}
+
+/* Liens dans le menu */
+.dropdown-content  {
+  text-decoration: none;
+
+  display: block;
+  font-size: 0.9rem;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.dropdown-content li:hover {
+  background-color: rgb(229, 245, 231);
+  color: #e31766;
+}
+.menu-link{
+  color:#e31766;
+}
+
+/*------------------------------*/
 nav{
     width: 100%;
     display:flex;

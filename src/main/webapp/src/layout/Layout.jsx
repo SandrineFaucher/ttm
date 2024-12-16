@@ -5,15 +5,20 @@ import logo from "../assets/images/logo.png";
 import ttm_rose from "../assets/images/ttm_rose.png";
 import hologramme_ttm from "../assets/images/hologramme_ttm.png";
 
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; 
 import { faHouse, faMessage, faAddressCard, faToolbox, faUser } from '@fortawesome/free-solid-svg-icons';
 import { faInstagram, faTiktok, faSquareFacebook, faLinkedin } from '@fortawesome/free-brands-svg-icons';
 
 export default function Layout() {
     const [isNavOpen, setIsNavOpen] = useState(false);
+    const [isProfilOpen, setIsProfilOpen] = useState(false);
 
     const toggleNav = () => {
         setIsNavOpen(!isNavOpen)
+    };
+    const toggleProfil = () => {
+        setIsProfilOpen(!isProfilOpen)
     };
 
     return (
@@ -32,7 +37,7 @@ export default function Layout() {
                         <Link to="/"><FontAwesomeIcon icon={faHouse} className="icon"/><div className="page-name">Accueil</div></Link>
                     </li>
                     <li>
-                        <Link to="/Profil"><FontAwesomeIcon icon={faAddressCard} className="icon"/><div className="page-name">Profil</div></Link>
+                        <Link to="/Profils"><FontAwesomeIcon icon={faAddressCard} className="icon"/><div className="page-name">Profils</div></Link>
                     </li>
                     <li>
                         <Link to="/Messagerie"><FontAwesomeIcon icon={faMessage} className="icon"/><div className="page-name">Messagerie</div></Link>
@@ -41,16 +46,33 @@ export default function Layout() {
                         <Link to="/boite-a-outils"><FontAwesomeIcon icon={faToolbox} className="icon"/><div className="page-name">Boîte à Outils</div></Link>
                     </li>
                 </ul>
-            <div className="icon-user">
-                <FontAwesomeIcon icon={faUser} />
-            </div>
+                <div className="profil">
+                    <div className="icon-user" onClick={toggleProfil} id="profil">
+                        <FontAwesomeIcon icon={faUser}/>
+                    </div>
+                    {isProfilOpen && (
+                        <div className="menu">
+                            <ul className="dropdown-content">
+                                <li>
+                                    <Link to="/AdminView" className="menu-link">Back-office</Link>
+                                </li>
+                                <li>
+                                    <Link to="" className="menu-link">Mon profil</Link>
+                                </li>
+                                <li>
+                                    <Link to="" className="menu-link">Déconnexion</Link>
+                                </li>
+                            </ul>
+                        </div>
+                    )}
+                </div>
             </nav>
         </header>
             <main>
                 <Outlet/>
             </main>
             <footer className="footer-line">
-                <div className="footer-bloc1">
+            <div className="footer-bloc1">
                     <img src={hologramme_ttm} alt="logo-mini-ttm" />
                 </div>
                 <div className="footer-bloc2">

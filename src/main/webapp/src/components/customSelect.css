@@ -1,0 +1,22 @@
+.custom-select {
+    position: relative;
+    width: 100%;
+    max-width: 300px;
+    margin: 10px 0;
+}
+
+.select-input {
+    width: 100%;
+    padding: 6px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    background-color: white;
+}
+
+.select-input:focus {
+
+    outline: none;
+    border-color: rgb(31, 159, 47);
+    box-shadow: 0 0 3px rgb(229, 245, 231);
+}
