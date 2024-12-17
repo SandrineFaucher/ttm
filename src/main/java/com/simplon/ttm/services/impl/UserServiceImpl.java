@@ -42,6 +42,7 @@ public class UserServiceImpl implements UserService {
         // Création et sauvegarde de l'utilisateur
         User newUser = User.builder()
                 .username(user.getUsername())
+                .email(user.getEmail())
                 .password(passwordEncoder.encode(user.getPassword()))
                 .role(role)
                 .build();
