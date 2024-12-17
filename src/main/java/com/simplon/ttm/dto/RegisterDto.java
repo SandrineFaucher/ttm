@@ -18,9 +18,12 @@ import lombok.Setter;
 
 public class RegisterDto {
 
-    @Column(unique=true)
     @NotEmpty(message = "username must not be empty")
     private String username;
+
+    @Column(unique=true)
+    @NotEmpty(message = "email must not be empty")
+    private String email;
 
     @NotEmpty(message = "password must not be empty")
     private String password;
