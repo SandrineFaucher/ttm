@@ -1,5 +1,23 @@
+/* Définition des éléments généraux de css */
+
+/* couleurs du site
+ vert foncé pour les boutons : rgb(113, 201, 32) / #71c920
+ vert clair                  : rgb(189,221, 150) / #bddd96
+ rose foncé                  : rgb(229,25,104)   / #e51968
+ rose pale                   : rgb(245,237,237)  / #f5eded
+ */
 
 body {
   margin: 0;
-  
+}
+button{
+  background-color: #71c920;
+  padding: 6px;
+  border-radius : 5px 0px 5px 0px;
+  border :50px ;
+  margin-top: 15px;
+
+}
+button:hover {
+  background-color: #bddd96
 }

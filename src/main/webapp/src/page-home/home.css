@@ -6,8 +6,8 @@ main{
     align-items: center;
   }
   
-  .text{
+.text{
       margin-top: 40px;
       text-align: center;
       word-break: break-word;
-  }
+}

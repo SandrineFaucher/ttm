@@ -3,28 +3,23 @@ import PropTypes from 'prop-types';
 import "./customSelect.css";
 
 const CustomSelect = ({
+                          label,
+                          name,
                           options,
                           value,
                           onChange,
-                          name,
                           placeholder,
                           className,
                       }) => {
     return (
-        <div className={`custom-select ${className || ''}`}>
-            <select
-                name={name}
-                value={value}
-                onChange={(e) => onChange(e.target.value)}
-                className="select-input"
-            >
-                {placeholder && (
-                    <option value="" disabled>
-                        {placeholder}
-                    </option>
-                )}
-                {options.map((option, index) => (
-                    <option key={index} value={option.value}>
+        <div className={`custom-select ${className}`}>
+            {label && <label htmlFor={name}>{label}</label>}
+            <select value={value} onChange={(e) => onChange(e.target.value)}>
+                <option value="" disabled>
+                    {placeholder}
+                </option>
+                {options.map((option) => (
+                    <option key={option.value} value={option.value}>
                         {option.label}
                     </option>
                 ))}
@@ -40,6 +35,7 @@ CustomSelect.propTypes = {
             value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
         })
     ).isRequired,
+    label : PropTypes.string,
     value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     onChange: PropTypes.func.isRequired,
     name: PropTypes.string,

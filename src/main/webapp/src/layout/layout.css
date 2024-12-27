@@ -105,7 +105,9 @@ a{
 .menu-link{
   color:#e31766;
 }
-
+.icon-user > .current{
+  font-size: 12px;
+}
 /*------------------------------*/
 nav{
     width: 100%;

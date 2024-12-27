@@ -1,14 +1,16 @@
 import React,{useState} from "react";
 import CustomInput from "../components/CustomImput.jsx";
+import {Login} from "../services/userService.js";
+import {useNavigate} from "react-router-dom";
 
 const FormLogin = () => {
 
     const [formData, setFormData] = useState({
         username: "",
         password: "",
-        passwordConfirm : "",
-        role: ""
+
     });
+    const navigate = useNavigate();
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({
@@ -16,9 +18,21 @@ const FormLogin = () => {
             [name]: value,
         });
     };
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         console.log("Form submitted:", formData);
+        try {
+            const response = await Login(formData);
+            console.log("Login successful:", response);
+            alert("Vous êtes bien connecté !");
+            if (response.ok) {
+                // Si le login est réussi, redirigez vers /profils
+                navigate("/profils");
+            }
+        } catch (error) {
+            console.error("Erreur de connexion :", error);
+            alert("Échec de la connexion.");
+        }
     };
     return (
         <form onSubmit={handleSubmit}>
@@ -36,10 +50,10 @@ const FormLogin = () => {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                placeholder="Entrez un mot de passe"
+                placeholder="Entrez votre mot de passe"
                 required
             />
-            <button type="submit">Submit</button>
+            <button type="submit">Envoyer</button>
         </form>
 
     )
