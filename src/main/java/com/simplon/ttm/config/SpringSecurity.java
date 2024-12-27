@@ -8,6 +8,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -47,8 +48,12 @@ public class SpringSecurity {
                         .anyRequest().authenticated()
                 )
                 .csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
 
-                .addFilterBefore(this.jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(this.jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)  // Pas de session HTTP classique
+                );
         return http.build();
     }
 
@@ -60,7 +65,7 @@ public class SpringSecurity {
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept")); // En-têtes autorisés
         configuration.setAllowCredentials(true); // Autoriser l'envoi de cookies ou de credentials
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration); // Applique la configuration à toutes les routes
+        source.registerCorsConfiguration("/**", configuration);// Applique la configuration à toutes les routes
         return source;
     }
 
