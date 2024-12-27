@@ -37,11 +37,9 @@ public class AdminController {
             return ResponseEntity.badRequest().body("Passwords do not match");
         }
         try {
-            // Appel du service pour enregistrer l'utilisateur
             userService.saveUserWithRole(userMapping);
             return ResponseEntity.ok("User registered successfully!");
         } catch (Exception e) {
-            // Gestion des erreurs
             System.err.println("Error during registration: " + e.getMessage());
             return ResponseEntity.status(500).body("Error during registration: " + e.getMessage());
         }
