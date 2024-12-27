@@ -6,12 +6,15 @@ import Profils from "./page-profils/Profils.jsx";
 import Messagerie from "./page-messagerie/Messagerie.jsx";
 import Document from "./page-boite-a-outils/Document.jsx";
 import AdminView from "./page-back-office/AdminView.jsx";
+import FormLogin from "./page-home/FormLogin.jsx";
+import { UserProvider } from "./context/UserContext.jsx";
 
 
 export default function App() {
 
 
   return (
+  <UserProvider>
       <Routes>
         <Route path={"/"} element={<Layout />}>
           <Route index element={<Home/>}/>
@@ -19,7 +22,9 @@ export default function App() {
           <Route path="messagerie" element={<Messagerie/>}/>
           <Route path="boite-a-outils" element={<Document/>}/>
           <Route path="adminView" element={<AdminView/>}/>
+          <Route path="/login" element={<FormLogin />} />
         </Route>
       </Routes>
+  </UserProvider>
     );
 }

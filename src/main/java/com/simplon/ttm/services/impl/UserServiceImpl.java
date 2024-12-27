@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.simplon.ttm.dto.LoginDto;
 import com.simplon.ttm.dto.RegisterDto;
 import com.simplon.ttm.models.User;
 import com.simplon.ttm.models.UserRole;
@@ -80,24 +81,6 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(id);
     }
 
-    /**
-     * méthode qui permet d'extraire l'utilisateur authentifié
-     * @param authentication
-     * @return user authenticated
-     */
-    public Optional<User> from(Authentication authentication) {
-        if(authentication == null){
-            return Optional.empty();
-        }
-
-        Object principal = authentication.getPrincipal();//renvoie true s'il y a un principal
-        if(!(principal instanceof UserDetails)){
-            return Optional.empty();
-        }
-
-        UserDetails userDetails = (UserDetails)principal;
-        return userRepository.findByUsername(userDetails.getUsername());
-    }
 
     /**
      * Service qui permet de sauver un match entre deux users

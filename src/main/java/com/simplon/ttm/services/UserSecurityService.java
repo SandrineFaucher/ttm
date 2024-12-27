@@ -7,18 +7,20 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.simplon.ttm.models.User;
+import com.simplon.ttm.repositories.UserRepository;
 
 @Service
 public class UserSecurityService implements UserDetailsService {
-    private UserService userService;
+    private UserRepository userRepository;
 
     @Autowired
-    public UserSecurityService(UserService userService) {
-        this.userService = userService;
+    public UserSecurityService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userService.getUserByUsername(username)
+        User user = userRepository.findByUsername(username)
                 .orElseThrow(()->new UsernameNotFoundException("User didn't exist."));
 
         return org.springframework.security.core.userdetails.User.builder()
