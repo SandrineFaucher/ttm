@@ -10,7 +10,7 @@ const FormLogin = () => {
         password: "",
 
     });
-    const navigate = useNavigate();
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({
@@ -25,10 +25,7 @@ const FormLogin = () => {
             const response = await Login(formData);
             console.log("Login successful:", response);
             alert("Vous êtes bien connecté !");
-            if (response.ok) {
-                // Si le login est réussi, redirigez vers /profils
-                navigate("/profils");
-            }
+
         } catch (error) {
             console.error("Erreur de connexion :", error);
             alert("Échec de la connexion.");

@@ -32,11 +32,13 @@ export async function Login(formData){
                 "Content-Type": "application/json",
                 Accept: "application/json"
             },
-            body: JSON.stringify(formData)
+            body: JSON.stringify(formData),
+            credentials: 'include'  // Permet d'envoyer le cookie qui contient le jwt avec la requête
         });
 
         if (!response.ok) {
-            throw new Error(`Erreur HTTP : ${response.status}`);
+            const errorDetails = await response.text();  // Récupère les détails d'erreur
+            throw new Error(`Erreur HTTP : ${response.status} - ${errorDetails}`);
         }
 
         return response.json();

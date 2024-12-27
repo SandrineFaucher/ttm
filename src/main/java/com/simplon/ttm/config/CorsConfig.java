@@ -14,6 +14,7 @@ public class CorsConfig {
                 registry.addMapping("/**") // Applique CORS à toutes les routes
                         .allowedOrigins("http://localhost:5173") // Origines autorisées (React)
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Méthodes autorisées
+                        .allowedHeaders("Content-Type", "Authorization", "Accept")
                         .allowedHeaders("*") // Autorise tous les en-têtes
                         .allowCredentials(true); // Autorise l'envoi de cookies ou credentials
             }
