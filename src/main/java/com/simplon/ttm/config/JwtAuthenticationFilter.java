@@ -13,34 +13,29 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-    private JwtUtils jwtUtils;
 
+    private JwtUtils jwtUtils;
     private UserDetailsService userDetailsService;
 
-    public JwtAuthenticationFilter(JwtUtils jwtUtils, UserDetailsService userDetailsService){
+    public JwtAuthenticationFilter(JwtUtils jwtUtils, UserDetailsService userDetailsService) {
         this.jwtUtils = jwtUtils;
         this.userDetailsService = userDetailsService;
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain)
-                                     throws ServletException, IOException {
-        /**
-         * Get JWT token from HTTP request
-         */
-        String token = getTokenFromRequest(request);
+            HttpServletResponse response,
+            FilterChain filterChain) throws ServletException, IOException {
 
-        /**
-         * Validate Token
-         */
-        if(StringUtils.hasText(token) && jwtUtils.validateToken(token)){
+        String token = getTokenFromRequest(request); // Récupération du token depuis l'en-tête Authorization
+
+        if (StringUtils.hasText(token) && jwtUtils.validateToken(token)) {
             String username = jwtUtils.getUsername(token);
 
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
@@ -55,13 +50,34 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         }
+
         filterChain.doFilter(request, response);
     }
-    private String getTokenFromRequest(HttpServletRequest request){
-        String bearerToken = request.getHeader("Authorization");
-        if(StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")){
-            return bearerToken.substring(7, bearerToken.length());
+
+    // Récupération du token à partir de son nom dans le cookie "jwt"
+    //    private String getTokenFromRequest(HttpServletRequest request) {
+    //        String jwtToken = request.getHeader("jwt");  // Récupère le JWT depuis l'en-tête "jwt"
+    //        if (StringUtils.hasText(jwtToken)) {
+    //            return jwtToken;  // Si le token existe, le retourne
+    //        }
+    //        return null;  // Aucun token trouvé
+    //    }
+    private String getTokenFromRequest(HttpServletRequest request) {
+        // Vérifie si le JWT est présent dans les cookies
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if ("JWT".equals(cookie.getName())) {
+                    return cookie.getValue(); // Retourne la valeur du cookie
+                }
+            }
         }
-        return null;
+
+        // Sinon, vérifie si le JWT est présent dans un en-tête spécifique
+        String jwtToken = request.getHeader("jwt");
+        if (StringUtils.hasText(jwtToken)) {
+            return jwtToken; // Si le token existe dans l'en-tête, le retourne
+        }
+
+        return null;  // Aucun token trouvé
     }
 }

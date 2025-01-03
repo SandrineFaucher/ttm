@@ -80,4 +80,12 @@ public class User {
      */
     @ManyToMany(mappedBy = "participants")
     private List<Appointment> appointments;
+
+    /**
+     * Constructeur pour récupérer le user authentifié
+     * @param username
+     * @param role
+     */
+    public User(String username, String role) {
+    }
 }

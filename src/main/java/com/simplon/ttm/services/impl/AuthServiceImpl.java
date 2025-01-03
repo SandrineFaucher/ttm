@@ -6,6 +6,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import com.simplon.ttm.config.JwtUtils;
@@ -20,16 +21,37 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class AuthServiceImpl implements AuthService {
     private final JwtUtils jwtUtils;
-    private final UserRepository userRepository;
     private AuthenticationManager authenticationManager;
+    private UserRepository userRepository;
 
     public String login(LoginDto loginDto){
-        authenticationManager.authenticate(
+        // Effectue l'authentification
+        Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginDto.getUsername(),
                         loginDto.getPassword()
                 )
         );
-            return jwtUtils.generateToken(loginDto.getUsername());
+
+        // Place l'objet Authentication dans le SecurityContextHolder
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        // Génère un token JWT pour l'utilisateur authentifié
+        return jwtUtils.generateToken(loginDto.getUsername());
+    }
+
+    public Optional<User> from(Authentication authentication) {
+        if(authentication == null){
+            return Optional.empty();
+        }
+
+        Object principal = authentication.getPrincipal();
+        if(!(principal instanceof UserDetails)){
+            return Optional.empty();
+        }
+        System.out.println(principal);
+
+        UserDetails userDetails = (UserDetails)principal;
+        return userRepository.findByUsername(userDetails.getUsername());
     }
 }

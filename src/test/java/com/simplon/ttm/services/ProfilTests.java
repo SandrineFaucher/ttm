@@ -53,7 +53,6 @@ public class ProfilTests {
                                 .username("Parain")
                                 .password("parain123")
                                 .role(UserRole.GODPARENT)
-                                .creationDate(date)
                                 .build();
                 Sector sector1 = Sector.builder()
                                 .id(2L)

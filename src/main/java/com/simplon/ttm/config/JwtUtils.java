@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
+import com.simplon.ttm.models.UserRole;
+
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -23,7 +25,7 @@ public class JwtUtils {
 
     /**
      * Générer le token
-     * @param authentication
+     * @param username
      * @return
      */
     public String generateToken(String username){
