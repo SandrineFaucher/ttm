@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, {useContext, useState} from "react";
 import {Outlet, Link} from "react-router-dom";
-import { useUser } from '../context/UserContext.jsx';
 import "./layout.css";
 import logo from "../assets/images/logo.png";
 import ttm_rose from "../assets/images/ttm_rose.png";
 import hologramme_ttm from "../assets/images/hologramme_ttm.png";
+import { AuthContext } from "../context/AuthContext.jsx";
 
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; 
@@ -12,7 +12,7 @@ import { faHouse, faMessage, faAddressCard, faToolbox, faUser } from '@fortaweso
 import { faInstagram, faTiktok, faSquareFacebook, faLinkedin } from '@fortawesome/free-brands-svg-icons';
 
 export default function Layout() {
-    const { currentUser, logoutUser } = useUser();
+    const {auth } = useContext(AuthContext);
     const [isNavOpen, setIsNavOpen] = useState(false);
     const [isProfilOpen, setIsProfilOpen] = useState(false);
 
@@ -52,7 +52,7 @@ export default function Layout() {
                     <div className="icon-user" onClick={toggleProfil} id="profil">
                         <FontAwesomeIcon icon={faUser}/>
                         <div className="current">
-                        {currentUser ? <span>{currentUser.username}</span> : "Anonymous"}
+                        {auth && <span>{auth.username}</span> }
                         </div>
                     </div>
                     {isProfilOpen && (

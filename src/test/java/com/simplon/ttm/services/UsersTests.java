@@ -7,7 +7,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Optional;
 
@@ -43,13 +44,13 @@ public class UsersTests {
      */
     void saveUserWithRole(){
         // Given
-        LocalDate date = LocalDate.parse("2024-11-06");
+        LocalDateTime date = LocalDateTime.parse("2024-11-06T00:00:00");
         User godparent = User.builder()
                 .id(1L)
                 .username("Parain")
                 .password(passwordEncoder.encode("parain123"))
                 .role(UserRole.GODPARENT)
-                .creationDate(date)
+                .createdAt(date)
                 .build();
         RegisterDto godparentDto = RegisterDto.builder()
                 .username("Parain")
@@ -67,7 +68,7 @@ public class UsersTests {
         assertNotNull(user); // Vérifie que l'utilisateur n'est pas null
         assertEquals(godparent.getUsername(), user.getUsername()); // Vérifie le nom d'utilisateur
         assertEquals(godparent.getRole(), user.getRole()); // Vérifie le rôle
-        assertEquals(godparent.getCreationDate(), user.getCreationDate()); // Vérifie la date de création
+        assertEquals(godparent.getCreatedAt(), user.getCreatedAt()); // Vérifie la date de création
     }
 
 

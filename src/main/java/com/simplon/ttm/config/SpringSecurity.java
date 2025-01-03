@@ -1,6 +1,6 @@
 package com.simplon.ttm.config;
 
-import java.util.List;
+import java.util.Arrays;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -44,7 +44,7 @@ public class SpringSecurity {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login").permitAll()
+                        .requestMatchers("/login", "/authenticate").permitAll()
                         .anyRequest().authenticated()
                 )
                 .csrf(csrf -> csrf.disable())
@@ -59,13 +59,14 @@ public class SpringSecurity {
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:5173")); // Origines autorisées (React)
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Méthodes HTTP autorisées
-        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept")); // En-têtes autorisés
-        configuration.setAllowCredentials(true); // Autoriser l'envoi de cookies ou de credentials
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));  // L'origine autorisée
+        corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        corsConfiguration.setAllowedHeaders(Arrays.asList("Content-Type", "Authorization")); // Ajoute Authorization
+        corsConfiguration.setAllowCredentials(true);  // Permet l'envoi des cookies ou credentials
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);// Applique la configuration à toutes les routes
+        source.registerCorsConfiguration("/**", corsConfiguration);  // Applique cette configuration à toutes les requêtes
         return source;
     }
 

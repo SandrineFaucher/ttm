@@ -18,7 +18,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.simplon.ttm.models.User;
 import com.simplon.ttm.models.UserRole;
 import com.simplon.ttm.repositories.UserRepository;
-import com.simplon.ttm.services.impl.UserServiceImpl;
+import com.simplon.ttm.services.impl.AuthServiceImpl;
+
 
 public class AuthTests {
     @ExtendWith(MockitoExtension.class)
@@ -33,13 +34,13 @@ public class AuthTests {
     private UserDetails userDetails;
 
     @InjectMocks
-    private UserServiceImpl userServiceImpl;
+    private AuthServiceImpl authServiceImpl;
 
 
 
     @Test
     public void testFrom_WithNullAuthentication() {
-        Optional<User> result = userServiceImpl.from(null);
+        Optional<User> result = authServiceImpl.from(null);
         assertFalse(result.isPresent(), "Expected empty Optional when authentication is null");
     }
 
@@ -48,7 +49,7 @@ public class AuthTests {
         // Simuler un user authentifié qui n'est pas une instance de UserDetails
         when(authentication.getPrincipal()).thenReturn(new Object());
 
-        Optional<User> result = userServiceImpl.from(authentication);
+        Optional<User> result = authServiceImpl.from(authentication);
         assertFalse(result.isPresent(), "Expected empty Optional when principal is not UserDetails");
     }
 
@@ -66,7 +67,7 @@ public class AuthTests {
         when(userDetails.getUsername()).thenReturn(username);
         when(userRepository.findByUsername(username)).thenReturn(Optional.of(mockUser));
 
-        Optional<User> result = userServiceImpl.from(authentication);
+        Optional<User> result = authServiceImpl.from(authentication);
 
         assertTrue(result.isPresent(), "Expected a non-empty Optional");
         assertEquals(mockUser, result.get(), "The result should match the mock user");
@@ -81,7 +82,7 @@ public class AuthTests {
         when(userDetails.getUsername()).thenReturn(username);
         when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
 
-        Optional<User> result = userServiceImpl.from(authentication);
+        Optional<User> result = authServiceImpl.from(authentication);
 
         assertFalse(result.isPresent(), "Expected empty Optional when user is not found in the repository");
     }
