@@ -1,3 +1,5 @@
+import { useNavigate } from 'react-router-dom';
+
 /**
  * Méthode pour enregistrer un utilisateur
  * @param formData
@@ -113,3 +115,6 @@ export async function handleLoginAndAuthenticate(formData) {
         throw error;
     }
 }
+
+
+

@@ -53,7 +53,12 @@ public class SpringSecurity {
                 .addFilterBefore(this.jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)  // Pas de session HTTP classique
-                );
+                )
+                .logout( logout -> logout
+                        .logoutUrl("/logout")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID", "JWT")
+                        .logoutSuccessUrl("/login"));
         return http.build();
     }
 
