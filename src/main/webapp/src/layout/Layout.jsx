@@ -1,4 +1,4 @@
-import React, {useContext, useState} from "react";
+import React, {useContext, useState, useEffect, useRef} from "react";
 import {Outlet, Link} from "react-router-dom";
 import "./layout.css";
 import logo from "../assets/images/logo.png";
@@ -10,18 +10,40 @@ import { AuthContext } from "../context/AuthContext.jsx";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; 
 import { faHouse, faMessage, faAddressCard, faToolbox, faUser } from '@fortawesome/free-solid-svg-icons';
 import { faInstagram, faTiktok, faSquareFacebook, faLinkedin } from '@fortawesome/free-brands-svg-icons';
+import {LogoutLi} from "./LogoutLi.jsx";
 
 export default function Layout() {
     const {auth } = useContext(AuthContext);
     const [isNavOpen, setIsNavOpen] = useState(false);
     const [isProfilOpen, setIsProfilOpen] = useState(false);
+    const profilRef = useRef(null);
 
     const toggleNav = () => {
         setIsNavOpen(!isNavOpen)
     };
     const toggleProfil = () => {
-        setIsProfilOpen(!isProfilOpen)
+        setIsProfilOpen((prevState) => !prevState);
     };
+
+    // Gestion des clics à l'extérieur
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (profilRef.current && !profilRef.current.contains(event.target)) {
+                setIsProfilOpen(false); // Ferme le menu si clic à l'extérieur
+            }
+        };
+
+        if (isProfilOpen) {
+            document.addEventListener("mousedown", handleClickOutside);
+        } else {
+            document.removeEventListener("mousedown", handleClickOutside);
+        }
+
+        // Nettoyage des écouteurs d'événements au démontage
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [isProfilOpen]); // Réexécute quand isProfilOpen change
 
     return (
         <>
@@ -48,7 +70,7 @@ export default function Layout() {
                         <Link to="/boite-a-outils"><FontAwesomeIcon icon={faToolbox} className="icon"/><div className="page-name">Boîte à Outils</div></Link>
                     </li>
                 </ul>
-                <div className="profil">
+                <div className="profil" ref={profilRef}>
                     <div className="icon-user" onClick={toggleProfil} id="profil">
                         <FontAwesomeIcon icon={faUser}/>
                         <div className="current">
@@ -65,7 +87,7 @@ export default function Layout() {
                                     <Link to="" className="menu-link">Mon profil</Link>
                                 </li>
                                 <li>
-                                    <Link to="" className="menu-link">Déconnexion</Link>
+                                    <LogoutLi/>
                                 </li>
                             </ul>
                         </div>
