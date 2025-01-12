@@ -8,6 +8,7 @@ import Document from "./page-boite-a-outils/Document.jsx";
 import AdminView from "./page-back-office/AdminView.jsx";
 import FormLogin from "./page-home/FormLogin.jsx";
 import { AuthProvider } from "./context/AuthContext.jsx";
+import UserProfil from "./page-profils/UserProfil.jsx";
 
 
 
@@ -24,6 +25,7 @@ export default function App() {
           <Route path="boite-a-outils" element={<Document/>}/>
           <Route path="adminView" element={<AdminView/>}/>
           <Route path="/login" element={<FormLogin />} />
+          <Route path="/userProfil" element={<UserProfil/>} />
         </Route>
       </Routes>
   </AuthProvider>

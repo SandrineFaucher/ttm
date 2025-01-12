@@ -18,4 +18,9 @@ spring:
 
   jwt-secret: daf66e01593f61a15b857cf433eee03a005812b31234e149036bbb8dee755dbb
   jwt-expiration-milliseconds: 604800000
+logging:
+  level:
+    root: debug
+    org.springframework: debug
 
+debug: true

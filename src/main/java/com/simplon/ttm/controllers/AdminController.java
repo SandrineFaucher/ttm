@@ -1,5 +1,8 @@
 package com.simplon.ttm.controllers;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -31,18 +34,26 @@ public class AdminController {
      * @return user with role
      */
     @PostMapping("/admin/register")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterDto userMapping) {
+    public ResponseEntity<Map<String, Object>> registerUser(@Valid @RequestBody RegisterDto userMapping) {
         System.out.println("Ok");
 
+        Map<String , Object> response = new HashMap<>();
+
         if (!userMapping.getPassword().equals(userMapping.getPasswordConfirm())) {
-            return ResponseEntity.badRequest().body("Passwords do not match");
+            response.put("succes", false);
+            response.put("message", "Passwords do not match");
+            return ResponseEntity.badRequest().body(response);
         }
         try {
             userService.saveUserWithRole(userMapping);
-            return ResponseEntity.ok("User registered successfully!");
+            response.put("success", true);
+            response.put("message", "User registered successfully!");
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             System.err.println("Error during registration: " + e.getMessage());
-            return ResponseEntity.status(500).body("Error during registration: " + e.getMessage());
+            response.put("succes", false);
+            response.put("message", "Error during registration: " + e.getMessage());
+            return ResponseEntity.status(500).body(response);
         }
     }
 }

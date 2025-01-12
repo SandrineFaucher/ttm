@@ -63,7 +63,7 @@ public class AuthController {
         //crée un cookie qui transporte le token
         Cookie cookie = new Cookie( "JWT", token);
         cookie.setHttpOnly(true); // Empêche l'accès au cookie via JavaScript (sécurisé contre XSS)
-        cookie.setSecure(false); // mettre la sécurité à "true" pour la production
+        cookie.setSecure(true); // mettre la sécurité à "true" pour la production
         cookie.setPath("/"); // Le cookie sera envoyé pour toutes les routes
         cookie.setMaxAge(86400); // Durée du cookie en secondes (1 jour ici, ajuste selon tes besoins)
 

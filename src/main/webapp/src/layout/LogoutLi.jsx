@@ -10,6 +10,9 @@ export const LogoutLi = () => {
         try {
             await fetch("http://localhost:8080/logout", {
                 method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
                 credentials: "include",
             });
             setAuth(null);
