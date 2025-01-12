@@ -9,7 +9,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+
 import com.simplon.ttm.dto.RegisterDto;
+import com.simplon.ttm.dto.UserUpdateDto;
 import com.simplon.ttm.models.User;
 import com.simplon.ttm.models.UserRole;
 import com.simplon.ttm.repositories.UserRepository;
@@ -17,7 +19,7 @@ import com.simplon.ttm.services.UserService;
 
 @Service
 public class UserServiceImpl implements UserService {
-    
+
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
 
@@ -28,6 +30,11 @@ public class UserServiceImpl implements UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     *
+     * @param user à enregistrer
+     * @return la sauvegarde du user
+     */
     public User saveUserWithRole(RegisterDto user) {
         // Validation et conversion du champ role en UserRole
         UserRole role;
@@ -45,6 +52,35 @@ public class UserServiceImpl implements UserService {
                 .role(role)
                 .build();
         return userRepository.save(newUser);
+    }
+    @Override
+    public Optional<User> findByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+
+    /**
+     *
+     * @param username de l'utilisateur à mettre à jour
+     * @param userUpdateDto données du formulaire de modification
+     * @return l'utilisateur modifié
+     */
+    public User updateUserByUsername(String username, UserUpdateDto userUpdateDto) {
+        // Récupére l'utilisateur authentifié
+        User existingUser = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+
+        // Étape 3 : Mise à jour des champs autorisés
+        existingUser.setUsername(userUpdateDto.getUsername());
+        existingUser.setEmail(userUpdateDto.getEmail());
+
+        System.out.println("Données mises à jour : Username = " + existingUser.getUsername() + ", Email = " + existingUser.getEmail());
+
+        // Étape 4 : Sauvegarde dans la base de données
+        User updatedUser = userRepository.save(existingUser);
+
+        System.out.println("Utilisateur mis à jour et sauvegardé : " + updatedUser);
+
+        return updatedUser;
     }
 
     /**

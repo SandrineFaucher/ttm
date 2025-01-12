@@ -84,7 +84,7 @@ export default function Layout() {
                                     <Link to="/AdminView" className="menu-link">Back-office</Link>
                                 </li>
                                 <li>
-                                    <Link to="" className="menu-link">Mon profil</Link>
+                                    <Link to="/userProfil" className="menu-link">Mon profil</Link>
                                 </li>
                                 <li>
                                     <LogoutLi/>

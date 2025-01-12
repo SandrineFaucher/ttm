@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+
 
 /**
  * Méthode pour enregistrer un utilisateur
@@ -14,7 +14,8 @@ export async function Register(formData) {
                 "Content-Type": "application/json",
                 Accept: "application/json"
             },
-            body: JSON.stringify(formData)
+            body: JSON.stringify(formData),
+            credentials: "include"
         });
 
         if (!response.ok) {
@@ -27,6 +28,29 @@ export async function Register(formData) {
     } catch (error) {
         console.error("Error during register:", error);
         alert("An error occurred during registration: " + error.message);
+        throw error;
+    }
+}
+
+export async function UpdateUser(formData){
+    try {
+        const response = await fetch("http://localhost:8080/userUpdate", {
+            method: 'PUT',
+            headers:{
+                "Content-Type": "application/json",
+                Accept: "application/json"
+            },
+            body: JSON.stringify(formData),
+            credentials: "include"
+        });
+        if(!response.ok){
+            throw new Error(`Erreur HTTP : ${response.status}`);
+        }
+        const data = await response.json();
+        console.log("Parsed response JSON:", data);
+        return data;
+    } catch (error) {
+        console.error("Erreur lors de la mise à jour de l'utilisateur :", error);
         throw error;
     }
 }
@@ -100,14 +124,14 @@ export async function handleLoginAndAuthenticate(formData) {
         // 1. D'abord, appelle la fonction de login
         const loginResult = await Login(formData);
 
-        console.log("Login successful:", loginResult);  // Si vous avez une réponse utile, vous pouvez la loguer ici.
+        console.log("Login successful:", loginResult);
 
         // 2. Ensuite, une fois le login réussi, appelle la fonction de récupération des infos utilisateur
         const authenticatedUser = await getAuthenticateUser();
 
         console.log("Authenticated user:", authenticatedUser);  // Affiche les infos de l'utilisateur authentifié.
 
-        // Vous pouvez retourner les informations utilisateur ici ou traiter d'autres actions
+        // Retourne les informations utilisateur
         return authenticatedUser;
 
     } catch (error) {

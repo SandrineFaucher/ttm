@@ -2,10 +2,12 @@ import React,{useState, useContext} from "react";
 import CustomInput from "../components/CustomImput.jsx";
 import {handleLoginAndAuthenticate} from "../services/userService.js";
 import {AuthContext} from "../context/AuthContext.jsx";
+import {useNavigate} from "react-router-dom";
 
 
 
 const FormLogin = () => {
+    const navigate = useNavigate();
     const { setAuth } = useContext(AuthContext);
     const [formData, setFormData] = useState({
         username: "",
@@ -32,7 +34,8 @@ const FormLogin = () => {
 
             console.log("Login successful:", authenticatedUser);
             alert("Vous êtes bien connecté !");
-
+            // redirige vers la pages des profils une fois loggé
+            navigate("/Profils");
         } catch (error) {
             console.error("Erreur de connexion :", error);
             alert("Échec de la connexion.");

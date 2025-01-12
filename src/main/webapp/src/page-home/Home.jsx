@@ -20,8 +20,6 @@ export default function Home(){
 
             <button onClick={goToLogin}>Je me connecte</button>
 
-
-
       </>
     )
 }
