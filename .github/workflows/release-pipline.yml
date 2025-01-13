@@ -19,8 +19,8 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    if: ${{ accompaniements.get-version.outputs.will-release == 'true' }}
-    accompaniements:
+    if: ${{ needs.get-version.outputs.will-release == 'true' }}
+    needs:
       - get-version
 
     steps:
@@ -32,6 +32,9 @@ jobs:
         with:
           node-version: 18
 
+      - name: Configure npm to use public registry
+        run: npm config set registry https://registry.npmjs.org/
+
       - name: Install dependencies
         run: cd src/main/webapp && npm install
 
@@ -39,7 +42,6 @@ jobs:
         run: cd src/main/webapp && npm run build
 
       - name: Copy webapp-build to Spring Boot static folder
-
         run: |
           mkdir -p src/main/resources/static/
           cp -r src/main/webapp/dist/* src/main/resources/static/
@@ -55,7 +57,7 @@ jobs:
 
       - name: Build with Gradle
         env:
-          VERSION: "${{ accompaniements.get-version.outputs.version }}"
+          VERSION: "${{ needs.get-version.outputs.version }}"
         run: ./gradlew bootjar
 
       - name: Upload Spring Boot artifact
