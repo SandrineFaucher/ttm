@@ -19,4 +19,7 @@ public class UpdatePasswordDto {
     @NotBlank(message = "Le nouveau mot de passe est obligatoire")
     private String newPassword;
 
+    @NotBlank(message = "La confirmation du mot de passe est obligatoire")
+    private String confirmPassword;
+
 }
