@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 
 import com.simplon.ttm.dto.RegisterDto;
+import com.simplon.ttm.dto.UpdatePasswordDto;
 import com.simplon.ttm.dto.UserUpdateDto;
 import com.simplon.ttm.models.User;
 import com.simplon.ttm.models.UserRole;
@@ -65,7 +66,7 @@ public class UserServiceImpl implements UserService {
      * @return l'utilisateur modifié
      */
     public User updateUserByUsername(String username, UserUpdateDto userUpdateDto) {
-        // Récupére l'utilisateur authentifié
+        // Récupère l'utilisateur par son username
         User existingUser = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
 
@@ -82,7 +83,26 @@ public class UserServiceImpl implements UserService {
 
         return updatedUser;
     }
+    public User updatePasswordByUsername(String username, UpdatePasswordDto updatePasswordDto){
+        // Je récupère l'utilisateur par son username
+        User existingUser = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
 
+        // Vérification que l'ancien mot de passe est correct
+        if (!passwordEncoder.matches(updatePasswordDto.getOldPassword(), existingUser.getPassword())) {
+            throw new RuntimeException("L'ancien mot de passe est incorrect");
+        }
+        // je vérifie que nouveau mot de passe et confirme mote de passe sont identiques
+        if (!updatePasswordDto.getNewPassword().equals(updatePasswordDto.getConfirmPassword())) {
+            throw new RuntimeException("Les mots de passe ne correspondent pas");
+        }
+        // Si c'est ok je hash le mot de passe pour l'enregistrer
+        String encodedPassword = passwordEncoder.encode(updatePasswordDto.getNewPassword());
+        existingUser.setPassword(encodedPassword);
+        // Enregistrement du nouveau mot de passe
+        return userRepository.save(existingUser);
+
+    }
     /**
      * Méthode qui permet d'afficher les users avec le bon role au user connecté
      * @param username

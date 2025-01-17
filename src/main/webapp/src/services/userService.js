@@ -56,8 +56,8 @@ export async function UpdateUser(formData){
 }
 
 /**
- * Méthode pour connecter un utilisateur
- * @param formData
+ * Méthode pour le endpoint de login
+ * @param formData données du formulaire login
  * @returns {Promise<any>}
  * @constructor
  */
@@ -85,6 +85,10 @@ export async function Login(formData){
     }
 }
 
+/**
+ * Méthode pour le endpoint authenticate
+ * @returns {Promise<{id}|any>}
+ */
 export async function getAuthenticateUser() {
     try {
         const response = await fetch("http://localhost:8080/authenticate", {
@@ -118,7 +122,11 @@ export async function getAuthenticateUser() {
     }
 }
 
-// Fonction principale pour gérer les deux appels successifs
+/**
+ * Méthode appelant le login et l'authentification afin de mettre le user authentifié dans un AuthContext
+ * @param formData
+ * @returns {Promise<{id}|*>}
+ */
 export async function handleLoginAndAuthenticate(formData) {
     try {
         // 1. D'abord, appelle la fonction de login

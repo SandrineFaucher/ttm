@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.simplon.ttm.dto.UpdatePasswordDto;
 import com.simplon.ttm.dto.UserUpdateDto;
 import com.simplon.ttm.models.User;
 import com.simplon.ttm.repositories.UserRepository;
@@ -27,6 +28,7 @@ import jakarta.validation.Valid;
 public class UserController {
     private UserService userService;
     private UserRepository userRepository;
+
     @Autowired
     public UserController(UserService userService, UserRepository userRepository) {
         this.userService = userService;
@@ -49,7 +51,6 @@ public class UserController {
     }
 
     /**
-     *
      * @param userUpdateDTO
      * @return l'utilisateur avec les modifications eu usernme et de l'email
      */
@@ -57,7 +58,7 @@ public class UserController {
     public ResponseEntity<User> updateUser(
             @Valid @RequestBody UserUpdateDto userUpdateDTO
     ) {
-        // Obtenir l'utilisateur authentifié
+        // Récupération de l'utilisateur authentifié
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String authenticatedUsername = authentication.getName();
         System.out.println("Utilisateur authentifié : " + authenticatedUsername);
@@ -67,7 +68,17 @@ public class UserController {
         return ResponseEntity.ok(updatedUser);
     }
 
-
+    @PutMapping("/userPasswordUpdate")
+    public ResponseEntity<User> updateUserPassword(
+            @Valid @RequestBody UpdatePasswordDto updatePasswordDto
+    ) {
+        // Récupération de l'utilisateur authentifié
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String authenticatedUsername = authentication.getName();
+        System.out.println("Utilisateur authentifié : " + authenticatedUsername);
+        // Appeler le service pour mettre à jour le mot de passe
+        User updateUserPassword = userService.updatePasswordByUsername(authenticatedUsername, updatePasswordDto);
+        return ResponseEntity.ok(updateUserPassword);
+    }
 }
-
 
