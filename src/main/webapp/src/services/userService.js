@@ -54,6 +54,27 @@ export async function UpdateUser(formData){
         throw error;
     }
 }
+export async function UpdateUserPassword(formData){
+    try{
+        const response = await fetch("http://localhost:8080/userPasswordUpdate", {
+            method: 'PUT',
+            headers:{
+                "Content-Type": "application/json",
+                Accept: "application/json"
+            },
+            body: JSON.stringify(formData),
+            credentials: "include"
+        });
+        if(!response.ok){
+            throw new Error(`Eerreur HTTP : ${response.status}`);
+        }
+        const data = await response.json();
+        return data;
+    }catch (error){
+        console.error("Erreur lors de la mise à jour du mot de passe :", error);
+        throw error;
+    }
+}
 
 /**
  * Méthode pour le endpoint de login

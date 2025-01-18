@@ -1,14 +1,16 @@
 import React, {useContext, useState} from "react";
 import CustomInput from "../components/CustomImput.jsx";
 import { AuthContext } from "../context/AuthContext.jsx";
+import { UpdateUserPassword} from "../services/userService.js";
 
 
 export default function UpdatePassword() {
     const {auth, setAuth } = useContext(AuthContext);
     const [formData, setFormData] = useState({
-        oldPassword:(auth.password) ,
+
+        oldPassword:'' ,
         newPassword: '',
-        newPasswordConfirm: '',
+        confirmPassword: '',
     });
 
     // Gestion générique des champs d'entrée
@@ -20,20 +22,18 @@ export default function UpdatePassword() {
         }));
     };
 
-
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log('Form submitted:', formData);
 
         // Validation des mots de passe
-        if (formData.newPassword !== formData.newPasswordConfirm) {
+        if (formData.newPassword !== formData.confirmPassword) {
             alert("Les mots de passe ne correspondent pas !");
             return;
         }
 
         try {
-            const response = await UpdatePassword(formData);
+            const response = await UpdateUserPassword(formData);
             console.log("UpdatePassword successful:", response);
             setAuth({
                 ...auth,
@@ -51,7 +51,7 @@ export default function UpdatePassword() {
             <CustomInput
                 label="Ancien mot de passe"
                 type="password"
-                name="password"
+                name="oldPassword"
                 value={formData.oldPassword}
                 onChange={handleChange}
                 placeholder="Ancien mot de passe"
@@ -61,7 +61,7 @@ export default function UpdatePassword() {
             <CustomInput
                 label="Nouveau mot de passe"
                 type="password"
-                name="password"
+                name="newPassword"
                 value={formData.newPassword}
                 onChange={handleChange}
                 placeholder="Entrez un nouveau mot de passe"
@@ -70,14 +70,14 @@ export default function UpdatePassword() {
             <CustomInput
                 label="Confirmation du nouveau mot de passe"
                 type="password"
-                name="passwordConfirm"
-                value={formData.newPasswordConfirm}
+                name="confirmPassword"
+                value={formData.confirmPassword}
                 onChange={handleChange}
                 placeholder="Veuillez confirmer le mot de passe"
                 required
             />
 
-            <button type="submit">Valider</button>
+            <button type="submit">Modifier</button>
         </form>
     );
 }
