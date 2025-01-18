@@ -1,16 +1,29 @@
-import {useContext, useState} from "react";
+import {useContext, useState, useEffect} from "react";
 import CustomInput from "../components/CustomImput.jsx";
 import { AuthContext } from "../context/AuthContext.jsx";
 import { UpdateUser} from "../services/userService.js";
 
 export default function UserUpdate() {
-    const {auth, setAuth } = useContext(AuthContext);
+    const { auth, setAuth } = useContext(AuthContext);
     const [formData, setFormData] = useState({
-        id:(auth.id),
-        username: (auth.username),
-        email: (auth.email),
-        password: (auth.password)
+        //si le contexte est chargé, affiche les données sinon la valeur est null
+        id: auth?.id || "",
+        username: auth?.username || "",
+        email: auth?.email || "",
+        password: auth?.password || "",
     });
+
+    useEffect(() => {
+        if (auth) {
+            setFormData({
+                id: auth.id || "",
+                username: auth.username || "",
+                email: auth.email || "",
+                password: auth.password || "",
+            });
+        }
+    }, [auth]);
+
 
 // Gestion générique des champs d'entrée
 const handleChange = (e) => {
@@ -60,7 +73,7 @@ return (
             placeholder="Entrez votre email"
             required
         />
-        <button type="submit">Valider</button>
+        <button type="submit">Modifier</button>
     </form>
 );
 }
