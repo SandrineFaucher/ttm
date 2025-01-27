@@ -19,6 +19,7 @@ public class AdminController {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
 
+
     public AdminController(UserService userService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
