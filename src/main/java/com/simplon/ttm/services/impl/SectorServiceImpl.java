@@ -39,4 +39,9 @@ public class SectorServiceImpl implements SectorService {
         sector.setContent(sectorDto.getContent());
         return sectorRepository.save(sector);
     }
+    public void deleteSector(Long id) {
+        Sector sector = sectorRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Sector not found with id: " + id));
+        sectorRepository.delete(sector);
+    }
 }

@@ -17,6 +17,7 @@ import com.simplon.ttm.dto.SectorDto;
 import com.simplon.ttm.models.Sector;
 import com.simplon.ttm.services.SectorService;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 
 @CrossOrigin(origins = "http://localhost:5173")
@@ -52,6 +53,14 @@ public class SectorController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
-
+    @DeleteMapping("/sectorDelete/{id}")
+    public ResponseEntity<String> deleteSector(@PathVariable Long id) {
+        try {
+            sectorService.deleteSector(id);
+            return ResponseEntity.ok("Sector is successfully deleted");
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
 
 }
