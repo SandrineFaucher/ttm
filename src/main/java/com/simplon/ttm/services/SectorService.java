@@ -12,4 +12,6 @@ public interface SectorService {
     Optional<Sector> getById(Long id);
 
     Sector updateSector(Sector sector, SectorDto sectorDto);
+
+    void deleteSector(Long id);
 }
