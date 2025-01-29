@@ -10,4 +10,6 @@ public interface SectorService {
     void saveSector(SectorDto sectorDto);
 
     Optional<Sector> getById(Long id);
+
+    Sector updateSector(Sector sector, SectorDto sectorDto);
 }
