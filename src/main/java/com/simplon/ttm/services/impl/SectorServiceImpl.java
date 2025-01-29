@@ -35,4 +35,8 @@ public class SectorServiceImpl implements SectorService {
         }
         return sector;
     }
+    public Sector updateSector(Sector sector, SectorDto sectorDto) {
+        sector.setContent(sectorDto.getContent());
+        return sectorRepository.save(sector);
+    }
 }
