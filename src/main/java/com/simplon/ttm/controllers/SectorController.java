@@ -1,12 +1,19 @@
 package com.simplon.ttm.controllers;
 
+import java.util.Optional;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.simplon.ttm.dto.SectorDto;
+import com.simplon.ttm.models.Sector;
 import com.simplon.ttm.services.SectorService;
 
 import jakarta.validation.Valid;
@@ -25,5 +32,13 @@ public class SectorController {
         return ResponseEntity.ok("Sector created successfully");
     }
 
-
+    @GetMapping("/sector/{id}")
+    public ResponseEntity<Sector>getSectorById(@PathVariable Long id){
+        Optional<Sector> sector  = sectorService.getById(id);
+        if (sector.isPresent()) {
+            return ResponseEntity.ok(sector.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
 }
