@@ -1,5 +1,6 @@
 package com.simplon.ttm.services.impl;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,10 @@ public class SectorServiceImpl implements SectorService {
         sector.setContent(sectorDto.getContent());
         return sectorRepository.save(sector);
     }
+    public List<Sector> findAll(){
+        return sectorRepository.findAll();
+    }
+
     public void deleteSector(Long id) {
         Sector sector = sectorRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Sector not found with id: " + id));
