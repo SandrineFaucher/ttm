@@ -1,5 +1,6 @@
 package com.simplon.ttm.controllers;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
@@ -53,6 +54,12 @@ public class SectorController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
+    @GetMapping("/sectors")
+    public ResponseEntity<List<Sector>> getAllSectors() {
+        List<Sector> sectors = sectorService.findAll();
+        return ResponseEntity.ok(sectors);
+    }
+
     @DeleteMapping("/sectorDelete/{id}")
     public ResponseEntity<String> deleteSector(@PathVariable Long id) {
         try {
