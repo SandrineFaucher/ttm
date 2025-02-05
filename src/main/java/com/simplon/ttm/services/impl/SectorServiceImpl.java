@@ -18,28 +18,28 @@ public class SectorServiceImpl implements SectorService {
     private SectorRepository sectorRepository;
 
     @Autowired
-    public SectorServiceImpl(SectorRepository sectorRepository){
+    public SectorServiceImpl(SectorRepository sectorRepository) {
         this.sectorRepository = sectorRepository;
     }
 
     /**
      * Méthode pour sauvegarder un secteur
+     *
      * @param sectorDto
      */
     public void saveSector(SectorDto sectorDto) {
         Sector sector = new Sector();
         sector.setContent(sectorDto.getContent());
-
-        // Appel du repository pour enregistrer l'entité
         sectorRepository.save(sector);
     }
 
-    /**
+     /**
      * Méthode pour récupérer un secteur à partir de son id
+     *
      * @param id
      * @return
      */
-    public Optional<Sector> getById(Long id){
+    public Optional<Sector> getById(Long id) {
         Optional<Sector> sector = sectorRepository.findById(id);
         if (sector.isEmpty()) {
             throw new EntityNotFoundException("Sector not found with id: " + id);
@@ -49,6 +49,7 @@ public class SectorServiceImpl implements SectorService {
 
     /**
      * Méthode pour mettre à jour un secteur à partir du DTO
+     *
      * @param sector
      * @param sectorDto
      * @return
@@ -60,14 +61,16 @@ public class SectorServiceImpl implements SectorService {
 
     /**
      * Méthode pour récupérer la liste de tous les secteurs d'activité
+     *
      * @return
      */
-    public List<Sector> findAll(){
+    public List<Sector> findAll() {
         return sectorRepository.findAll();
     }
 
     /**
      * Méthode pour supprimer un secteur à partir de son id
+     *
      * @param id
      */
     public void deleteSector(Long id) {

@@ -8,6 +8,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -47,7 +48,7 @@ public class ProfilTests {
          */
         void saveUserProfil() {
                 // given
-                LocalDate date = LocalDate.parse("2024-11-07");
+                LocalDateTime date = LocalDateTime.parse("2024-11-06T00:00:00");
                 User user = User.builder()
                                 .id(1L)
                                 .username("Parain")
@@ -70,7 +71,7 @@ public class ProfilTests {
                                 .city("Niort")
                                 .department("Deux-Sèvres")
                                 .region("Nouvelle Aquitaine")
-                                .creationDate(date)
+                                .createdAt(date)
                                 .user(user)
                                 .image("profil.png")
                                 .build();
