@@ -4,6 +4,9 @@ import CustomSelect from "../components/CustomSelect.jsx";
 import { Register } from "../services/userService.js";
 
 export default function FormRegister() {
+    /**
+     * State du formulaire
+     */
     const roles = [
         { label: 'Parrain/Marraine', value: 'GODPARENT' },
         { label: 'Porteur de projet', value: 'LEADERPROJECT' },
@@ -19,7 +22,9 @@ export default function FormRegister() {
         role: '', // Initialisé à une valeur vide
     });
 
-    // Gestion générique des champs d'entrée
+    /**
+     * FONCTIONS HANDLECHANGE
+     */
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({
@@ -27,8 +32,6 @@ export default function FormRegister() {
             [name]: value,
         }));
     };
-
-    // Gestion du champ `CustomSelect` pour le rôle
     const handleRoleChange = (selectedRole) => {
         console.log(`Role selected: ${selectedRole}`);
         setFormData((prevData) => ({
@@ -36,7 +39,6 @@ export default function FormRegister() {
             role: selectedRole,
         }));
     };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log('Form submitted:', formData);
@@ -46,7 +48,6 @@ export default function FormRegister() {
             alert("Les mots de passe ne correspondent pas !");
             return;
         }
-
         try {
             const response = await Register(formData);
             console.log("Registration successful:", response);
@@ -99,7 +100,7 @@ export default function FormRegister() {
                 label=  "Role"
                 options={roles}
                 value={formData.role}
-                onChange={handleRoleChange} // Mise à jour via `handleRoleChange`
+                onChange={handleRoleChange} // Mise à jour via handleRoleChange
                 placeholder="Sélectionnez un rôle"
                 required
             />
