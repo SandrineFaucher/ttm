@@ -1,0 +1,34 @@
+/* Css mobile first */
+/* Conteneur principal */
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+}
+
+/* Style pour chaque bloc */
+.block {
+    width: 100%;
+    background-color: rgb(229, 245, 231);
+    border-radius: 8px;
+    padding: 12px;
+
+}
+.component {
+    margin-bottom: 16px;
+}
+
+/* Styles pour les écrans plus larges (desktop) */
+@media (min-width: 768px) {
+    .container {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .block{
+        width: auto;
+    }
+
+
+}
