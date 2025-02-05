@@ -54,7 +54,7 @@ public class AccompaniementController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
-    @GetMapping("/accomaniements")
+    @GetMapping("/accompaniements")
     public ResponseEntity<List<Accompaniement>> getAllAccompaniements(){
         List<Accompaniement> accompaniements = accompaniementService.findAll();
         return ResponseEntity.ok(accompaniements);

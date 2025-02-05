@@ -19,7 +19,7 @@ const CustomSelect = ({
                     {placeholder}
                 </option>
                 {options.map((option) => (
-                    <option key={option.value} value={option.value}>
+                    <option className="option-select" key={option.value} value={option.value}>
                         {option.label}
                     </option>
                 ))}

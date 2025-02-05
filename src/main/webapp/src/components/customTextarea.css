@@ -1,33 +1,24 @@
-
-.custom-select {
+.custom-textarea {
     margin-bottom: 1rem;
     display: flex;
     flex-direction: column;
-    width: 225px;
-
 }
 
-.custom-select  label {
+.custom-textarea label {
     font-weight: 400;
     margin-bottom: 0.75rem;
 }
 
-select{
+.custom-textarea .textarea-field {
     padding: 0.5rem;
     font-size: 1rem;
     border: 1px solid #ccc;
     border-radius: 3px;
-    width: 225px; /* Ajuste la largeur du select */
+    resize: vertical;
 }
 
-select:focus {
+.custom-textarea .textarea-field:focus {
     outline: none;
     border-color: rgb(31, 159, 47);
     box-shadow: 0 0 3px rgb(229, 245, 231);
 }
-.option-select{
-    font-size: 9px;
-    white-space: nowrap; /* Evite le retour à la ligne */
-    overflow: hidden;    /* Empêche le texte de déborder */
-}
-
