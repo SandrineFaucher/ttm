@@ -11,6 +11,10 @@ spring:
     hibernate:
       dialect: org.hibernate.dialect.PostgreSQLDialect
       ddl-auto: update
+  flyway:
+    enabled: true
+    locations: db/migration/data
+    baseline-on-migrate: true
 
   jwt-secret: daf66e01593f61a15b857cf433eee03a005812b31234e149036bbb8dee755dbb
   jwt-expiration-milliseconds: 604800000
