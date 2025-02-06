@@ -1,7 +1,7 @@
 .rowWithIcon{
     display: flex;
     flex-direction: row;
-    justify-content: center;
+
 }
 .iconAdd{
     display: flex;
@@ -11,4 +11,13 @@
 }
 .iconDelete{
 margin-left: 10px;
+}
+
+.input-image{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+img{
+    width: 100px;
 }
