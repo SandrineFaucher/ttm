@@ -5,6 +5,7 @@ import {faPlus,  faTrash} from '@fortawesome/free-solid-svg-icons';
 import "./formProfil.css";
 import CustomSelect from "../components/CustomSelect.jsx";
 import CustomTextarea from "../components/CustomTextarea.jsx";
+import CustomImage from "../components/CustomImage.jsx";
 import { getSectors, getAccompaniements, getCities, getRegionName } from "../services/profilService.js";
 
 export default function FormProfil () {
@@ -20,6 +21,7 @@ export default function FormProfil () {
         city:"",
         department:"",
         region:"",
+        image:""
     });
     const [newAvailability, setNewAvailability] = useState(""); // Disponibilité à ajouter
     const [sectors, setSectors] = useState([]); // Stocke la liste des secteurs
@@ -146,6 +148,12 @@ export default function FormProfil () {
 
     return (
         <form onSubmit={handleSubmit}>
+            <CustomImage
+                label="Photo du profil"
+                name="image"
+                className="input-image"
+                onChange={(file) => setFormData((prev) => ({ ...prev, image: file }))}
+            />
             <div className="rowWithIcon">
                 <CustomInput
                     label="Mes disponibilités"
@@ -172,6 +180,7 @@ export default function FormProfil () {
             </ul>
             <CustomSelect
                 label=  "Secteurs/réseaux"
+                name="sector"
                 options={sectorOptions}
                 value={formData.sector}
                 onChange={handleSectorChange}
@@ -179,7 +188,8 @@ export default function FormProfil () {
                 required
             />
             <CustomSelect
-                label=  "Accompagnement"
+                label="Accompagnement"
+                name="accompaniement"
                 options={accompaniementOptions}
                 value={formData.accompaniement}
                 onChange={handleAccompaniementChange}

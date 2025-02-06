@@ -12,6 +12,10 @@ export default function UserProfil(){
             <h1>Mon Profil </h1>
                 <div className="container">
                     <div className="block">
+                        <h2>Remplir mon profil</h2>
+                        <FormProfil/>
+                    </div>
+                    <div className="block">
                         <h2>Modifier mes données</h2>
                         <div className="component">
                             <UserUpdate/>
@@ -20,10 +24,7 @@ export default function UserProfil(){
                             <UpdatePassword/>
                         </div>
                     </div>
-                    <div className="block">
-                        <h2>Remplir mon profil</h2>
-                        <FormProfil/>
-                    </div>
+
                 </div>
             </>
     )
