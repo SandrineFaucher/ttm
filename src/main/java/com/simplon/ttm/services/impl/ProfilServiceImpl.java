@@ -2,16 +2,20 @@ package com.simplon.ttm.services.impl;
 
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.simplon.ttm.dto.ProfilDto;
 import com.simplon.ttm.models.Accompaniement;
 import com.simplon.ttm.models.Profil;
 import com.simplon.ttm.models.Sector;
 import com.simplon.ttm.models.User;
 import com.simplon.ttm.models.UserRole;
+import com.simplon.ttm.repositories.AccompaniementRepository;
 import com.simplon.ttm.repositories.ProfilRepository;
+import com.simplon.ttm.repositories.SectorRepository;
 import com.simplon.ttm.repositories.UserRepository;
 import com.simplon.ttm.services.ProfilService;
 
@@ -20,25 +24,59 @@ import jakarta.transaction.Transactional;
 @Service
 public class ProfilServiceImpl implements ProfilService {
 
-    private UserRepository userRepository;
-    private ProfilRepository profilRepository;
+    private  UserRepository userRepository;
+    private   ProfilRepository profilRepository;
+
+    private  SectorRepository sectorRepository;
+
+    private  AccompaniementRepository accompaniementRepository;
+
 
     @Autowired
-    public ProfilServiceImpl(UserRepository userRepository, ProfilRepository profilRepository) {
+    public ProfilServiceImpl(UserRepository userRepository,
+                             ProfilRepository profilRepository,
+                             SectorRepository sectorRepository,
+                             AccompaniementRepository accompaniementRepository) {
         this.userRepository = userRepository;
         this.profilRepository = profilRepository;
+        this.sectorRepository = sectorRepository;
+        this.accompaniementRepository = accompaniementRepository;
     }
 
     @Transactional
-    public Profil saveUserProfil(Profil profil) {
-        // Récupération du user à associer au profil
-        User user = userRepository.findById(profil.getUser().getId())
+    public Profil saveUserProfil(ProfilDto profilDto) {
+        // Récupération du user connecté à associer au profil
+        User user = userRepository.findById(profilDto.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        // Associer le profil au user par son attribut user
+        // Créer un nouvel objet Profil à partir du ProfilDto
+        Profil profil = new Profil();
+        profil.setAvailability(profilDto.getAvailability());
+        profil.setContent(profilDto.getContent());
+        profil.setCity(profilDto.getCity());
+        profil.setDepartment(profilDto.getDepartment());
+        profil.setRegion(profilDto.getRegion());
+        profil.setImage(profilDto.getImage());
+
+        // Convertir les IDs des secteurs en entités Sector
+        List<Sector> sectors = profilDto.getSectorIds().stream()
+                .map(sectorId -> sectorRepository.findById(Long.parseLong(sectorId))
+                        .orElseThrow(() -> new IllegalArgumentException("Sector not found")))
+                .collect(Collectors.toList());
+
+        // Convertir les IDs des accompagnements en entités Accompaniement
+        List<Accompaniement> accompaniements = profilDto.getAccompaniementIds().stream()
+                .map(accompaniementId -> accompaniementRepository.findById(Long.parseLong(accompaniementId))
+                        .orElseThrow(() -> new IllegalArgumentException("Accompaniement not found")))
+                .collect(Collectors.toList());
+        // Associer les secteurs et les accompagnements au profil
+        profil.setSector(sectors);
+        profil.setAccompaniement(accompaniements);
+
+        // Associer le profil à l'utilisateur
         profil.setUser(user);
 
-        // Sauvegarder le profil
+        // Sauvegarder le profil du user
         return profilRepository.save(profil);
     }
 

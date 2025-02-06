@@ -13,11 +13,20 @@
 margin-left: 10px;
 }
 
-.input-image{
+.input-image {
     display: flex;
     flex-direction: column;
     margin-bottom: 20px;
+
 }
-img{
+.input-image img {
+    margin-top: 20px;
+    margin-bottom: 10px;
     width: 100px;
+    display: flex;
+}
+.image-preview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
