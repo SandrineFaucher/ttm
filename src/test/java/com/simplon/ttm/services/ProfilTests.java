@@ -19,13 +19,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.simplon.ttm.dto.ProfilDto;
 import com.simplon.ttm.models.Accompaniement;
 import com.simplon.ttm.models.Profil;
 import com.simplon.ttm.models.Sector;
 import com.simplon.ttm.models.User;
 
 import com.simplon.ttm.models.UserRole;
+import com.simplon.ttm.repositories.AccompaniementRepository;
 import com.simplon.ttm.repositories.ProfilRepository;
+import com.simplon.ttm.repositories.SectorRepository;
 import com.simplon.ttm.repositories.UserRepository;
 import com.simplon.ttm.services.impl.ProfilServiceImpl;
 
@@ -39,6 +42,12 @@ public class ProfilTests {
         @Mock
         private UserRepository userRepository;
 
+        @Mock
+        private SectorRepository sectorRepository;
+
+        @Mock
+        private AccompaniementRepository accompaniementRepository;
+
         @InjectMocks
         private ProfilServiceImpl profilServiceImpl;
 
@@ -50,41 +59,64 @@ public class ProfilTests {
                 // given
                 LocalDateTime date = LocalDateTime.parse("2024-11-06T00:00:00");
                 User user = User.builder()
-                                .id(1L)
-                                .username("Parain")
-                                .password("parain123")
-                                .role(UserRole.GODPARENT)
-                                .build();
+                        .id(1L)
+                        .username("Parain")
+                        .password("parain123")
+                        .role(UserRole.GODPARENT)
+                        .build();
                 Sector sector1 = Sector.builder()
-                                .id(2L)
-                                .content("Informaticien")
-                                .build();
+                        .id(2L)
+                        .content("Informaticien")
+                        .build();
                 Sector sector2 = Sector.builder()
-                                .id(3L)
-                                .content("juridique")
-                                .build();
+                        .id(3L)
+                        .content("juridique")
+                        .build();
+                Accompaniement accompaniement = Accompaniement.builder()
+                        .id(6L)
+                        .content("Accompagnement")
+                        .build();
+
+                // Créer un ProfilDto avec les données nécessaires
+                ProfilDto profilDto = ProfilDto.builder()
+                        .userId(user.getId()) // Associer l'ID de l'utilisateur
+                        .availability("tous les jeudi")
+                        .sectorIds(List.of("2", "3")) // Les ID des secteurs en String
+                        .accompaniementIds(List.of("6"))
+                        .content("Profil content")
+                        .city("Niort")
+                        .department("Deux-Sèvres")
+                        .region("Nouvelle Aquitaine")
+                        .image("profil.png")
+                        .build();
 
                 Profil profil = Profil.builder()
-                                .id(2L)
-                                .availability("tous les jeudi")
-                                .sector(List.of(sector1, sector2))
-                                .city("Niort")
-                                .department("Deux-Sèvres")
-                                .region("Nouvelle Aquitaine")
-                                .createdAt(date)
-                                .user(user)
-                                .image("profil.png")
-                                .build();
+                        .id(2L)
+                        .availability("tous les jeudi")
+                        .sector(List.of(sector1, sector2))
+                        .city("Niort")
+                        .department("Deux-Sèvres")
+                        .region("Nouvelle Aquitaine")
+                        .createdAt(date)
+                        .user(user)
+                        .image("profil.png")
+                        .build();
 
                 // when
                 when(profilRepository.save(any(Profil.class))).thenReturn(profil);
-                when(userRepository.findById(profil.getUser().getId())).thenReturn(Optional.of(user));
+                when(userRepository.findById(profilDto.getUserId())).thenReturn(Optional.of(user));
+                when(sectorRepository.findById(2L)).thenReturn(Optional.of(sector1));
+                when(sectorRepository.findById(3L)).thenReturn(Optional.of(sector2));
+                when(accompaniementRepository.findById(6L)).thenReturn(Optional.of(accompaniement));
+
                 // then
-                Profil profilSaved = profilServiceImpl.saveUserProfil(profil);
+                Profil profilSaved = profilServiceImpl.saveUserProfil(profilDto);
 
                 assertEquals(profilSaved.getAvailability(), "tous les jeudi");
                 assertEquals(profilSaved.getUser().getUsername(), "Parain");
-
+                assertEquals(profilSaved.getSector().size(), 2); // Vérifie que les secteurs sont bien associés
+                assertTrue(profilSaved.getSector().contains(sector1));
+                assertTrue(profilSaved.getSector().contains(sector2));
         }
 
         @Test

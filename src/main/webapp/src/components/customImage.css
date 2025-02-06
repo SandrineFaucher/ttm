@@ -3,6 +3,9 @@
     display: flex;
     flex-direction: column;
 }
+.input-image input{
+    margin-top:20px;
+}
 
 .custom-image label {
     font-weight: 400;
