@@ -80,3 +80,39 @@ export const getRegionName = async (regionCode) => {
         return "";
     }
 };
+
+export async function postProfil(formData) {
+    try {
+        // Transforme les données en FormData (natif js) pour une meilleure gestion
+        const formDataToSend = new FormData();
+        Object.entries(formData).forEach(([key, value]) => {
+            if (value !== null) {
+                formDataToSend.append(key, value);
+            }
+        });
+
+        // Vérifie les données envoyées en console
+        for (let [key, value] of formDataToSend.entries()) {
+            console.log(key, value);
+        }
+        const response = await fetch("http://localhost:8080/profil", {
+            method: "POST",
+            headers: { Accept: "application/json" }, // Pas de `Content-Type` avec FormData
+            body: formDataToSend,
+            credentials: "include"
+        });
+
+        if (!response.ok) {
+            throw new Error(`Erreur HTTP : ${response.status}`);
+        }
+        // Vérifie si la response contient du json avant de parser => evite les erreurs
+        const text = await response.text();
+        const data = text ? JSON.parse(text) : {};
+        console.log("Réponse serveur:", data);
+        return data;
+    } catch (error) {
+        console.error("Erreur lors de l'envoi du profil:", error);
+        alert("Une erreur est survenue lors de l'envoi du profil : " + error.message);
+        throw error;
+    }
+}

@@ -17,6 +17,6 @@ public interface SectorService {
 
     void deleteSector(Long id);
 
-    List<Sector> findAll();
+    List <Sector> findAll();
 }
 

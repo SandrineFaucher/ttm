@@ -18,9 +18,9 @@ public interface ProfilRepository extends JpaRepository <Profil, Long> {
 
     Profil findByUserId(Long userId);
 
-    List<Profil> findAllBySector(Sector sector);
+    List<Profil> findAllBySectors(Sector sector);
 
-    List<Profil> findAllByAccompaniement(Accompaniement accompaniement);
+    List<Profil> findAllByAccompaniements(Accompaniement accompaniement);
 
     List<Profil> findAllByCity(String city);
 

@@ -6,7 +6,7 @@ import "./formProfil.css";
 import CustomSelect from "../components/CustomSelect.jsx";
 import CustomTextarea from "../components/CustomTextarea.jsx";
 import CustomImage from "../components/CustomImage.jsx";
-import { getSectors, getAccompaniements, getCities, getRegionName } from "../services/profilService.js";
+import { getSectors, getAccompaniements, getCities, getRegionName, postProfil } from "../services/profilService.js";
 
 export default function FormProfil () {
     /**
@@ -15,8 +15,8 @@ export default function FormProfil () {
 
     const [formData, setFormData] = useState({
         availability: [],
-        sector:"",
-        accompaniement:"",
+        sectors:[],
+        accompaniements:[],
         content:"",
         city:"",
         department:"",
@@ -24,8 +24,8 @@ export default function FormProfil () {
         image:""
     });
     const [newAvailability, setNewAvailability] = useState(""); // Disponibilité à ajouter
-    const [sectors, setSectors] = useState([]); // Stocke la liste des secteurs
-    const [accompaniement, setAccompaniement] = useState([]); //Stocke la liste des accompagnements
+    const [secteurs, setSecteurs] = useState([]); // Stocke la liste des secteurs
+    const [accompagnements, setAccompagnements] = useState([]); //Stocke la liste des accompagnements
     const [cities, setCities] = useState([]); // Liste des villes proposées
     /**
      * HANDLE FUNCTIONS
@@ -54,7 +54,7 @@ export default function FormProfil () {
         const fetchSectors = async () => {
             try {
                 const sectorData = await getSectors(); // Appelle la fonction fetch
-                setSectors(sectorData); // Met à jour le state avec les données
+                setSecteurs(sectorData); // Met à jour le state avec les données
             } catch (error) {
                 console.error("Erreur lors de la récupération des secteurs :", error);
             }
@@ -67,7 +67,7 @@ export default function FormProfil () {
         const fetchAccompaniements = async () => {
             try {
                 const accompaniementData = await getAccompaniements(); // Appelle la fonction fetch
-                setAccompaniement(accompaniementData); // Met à jour le state avec les données
+                setAccompagnements(accompaniementData); // Met à jour le state avec les données
             } catch (error) {
                 console.error("Erreur lors de la récupération des accompagnements :", error);
             }
@@ -87,7 +87,7 @@ export default function FormProfil () {
         } else if (name === "city") {
             setFormData((prev) => ({ ...prev, city: value }));
 
-            if (value.length > 2) { // Lancer la recherche après 3 caractères
+            if (value.length > 2) { // Lance la recherche après 3 caractères
                 const results = await getCities(value);
                 setCities(results);
             } else {
@@ -104,28 +104,29 @@ export default function FormProfil () {
         console.log(`Sector selected: ${selectedSector}`);
         setFormData((prevData) => ({
             ...prevData,
-            sector: selectedSector,
+            // transforme le string Id en number
+            sectors: selectedSector,
         }));
     };
     /**
      * Transformation des secteurs pour `CustomSelect`
      */
-    const sectorOptions = sectors.map((sector) => ({
-        value: sector.id, // Ce qui est stocké dans formData.sector
+    const sectorOptions = secteurs.map((sector) => ({
+        value: parseInt(sector.id), // Ce qui est stocké dans formData.sector
         label: sector.content, // Ce qui est affiché dans le Select
     }));
     const handleAccompaniementChange = (selectedAccompaniement) => {
         console.log(`Accompaniement selected: ${selectedAccompaniement}`);
         setFormData((prevData) => ({
             ...prevData,
-            accompaniement: selectedAccompaniement,
+            accompaniements: selectedAccompaniement,
         }));
     };
     /**
      * Transformation des accompagnements pour `CustomSelect`
      */
-    const accompaniementOptions = accompaniement.map((accompaniement) => ({
-        value: accompaniement.id, // Ce qui est stocké dans formData.sector
+    const accompaniementOptions = accompagnements.map((accompaniement) => ({
+        value: parseInt(accompaniement.id), // Ce qui est stocké dans formData.sector
         label: accompaniement.content, // Ce qui est affiché dans le Select
     }));
 
@@ -141,9 +142,20 @@ export default function FormProfil () {
 
         setCities([]); // Ferme la liste après sélection
     };
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Données soumises :", formData);
+        try {
+            // Envoi des données avec postProfil
+            const result = await postProfil(formData);
+
+            // Gérer la réponse après l'envoi
+            console.log("Profil enregistré avec succès :", result);
+            alert("Votre profil a été enregistré avec succès !");
+
+        }catch (error) {
+            console.error("Erreur lors de l'envoi du formulaire :", error);
+            alert("Une erreur est survenue lors de l'envoi du formulaire.");
+        }
     };
 
     return (
@@ -182,7 +194,7 @@ export default function FormProfil () {
                 label=  "Secteurs/réseaux"
                 name="sector"
                 options={sectorOptions}
-                value={formData.sector}
+                value={formData.sectors}
                 onChange={handleSectorChange}
                 placeholder="Sélectionnez un secteur"
                 required
@@ -191,7 +203,7 @@ export default function FormProfil () {
                 label="Accompagnement"
                 name="accompaniement"
                 options={accompaniementOptions}
-                value={formData.accompaniement}
+                value={formData.accompaniements}
                 onChange={handleAccompaniementChange}
                 placeholder="Sélectionnez un accompagnement"
                 required

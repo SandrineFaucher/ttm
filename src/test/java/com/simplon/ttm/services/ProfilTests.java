@@ -81,8 +81,8 @@ public class ProfilTests {
                 ProfilDto profilDto = ProfilDto.builder()
                         .userId(user.getId()) // Associer l'ID de l'utilisateur
                         .availability("tous les jeudi")
-                        .sectorIds(List.of("2", "3")) // Les ID des secteurs en String
-                        .accompaniementIds(List.of("6"))
+                        .sector(List.of(2L,3L)) // Les ID des secteurs en String
+                        .accompaniement(List.of(6L))
                         .content("Profil content")
                         .city("Niort")
                         .department("Deux-Sèvres")
