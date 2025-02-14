@@ -8,12 +8,16 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
@@ -39,13 +43,21 @@ public class Profil {
 
     private String availability;
 
-    @OneToMany
-    @Default
-    private List<Sector> sector = new ArrayList<>();
+    @ManyToMany
+    @JoinTable(
+            name = "profil_sectors",
+            joinColumns = @JoinColumn(name = "profil_id"),
+            inverseJoinColumns = @JoinColumn(name = "sector_id")
+    )
+    private List<Sector> sectors = new ArrayList<>();
 
-    @OneToMany
-    @Default
-    private List<Accompaniement> accompaniement = new ArrayList<>();
+    @ManyToMany
+    @JoinTable(
+            name = "profil_accompaniements",
+            joinColumns = @JoinColumn(name = "profil_id"),
+            inverseJoinColumns = @JoinColumn(name = "accompaniement_id")
+    )
+    private List<Accompaniement> accompaniements = new ArrayList<>();
 
     private String content;
 
@@ -66,6 +78,7 @@ public class Profil {
     private LocalDateTime updatedAt;
 
     @OneToOne
+    @JsonIgnore // permet d'éviter une boucle infinie
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 

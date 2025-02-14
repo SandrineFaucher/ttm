@@ -17,13 +17,14 @@ import lombok.Setter;
 public class ProfilDto {
 
     private String availability;
-    private List<String> sectorIds;
-    private List<String> accompaniementIds;
+    //id des sector
+    private List<Long> sectors;
+    //id des accompaniement
+    private List<Long> accompaniements;
     private String content;
     private String city;
     private String department;
     private String region;
     private String image;
-    private LocalDateTime createdAt;
     private Long userId;
 }

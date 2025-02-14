@@ -1,7 +1,11 @@
 package com.simplon.ttm.services.impl;
 
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,11 +49,16 @@ public class ProfilServiceImpl implements ProfilService {
 
     @Transactional
     public Profil saveUserProfil(ProfilDto profilDto) {
-        // Récupération du user connecté à associer au profil
+        // Récupère le user à associer au profil
         User user = userRepository.findById(profilDto.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        // Créer un nouvel objet Profil à partir du ProfilDto
+        // Vérifier si un profil existe déjà pour cet utilisateur
+        if (user.getProfil() != null) {
+            throw new IllegalArgumentException("L'utilisateur a déjà un profil");
+        }
+
+        // Crée un nouvel objet Profil à partir du ProfilDto
         Profil profil = new Profil();
         profil.setAvailability(profilDto.getAvailability());
         profil.setContent(profilDto.getContent());
@@ -58,26 +67,47 @@ public class ProfilServiceImpl implements ProfilService {
         profil.setRegion(profilDto.getRegion());
         profil.setImage(profilDto.getImage());
 
-        // Convertir les IDs des secteurs en entités Sector
-        List<Sector> sectors = profilDto.getSectorIds().stream()
-                .map(sectorId -> sectorRepository.findById(Long.parseLong(sectorId))
-                        .orElseThrow(() -> new IllegalArgumentException("Sector not found")))
-                .collect(Collectors.toList());
+        // Récupère les secteurs sélectionnés par l'utilisateur
+        List<Sector> sectors = Optional.ofNullable(profilDto.getSectors())
+                .filter(ids -> !ids.isEmpty())  // Évite une requête inutile si la liste est vide
+                .map(sectorRepository::findAllById) // Récupère tous les secteurs par leurs ID
+                .orElseThrow(() -> new IllegalArgumentException("Un ou plusieurs secteurs sélectionnés n'existent pas"));
 
-        // Convertir les IDs des accompagnements en entités Accompaniement
-        List<Accompaniement> accompaniements = profilDto.getAccompaniementIds().stream()
-                .map(accompaniementId -> accompaniementRepository.findById(Long.parseLong(accompaniementId))
-                        .orElseThrow(() -> new IllegalArgumentException("Accompaniement not found")))
-                .collect(Collectors.toList());
-        // Associer les secteurs et les accompagnements au profil
-        profil.setSector(sectors);
-        profil.setAccompaniement(accompaniements);
+        // Vérifie que tous les secteurs demandés ont bien été trouvés
+        if (sectors.size() != profilDto.getSectors().size()) {
+            throw new IllegalArgumentException("Un ou plusieurs secteurs sélectionnés sont invalides");
+        }
+
+        // Associe les secteurs au profil
+        profil.setSectors(sectors);
+
+        // Récupère les accompagnements sélectionnés par l'utilisateur
+        List<Accompaniement> accompaniements = Optional.ofNullable(profilDto.getAccompaniements())
+                .filter(ids -> !ids.isEmpty())  // Évite une requête inutile si vide
+                .map(accompaniementRepository::findAllById) // Récupère tous les accompagnements par leurs ID
+                .orElseThrow(() -> new IllegalArgumentException("Un ou plusieurs accompagnements sélectionnés n'existent pas"));
+
+        // Vérifie que tous les accompagnements demandés ont bien été trouvés
+        if (accompaniements.size() != profilDto.getAccompaniements().size()) {
+            throw new IllegalArgumentException("Un ou plusieurs accompagnements sélectionnés n'existent pas");
+        }
+
+        // Associe les accompagnements au profil
+        profil.setAccompaniements(accompaniements);
 
         // Associer le profil à l'utilisateur
         profil.setUser(user);
 
-        // Sauvegarder le profil du user
-        return profilRepository.save(profil);
+        // Sauvegarde d'abord le profil
+        profil = profilRepository.save(profil);
+
+        // Met à jour l'utilisateur avec le profil
+        user.setProfil(profil);
+
+        // Sauvegarde l'utilisateur pour établir la relation bidirectionnelle
+        userRepository.save(user);
+
+        return profil;
     }
 
     public List<Profil> getAllProfilsByRole(UserRole userRole) {
@@ -92,12 +122,12 @@ public class ProfilServiceImpl implements ProfilService {
 	}
 
     public List<Profil> getAllProfilBySector(Sector sector) {
-        List<Profil> profils = profilRepository.findAllBySector(sector);
+        List<Profil> profils = profilRepository.findAllBySectors(sector);
         return profils;
     }
 
     public List<Profil> getAllProfilByAccompaniement(Accompaniement accompaniement) {
-        List<Profil> profils = profilRepository.findAllByAccompaniement(accompaniement);
+        List<Profil> profils = profilRepository.findAllByAccompaniements(accompaniement);
         return profils;
     }
 
