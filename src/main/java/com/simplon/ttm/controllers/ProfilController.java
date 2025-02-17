@@ -63,13 +63,14 @@ public class ProfilController {
         profilDto.setUserId(user.getId());
 
         // Gestion de l'image (optionnelle)
+        String imageUrl = null;
         if (image != null && !image.isEmpty()) {
-            String imageUrl = fileService.saveFile(image, "profil_images");
-            profilDto.setImage(imageUrl);
+            imageUrl = fileService.saveFile(image, "profil_images");
+            System.out.println("Image enregistrée : " + imageUrl);
         }
 
         // Sauvegarde du profil
-        Profil savedProfil = profilService.saveUserProfil(profilDto);
+        Profil savedProfil = profilService.saveUserProfil(profilDto, image);
 
         // Création de la réponse
         Map<String, Object> response = new HashMap<>();

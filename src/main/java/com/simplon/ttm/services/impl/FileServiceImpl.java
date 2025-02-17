@@ -47,10 +47,11 @@ public class FileServiceImpl implements FileService {
         Files.createDirectories(directoryPath);
 
         Path filePath = directoryPath.resolve(uniqueFilename);
+
         // Traitement en fonction du type de fichier
         if (fileExtension.matches("\\.(jpg|jpeg|png|gif)$")) {
             // Redimensionner l’image avant de la sauvegarder
-            BufferedImage resizedImage = resizeImage(file.getInputStream(), 300, 300);
+            BufferedImage resizedImage = resizeImage(file.getInputStream(), 150, 150);
             ImageIO.write(resizedImage, fileExtension.replace(".", ""), filePath.toFile());
         } else if (fileExtension.equalsIgnoreCase(".pdf")) {
             // Compresser le PDF
@@ -60,7 +61,8 @@ public class FileServiceImpl implements FileService {
             Files.copy(file.getInputStream(), filePath);
         }
 
-        return filePath.toString();  // Retourne le chemin du fichier
+        // Normalisation du chemin pour compatibilité web
+        return filePath.toString().replace("\\", "/");
     }
     /**
      * Redimensionne une image tout en gardant les proportions

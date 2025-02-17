@@ -14,7 +14,7 @@ export default function FormProfil () {
      */
 
     const [formData, setFormData] = useState({
-        availability: [],
+        availability:[],
         sectors:[],
         accompaniements:[],
         content:"",
@@ -53,7 +53,7 @@ export default function FormProfil () {
         // Fonction pour récupérer les secteurs
         const fetchSectors = async () => {
             try {
-                const sectorData = await getSectors(); // Appelle la fonction fetch
+                const sectorData = await getSectors();
                 setSecteurs(sectorData); // Met à jour le state avec les données
             } catch (error) {
                 console.error("Erreur lors de la récupération des secteurs :", error);
@@ -66,7 +66,7 @@ export default function FormProfil () {
         // Fonction pour récupérer les accompagnements
         const fetchAccompaniements = async () => {
             try {
-                const accompaniementData = await getAccompaniements(); // Appelle la fonction fetch
+                const accompaniementData = await getAccompaniements();
                 setAccompagnements(accompaniementData); // Met à jour le state avec les données
             } catch (error) {
                 console.error("Erreur lors de la récupération des accompagnements :", error);
@@ -104,7 +104,6 @@ export default function FormProfil () {
         console.log(`Sector selected: ${selectedSector}`);
         setFormData((prevData) => ({
             ...prevData,
-            // transforme le string Id en number
             sectors: selectedSector,
         }));
     };
@@ -112,7 +111,7 @@ export default function FormProfil () {
      * Transformation des secteurs pour `CustomSelect`
      */
     const sectorOptions = secteurs.map((sector) => ({
-        value: parseInt(sector.id), // Ce qui est stocké dans formData.sector
+        value: parseInt(sector.id), // Ce qui est stocké dans formData.sectors
         label: sector.content, // Ce qui est affiché dans le Select
     }));
     const handleAccompaniementChange = (selectedAccompaniement) => {
@@ -126,33 +125,32 @@ export default function FormProfil () {
      * Transformation des accompagnements pour `CustomSelect`
      */
     const accompaniementOptions = accompagnements.map((accompaniement) => ({
-        value: parseInt(accompaniement.id), // Ce qui est stocké dans formData.sector
+        value: parseInt(accompaniement.id), // Ce qui est stocké dans formData.accompaniements
         label: accompaniement.content, // Ce qui est affiché dans le Select
     }));
 
     const handleCitySelect = async (city) => {
         const regionName = await getRegionName(city.codeRegion);
-
         setFormData((prev) => ({
             ...prev,
-            city: city.nom,  // Assure-toi que seule cette clé est mise à jour
+            city: city.nom,
             department: city.codeDepartement,
             region: regionName
         }));
-
         setCities([]); // Ferme la liste après sélection
     };
     const handleSubmit = async (e) => {
         e.preventDefault();
-        try {
-            // Envoi des données avec postProfil
-            const result = await postProfil(formData);
+        console.log("Données soumises :", formData);
+        console.log("Image envoyée :", formData.image);
+        console.log("Type de image :", typeof formData.image);
+        console.log("Instance de File ?", formData.image instanceof File);
 
-            // Gérer la réponse après l'envoi
+        try {
+            const result = await postProfil(formData);
             console.log("Profil enregistré avec succès :", result);
             alert("Votre profil a été enregistré avec succès !");
-
-        }catch (error) {
+        } catch (error) {
             console.error("Erreur lors de l'envoi du formulaire :", error);
             alert("Une erreur est survenue lors de l'envoi du formulaire.");
         }
@@ -174,9 +172,9 @@ export default function FormProfil () {
                     onChange={handleChange}
                     placeholder="Ex : Lundi matin"
                 />
-                <button className="iconAdd" onClick={handleAddAvailability}>
+                <div className="iconAdd" onClick={handleAddAvailability}>
                     <FontAwesomeIcon icon={faPlus} />
-                </button>
+                </div>
             </div>
             <ul>
                 {formData.availability.map((availability, index) => (
