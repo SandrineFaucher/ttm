@@ -5,8 +5,10 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -18,6 +20,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.simplon.ttm.dto.ProfilDto;
 import com.simplon.ttm.models.Accompaniement;
@@ -48,6 +52,9 @@ public class ProfilTests {
         @Mock
         private AccompaniementRepository accompaniementRepository;
 
+        @Mock
+        private FileService fileService;
+
         @InjectMocks
         private ProfilServiceImpl profilServiceImpl;
 
@@ -55,68 +62,84 @@ public class ProfilTests {
         /**
          * Teste la sauvegarde du profil d'un user inscrit sur le site
          */
-        void saveUserProfil() {
-                // given
+        void saveUserProfil() throws IOException {
+                // given (Préparation des données)
                 LocalDateTime date = LocalDateTime.parse("2024-11-06T00:00:00");
+
                 User user = User.builder()
                         .id(1L)
                         .username("Parain")
                         .password("parain123")
                         .role(UserRole.GODPARENT)
                         .build();
+
                 Sector sector1 = Sector.builder()
                         .id(2L)
                         .content("Informaticien")
                         .build();
+
                 Sector sector2 = Sector.builder()
                         .id(3L)
-                        .content("juridique")
+                        .content("Juridique")
                         .build();
+
                 Accompaniement accompaniement = Accompaniement.builder()
                         .id(6L)
                         .content("Accompagnement")
                         .build();
 
-                // Créer un ProfilDto avec les données nécessaires
+                // Simuler un fichier image (PNG fictif)
+                MockMultipartFile mockImage = new MockMultipartFile(
+                        "image", // Nom du champ dans la requête
+                        "profil.png", // Nom du fichier
+                        "image/png", // Type MIME
+                        "fake image content".getBytes() // Contenu fictif
+                );
+
+                // Création du DTO sans l'image (puisque retirée du DTO)
                 ProfilDto profilDto = ProfilDto.builder()
                         .userId(user.getId()) // Associer l'ID de l'utilisateur
-                        .availability("tous les jeudi")
-                        .sector(List.of(2L,3L)) // Les ID des secteurs en String
-                        .accompaniement(List.of(6L))
+                        .availability("Tous les jeudis")
+                        .sectors(List.of(2L, 3L)) // ID des secteurs
+                        .accompaniements(List.of(6L))
                         .content("Profil content")
                         .city("Niort")
                         .department("Deux-Sèvres")
                         .region("Nouvelle Aquitaine")
-                        .image("profil.png")
                         .build();
 
-                Profil profil = Profil.builder()
+                // Création du profil attendu après sauvegarde
+                Profil expectedProfil = Profil.builder()
                         .id(2L)
-                        .availability("tous les jeudi")
-                        .sector(List.of(sector1, sector2))
+                        .availability("Tous les jeudis")
+                        .sectors(List.of(sector1, sector2))
                         .city("Niort")
                         .department("Deux-Sèvres")
                         .region("Nouvelle Aquitaine")
                         .createdAt(date)
                         .user(user)
-                        .image("profil.png")
+                        .image("profil.png") // Simule une image enregistrée
                         .build();
 
-                // when
-                when(profilRepository.save(any(Profil.class))).thenReturn(profil);
+                // when (Définition des comportements mockés)
                 when(userRepository.findById(profilDto.getUserId())).thenReturn(Optional.of(user));
                 when(sectorRepository.findById(2L)).thenReturn(Optional.of(sector1));
                 when(sectorRepository.findById(3L)).thenReturn(Optional.of(sector2));
                 when(accompaniementRepository.findById(6L)).thenReturn(Optional.of(accompaniement));
+                when(fileService.saveFile(any(MultipartFile.class), eq("profil_images"))).thenReturn(String.valueOf(mockImage));
+                when(profilRepository.save(any(Profil.class))).thenReturn(expectedProfil);
 
-                // then
-                Profil profilSaved = profilServiceImpl.saveUserProfil(profilDto);
+                // Act (Appel du service)
+                Profil profilSaved = profilServiceImpl.saveUserProfil(profilDto, mockImage);
 
-                assertEquals(profilSaved.getAvailability(), "tous les jeudi");
-                assertEquals(profilSaved.getUser().getUsername(), "Parain");
-                assertEquals(profilSaved.getSector().size(), 2); // Vérifie que les secteurs sont bien associés
-                assertTrue(profilSaved.getSector().contains(sector1));
-                assertTrue(profilSaved.getSector().contains(sector2));
+                // then (Assertions pour valider le résultat)
+                assertNotNull(profilSaved);
+                assertEquals("Tous les jeudis", profilSaved.getAvailability());
+                assertEquals("Parain", profilSaved.getUser().getUsername());
+                assertEquals(2, profilSaved.getSectors().size()); // Vérifie que les secteurs sont bien associés
+                assertTrue(profilSaved.getSectors().contains(sector1));
+                assertTrue(profilSaved.getSectors().contains(sector2));
+                assertEquals("profil.png", profilSaved.getImage()); // Vérifie que l'image est bien enregistrée
         }
 
         @Test
@@ -191,12 +214,12 @@ public class ProfilTests {
                 secondProfilSectors.add(secteur3);
                 secondProfilSectors.add(secteur1);
                 //construction de profils avec un même secteur d'activité
-                Profil profil1 = Profil.builder().sector(firstProfilSectors).build();
-                Profil profil2 = Profil.builder().sector(secondProfilSectors).build();
+                Profil profil1 = Profil.builder().sectors(firstProfilSectors).build();
+                Profil profil2 = Profil.builder().sectors(secondProfilSectors).build();
 
                 //when
                 //mock des profils avec le meme secteur "informatique"
-                when(profilRepository.findAllBySector(secteur1)).thenReturn(List.of(profil1, profil2));
+                when(profilRepository.findAllBySectors(secteur1)).thenReturn(List.of(profil1, profil2));
 
                 //then
                 List<Profil> result = profilServiceImpl.getAllProfilBySector(secteur1);
@@ -225,11 +248,11 @@ public class ProfilTests {
                 secondProfilAccompaniements.add(accompaniement1);
                 secondProfilAccompaniements.add(accompaniement3);
                 //construction de profils avec un même secteur d'activité
-                Profil profil1 = Profil.builder().accompaniement(firstProfilAccompaniements).build();
-                Profil profil2 = Profil.builder().accompaniement(secondProfilAccompaniements).build();
+                Profil profil1 = Profil.builder().accompaniements(firstProfilAccompaniements).build();
+                Profil profil2 = Profil.builder().accompaniements(secondProfilAccompaniements).build();
 
                 //when
-                when(profilRepository.findAllByAccompaniement(accompaniement1)).thenReturn(List.of(profil1, profil2));
+                when(profilRepository.findAllByAccompaniements(accompaniement1)).thenReturn(List.of(profil1, profil2));
 
                 //then
                 List<Profil> result = profilServiceImpl.getAllProfilByAccompaniement(accompaniement1);

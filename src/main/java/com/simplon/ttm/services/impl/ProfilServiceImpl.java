@@ -1,6 +1,7 @@
 package com.simplon.ttm.services.impl;
 
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -10,6 +11,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.simplon.ttm.dto.ProfilDto;
 import com.simplon.ttm.models.Accompaniement;
@@ -21,6 +23,7 @@ import com.simplon.ttm.repositories.AccompaniementRepository;
 import com.simplon.ttm.repositories.ProfilRepository;
 import com.simplon.ttm.repositories.SectorRepository;
 import com.simplon.ttm.repositories.UserRepository;
+import com.simplon.ttm.services.FileService;
 import com.simplon.ttm.services.ProfilService;
 
 import jakarta.transaction.Transactional;
@@ -35,20 +38,24 @@ public class ProfilServiceImpl implements ProfilService {
 
     private  AccompaniementRepository accompaniementRepository;
 
+    private FileService fileService;
+
 
     @Autowired
     public ProfilServiceImpl(UserRepository userRepository,
                              ProfilRepository profilRepository,
                              SectorRepository sectorRepository,
-                             AccompaniementRepository accompaniementRepository) {
+                             AccompaniementRepository accompaniementRepository,
+                             FileService fileService) {
         this.userRepository = userRepository;
         this.profilRepository = profilRepository;
         this.sectorRepository = sectorRepository;
         this.accompaniementRepository = accompaniementRepository;
+        this.fileService = fileService;
     }
 
     @Transactional
-    public Profil saveUserProfil(ProfilDto profilDto) {
+    public Profil saveUserProfil(ProfilDto profilDto, MultipartFile image) throws IOException {
         // Récupère le user à associer au profil
         User user = userRepository.findById(profilDto.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
@@ -65,7 +72,16 @@ public class ProfilServiceImpl implements ProfilService {
         profil.setCity(profilDto.getCity());
         profil.setDepartment(profilDto.getDepartment());
         profil.setRegion(profilDto.getRegion());
-        profil.setImage(profilDto.getImage());
+
+        // ✅ Gérer l'image si elle est présente
+        if (image != null && !image.isEmpty()) {
+            String imageUrl = fileService.saveFile(image, "profil_images"); // Sauvegarde et récupération du chemin
+            profil.setImage(imageUrl);
+            System.out.println("Image enregistrée : " + imageUrl);
+        } else {
+            profil.setImage(null);
+        }
+
 
         // Récupère les secteurs sélectionnés par l'utilisateur
         List<Sector> sectors = Optional.ofNullable(profilDto.getSectors())

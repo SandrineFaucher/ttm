@@ -82,19 +82,32 @@ export const getRegionName = async (regionCode) => {
 };
 
 export async function postProfil(formData) {
+    const formDataToSend = new FormData();
+
     try {
-        // Transforme les données en FormData (natif js) pour une meilleure gestion
-        const formDataToSend = new FormData();
+        console.log("Image reçue :", formData.image);
+        console.log("Type :", typeof formData.image);
+        console.log("Instance de File ?", formData.image instanceof File);
+        // Ajout explicite de l'image si elle est définie
+        if (formData.image instanceof File) {
+            formDataToSend.append("image", formData.image, formData.image.name);
+        }
+        // Remplir formDataToSend avec les données de formData
         Object.entries(formData).forEach(([key, value]) => {
-            if (value !== null) {
+            if (value !== null && key !=="image") {
                 formDataToSend.append(key, value);
             }
         });
-
+        console.log("📤 Contenu de formDataToSend AVANT envoi:");
+        for (let [key, value] of formDataToSend.entries()) {
+            console.log(`🔹 ${key}:`, value);
+        }
         // Vérifie les données envoyées en console
         for (let [key, value] of formDataToSend.entries()) {
             console.log(key, value);
         }
+
+        // Envoi des données au serveur
         const response = await fetch("http://localhost:8080/profil", {
             method: "POST",
             headers: { Accept: "application/json" }, // Pas de `Content-Type` avec FormData
@@ -105,10 +118,18 @@ export async function postProfil(formData) {
         if (!response.ok) {
             throw new Error(`Erreur HTTP : ${response.status}`);
         }
-        // Vérifie si la response contient du json avant de parser => evite les erreurs
+
+        // Vérifie si la réponse contient du JSON avant de parser pour éviter les erreurs
         const text = await response.text();
         const data = text ? JSON.parse(text) : {};
         console.log("Réponse serveur:", data);
+
+        // Si la réponse contient une URL d'image, affichez-la
+        if (data.image) {
+            const img = document.createElement('img');
+            img.src = data.image;
+            document.body.appendChild(img);
+        }
         return data;
     } catch (error) {
         console.error("Erreur lors de l'envoi du profil:", error);

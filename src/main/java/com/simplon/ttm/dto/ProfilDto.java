@@ -3,6 +3,8 @@ package com.simplon.ttm.dto;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,6 +27,5 @@ public class ProfilDto {
     private String city;
     private String department;
     private String region;
-    private String image;
     private Long userId;
 }
