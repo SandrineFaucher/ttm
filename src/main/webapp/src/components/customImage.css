@@ -1,44 +1,12 @@
-.custom-image {
-    margin-bottom: 1rem;
+
+.input-image img {
+    margin-top: 20px;
+    margin-bottom: 10px;
+    width: 100px;
+    display: flex;
+}
+.image-preview {
     display: flex;
     flex-direction: column;
-}
-.input-image input{
-    margin-top:20px;
-}
-
-.custom-image label {
-    font-weight: 400;
-    margin-bottom: 0.75rem;
-}
-
-.input-file {
-    padding: 0.5rem;
-    font-size: 1rem;
-}
-
-.image-preview {
-    position: relative;
-    margin-top: 0.75rem;
-    max-width: 100px;
-
-}
-
-.preview-img {
-    width: 100%;
-    object-fit: cover;
-    border-radius: 50%;
-    border: 2px solid #ccc;
-}
-
-.remove-btn {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 24px;
-    height: 24px;
-    cursor: pointer;
+    align-items: center;
 }

@@ -19,14 +19,3 @@ margin-left: 10px;
     margin-bottom: 20px;
 
 }
-.input-image img {
-    margin-top: 20px;
-    margin-bottom: 10px;
-    width: 100px;
-    display: flex;
-}
-.image-preview {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
