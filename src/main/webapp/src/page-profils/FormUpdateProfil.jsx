@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import CustomInput from "../components/CustomImput.jsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPlus,  faTrash} from '@fortawesome/free-solid-svg-icons';
@@ -6,37 +6,41 @@ import "./formProfil.css";
 import CustomSelect from "../components/CustomSelect.jsx";
 import CustomTextarea from "../components/CustomTextarea.jsx";
 import CustomImage from "../components/CustomImage.jsx";
-import { getSectors, getAccompaniements, getCities, getRegionName, postProfil } from "../services/profilService.js";
+import { getSectors, getAccompaniements, getCities, getRegionName } from "../services/profilService.js";
+import {AuthContext} from "../context/AuthContext.jsx";
 
-export default function FormProfil () {
+export default function FormUpdateProfil () {
     /**
      * State des données
      */
-
+    const { auth, setAuth } = useContext(AuthContext);
+    const authProfil = auth.profil;
     const [formData, setFormData] = useState({
-        availability:[],
-        sectors:[],
-        accompaniements:[],
-        content:"",
-        city:"",
-        department:"",
-        region:"",
-        image:""
+        availability: [],
+        sectors:  [],
+        accompaniements: [],
+        content: authProfil?.content || "",
+        city: authProfil?.city ||"",
+        department: authProfil?.department || "",
+        region: authProfil?.region || "",
+        image: authProfil?.image || ""
     });
-    const [newAvailability, setNewAvailability] = useState(""); // Disponibilité à ajouter
+    const [changeAvailability, setChangeAvailability] = useState(""); // Disponibilité à ajouter
     const [secteurs, setSecteurs] = useState([]); // Stocke la liste des secteurs
     const [accompagnements, setAccompagnements] = useState([]); //Stocke la liste des accompagnements
     const [cities, setCities] = useState([]); // Liste des villes proposées
+
+
     /**
      * HANDLE FUNCTIONS
      */
     function handleAddAvailability() {
-        if (newAvailability.trim()) {
+        if (changeAvailability.trim()) {
             setFormData((prev) => ({
                 ...prev,
-                availability: [...prev.availability, newAvailability.trim()],
+                availability: [...prev.availability, changeAvailability.trim()],
             }));
-            setNewAvailability(""); // Réinitialise le champ
+            setChangeAvailability(""); // Réinitialise le champ
         }
     }
     function handleRemoveAvailability(index) {
@@ -82,8 +86,8 @@ export default function FormProfil () {
     const handleChange = async (e) => {
         const { name, value } = e.target;
 
-        if (name === "newAvailability") {
-            setNewAvailability(value);
+        if (name === "changeAvailability") {
+            setChangeAvailability(value);
         } else if (name === "city") {
             setFormData((prev) => ({ ...prev, city: value }));
 
@@ -141,15 +145,22 @@ export default function FormProfil () {
     };
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Données soumises :", formData);
-        console.log("Image envoyée :", formData.image);
-        console.log("Type de image :", typeof formData.image);
-        console.log("Instance de File ?", formData.image instanceof File);
 
         try {
-            const result = await postProfil(formData);
-            console.log("Profil enregistré avec succès :", result);
-            alert("Votre profil a été enregistré avec succès !");
+            // const result = await updateProfil(formData);
+            // console.log("Profil mis à jour :", result);
+            setAuth({
+                ...auth,
+                availability: formData.availability,
+                sectors: formData.sectors,
+                accompagnements: formData.accompaniements,
+                content: formData.content,
+                city: formData.city,
+                department: formData.department,
+                region: formData.region
+
+            });
+            alert("Votre profil a été mis à jour avec succès !");
         } catch (error) {
             console.error("Erreur lors de l'envoi du formulaire :", error);
             alert("Une erreur est survenue lors de l'envoi du formulaire.");
@@ -167,8 +178,8 @@ export default function FormProfil () {
             <div className="rowWithIcon">
                 <CustomInput
                     label="Mes disponibilités"
-                    name="newAvailability"
-                    value={newAvailability}
+                    name="changeAvailability"
+                    value={changeAvailability}
                     onChange={handleChange}
                     placeholder="Ex : Lundi matin"
                 />
@@ -181,7 +192,7 @@ export default function FormProfil () {
                     <li key={index} className="rowWithIcon">
                         {availability}
                         <div className="iconDelete"
-                            onClick={() => handleRemoveAvailability(index)}
+                             onClick={() => handleRemoveAvailability(index)}
                         >
                             <FontAwesomeIcon icon={faTrash}  />
                         </div>
@@ -244,7 +255,7 @@ export default function FormProfil () {
                 placeholder="Région"
                 readOnly
             />
-            <button type="submit">Enregistrer</button>
+            <button type="submit">Modifier</button>
         </form>
     );
 

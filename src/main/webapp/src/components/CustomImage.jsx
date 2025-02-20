@@ -2,6 +2,7 @@ import React, {useEffect, useRef, useState} from "react";
 import PropTypes from "prop-types";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import "./customImage.css"
 
 const CustomImage = ({ label, name, onChange, className }) => {
     const [preview, setPreview] = useState(null);
