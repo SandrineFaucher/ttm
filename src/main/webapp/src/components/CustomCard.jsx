@@ -1,9 +1,8 @@
 import "./customCard.css"
 import PropTypes from "prop-types";
 
-const CustomCard =({ title, image, availability, sectors, accompaniements, city, department, region, description}) =>{
-
-    console.log(image);
+const CustomCard =({ key, title, image, availability, sectors, accompaniements, city, department, region, description}) =>{
+console.log("Image :" ,image)
     return (
         <div className="body-card">
             <p className="location">{region} {city}{department}</p>
@@ -29,6 +28,7 @@ const CustomCard =({ title, image, availability, sectors, accompaniements, city,
     )
 };
 CustomCard.prototype = {
+    key:PropTypes.number,
     title : PropTypes.string,
     availability: PropTypes.string,
     sectors: PropTypes.string,
@@ -36,6 +36,7 @@ CustomCard.prototype = {
     city: PropTypes.string,
     department: PropTypes.string,
     region: PropTypes.string,
-    description: PropTypes.string
+    description: PropTypes.string,
+    image:PropTypes.string
 }
 export default CustomCard;
