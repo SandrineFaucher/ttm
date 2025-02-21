@@ -21,3 +21,6 @@ button{
 button:hover {
   background-color: #bddd96
 }
+p{
+  font-size: 14px;
+}
