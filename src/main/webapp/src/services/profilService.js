@@ -98,9 +98,9 @@ export async function postProfil(formData) {
                 formDataToSend.append(key, value);
             }
         });
-        console.log("📤 Contenu de formDataToSend AVANT envoi:");
+        console.log("Contenu de formDataToSend AVANT envoi:");
         for (let [key, value] of formDataToSend.entries()) {
-            console.log(`🔹 ${key}:`, value);
+            console.log(`${key}:`, value);
         }
         // Vérifie les données envoyées en console
         for (let [key, value] of formDataToSend.entries()) {
@@ -135,5 +135,30 @@ export async function postProfil(formData) {
         console.error("Erreur lors de l'envoi du profil:", error);
         alert("Une erreur est survenue lors de l'envoi du profil : " + error.message);
         throw error;
+    }
+}
+
+export async function getProfilsByRoles() {
+    try {
+        const response = await fetch("http://localhost:8080/usersProfils/by-role", {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json"
+            },
+            credentials: 'include'  // Inclut le cookie JWT (HttpOnly) dans la requête
+        });
+
+        // Vérifie si la réponse est correcte (status 200)
+        if (!response.ok) {
+            throw new Error(`Failed to fetch users profils : ${response.statusText}`);
+        }
+        const profilsOfUsers = await response.json();
+
+        return profilsOfUsers;
+
+    } catch (error) {
+        console.error("Error fetching profils of users :", error);
+        throw new Error("Failed to fetch profils of users");
     }
 }

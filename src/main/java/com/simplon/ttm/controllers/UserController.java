@@ -40,17 +40,7 @@ public class UserController {
         return this.userRepository.findAll();
     }
 
-    @GetMapping("/users/by-role")
-    public ResponseEntity<List<User>> getUsersByRole(Authentication authentication) {
-        // Récupération de l'utilisateur connecté
-        String currentUsername = authentication.getName();
-
-        // Récupération de la liste des utilisateurs selon la logique de rôle
-        List<User> users = userService.getUsersVisibleToCurrentUser(currentUsername);
-        return ResponseEntity.ok(users);
-    }
-
-    /**
+     /**
      * @param userUpdateDTO
      * @return l'utilisateur avec les modifications eu usernme et de l'email
      */
