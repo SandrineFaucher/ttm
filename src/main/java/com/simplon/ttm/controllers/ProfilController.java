@@ -2,6 +2,7 @@ package com.simplon.ttm.controllers;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -78,5 +80,16 @@ public class ProfilController {
         response.put("profil", savedProfil);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+
+    @GetMapping("/usersProfils/by-role")
+    public ResponseEntity<List<User>> getUsersProfilsByRole(Authentication authentication) {
+        // Récupération de l'utilisateur connecté
+        String currentUsername = authentication.getName();
+
+        // Récupération de la liste des utilisateurs selon la logique de rôle
+        List<User> users = userService.getUsersVisibleToCurrentUser(currentUsername);
+        return ResponseEntity.ok(users);
     }
 }

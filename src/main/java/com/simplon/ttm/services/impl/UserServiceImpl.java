@@ -113,17 +113,27 @@ public class UserServiceImpl implements UserService {
         User currentUser = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
 
-        // Détermine le rôle visible pour cet utilisateur
-        UserRole visibleRole;
-        if (currentUser.getRole() == UserRole.GODPARENT) {
-            visibleRole = UserRole.LEADERPROJECT;
-        } else if (currentUser.getRole() == UserRole.LEADERPROJECT) {
-            visibleRole = UserRole.GODPARENT;
-        } else {
-            throw new AccessDeniedException("Role not allowed to view users");
+        List<UserRole> visibleRoles;
+
+        // Déterminer les rôles visibles en fonction du rôle de l'utilisateur connecté
+        switch (currentUser.getRole()) {
+            case GODPARENT:
+                visibleRoles = List.of(UserRole.LEADERPROJECT);
+                break;
+            case LEADERPROJECT:
+                visibleRoles = List.of(UserRole.GODPARENT);
+                break;
+            case ADMIN:
+            case USER:
+                // Admin et User voient tous les rôles
+                visibleRoles = List.of(UserRole.GODPARENT, UserRole.LEADERPROJECT, UserRole.ADMIN, UserRole.USER);
+                break;
+            default:
+                throw new AccessDeniedException("Role not allowed to view users");
         }
-        // Retourner les utilisateurs ayant le rôle visible
-        return userRepository.findByRole(visibleRole);
+
+        // Retourner les utilisateurs ayant les rôles visibles
+        return userRepository.findByRoleIn(visibleRoles);
     }
     
     public Optional<User> getUserByUsername(String username) {
