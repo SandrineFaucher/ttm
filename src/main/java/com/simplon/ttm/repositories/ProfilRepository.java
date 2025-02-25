@@ -1,7 +1,7 @@
 package com.simplon.ttm.repositories;
 
 import java.util.List;
-
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -16,7 +16,7 @@ public interface ProfilRepository extends JpaRepository <Profil, Long> {
 
     List<Profil> findAllByUserRole(UserRole userRole);
 
-    Profil findByUserId(Long userId);
+    Optional<Profil> findByUserId(Long userId);
 
     List<Profil> findAllBySectors(Sector sector);
 

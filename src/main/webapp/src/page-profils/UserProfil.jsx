@@ -1,4 +1,4 @@
-import React, {useContext} from "react";
+import React, {useContext, useEffect} from "react";
 import UserUpdate from "./UserUpdate.jsx";
 import UpdatePassword from "./UpdatePassword.jsx";
 import FormProfil from "./FormProfil.jsx";
@@ -18,6 +18,12 @@ export default function UserProfil(){
     const isAuthProfil = auth?.profil && Object.keys(auth.profil).length > 0;
     console.log("Valeur de auth.profil :", auth.profil);
     console.log("isAuthProfil :", isAuthProfil);
+
+    // useEffect qui se déclenche quand le profil change
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useEffect(() => {
+        console.log("Le profil a été mis à jour, recharge de PreviewCard !");
+    }, [isAuthProfil]); // Se déclenche uniquement quand isAuthProfil change
     return (
             <>
             <h1>Mon Profil </h1>
@@ -25,7 +31,7 @@ export default function UserProfil(){
                     <div className="block">
                         {isAuthProfil ? (
                             <>
-                                <PreviewCard/>
+                                <PreviewCard />
                                 <h2>Modifier mon profil</h2>
                                 <FormUpdateProfil />
                             </>

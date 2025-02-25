@@ -6,4 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface FileService {
     String saveFile(MultipartFile file, String subDirectory) throws IOException;
+
+    void deleteFile(String filePath);
+
 }

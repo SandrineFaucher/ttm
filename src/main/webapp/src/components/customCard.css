@@ -48,7 +48,7 @@ h3{
     font-size: 1rem;
 }
 .small-containers{
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    background-color: rgb(229, 245, 231);
     border-radius: 8px;
     margin: 4px;
     padding: 5px;

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.simplon.ttm.dto.ProfilDto;
+import com.simplon.ttm.dto.UpdateProfilDto;
 import com.simplon.ttm.models.Accompaniement;
 import com.simplon.ttm.models.Profil;
 import com.simplon.ttm.models.Sector;
@@ -73,7 +74,7 @@ public class ProfilServiceImpl implements ProfilService {
         profil.setDepartment(profilDto.getDepartment());
         profil.setRegion(profilDto.getRegion());
 
-        // ✅ Gérer l'image si elle est présente
+        // Gérer l'image si elle est présente
         if (image != null && !image.isEmpty()) {
             String imageUrl = fileService.saveFile(image, "profil_images"); // Sauvegarde et récupération du chemin
             profil.setImage(imageUrl);
@@ -126,16 +127,60 @@ public class ProfilServiceImpl implements ProfilService {
         return profil;
     }
 
+
+    @Transactional
+    public Profil updateUserProfil(Optional<Profil> optionalProfil, UpdateProfilDto updateProfilDto, MultipartFile image) throws IOException {
+        // Vérifier si le profil existe
+        Profil existingProfil = optionalProfil.orElseThrow(() -> new IllegalArgumentException("Profil not found"));
+
+        // Mettre à jour les champs du profil
+        existingProfil.setAvailability(updateProfilDto.getAvailability());
+        existingProfil.setContent(updateProfilDto.getContent());
+        existingProfil.setCity(updateProfilDto.getCity());
+        existingProfil.setDepartment(updateProfilDto.getDepartment());
+        existingProfil.setRegion(updateProfilDto.getRegion());
+
+        // Gérer l'image si elle est fournie
+        if (image != null && !image.isEmpty()) {
+            // Supprime l'ancienne image si elle existe
+            if (existingProfil.getImage() != null) {
+                fileService.deleteFile(existingProfil.getImage());
+            }
+            // Sauvegarde la nouvelle image
+            String imageUrl = fileService.saveFile(image, "profil_images");
+            existingProfil.setImage(imageUrl);
+        }
+
+        // Mettre à jour les secteurs sélectionnés
+        if (updateProfilDto.getSectors() != null) {
+            List<Sector> sectors = sectorRepository.findAllById(updateProfilDto.getSectors());
+            if (sectors.size() != updateProfilDto.getSectors().size()) {
+                throw new IllegalArgumentException("Un ou plusieurs secteurs sélectionnés sont invalides");
+            }
+            existingProfil.setSectors(sectors);
+        }
+
+        // Mettre à jour les accompagnements sélectionnés
+        if (updateProfilDto.getAccompaniements() != null) {
+            List<Accompaniement> accompaniements = accompaniementRepository.findAllById(updateProfilDto.getAccompaniements());
+            if (accompaniements.size() != updateProfilDto.getAccompaniements().size()) {
+                throw new IllegalArgumentException("Un ou plusieurs accompagnements sélectionnés sont invalides");
+            }
+            existingProfil.setAccompaniements(accompaniements);
+        }
+
+        // Sauvegarde du profil mis à jour
+        return profilRepository.save(existingProfil);
+    }
     public List<Profil> getAllProfilsByRole(UserRole userRole) {
         
         List<Profil> profils = profilRepository.findAllByUserRole(userRole);
         return  profils;
     }
 
-	public Profil getProfilByUserId(long userId) {
-		Profil profil = profilRepository.findByUserId(userId);
-        return profil;
-	}
+    public Optional<Profil> getProfilByUserId(Long userId) {
+        return profilRepository.findByUserId(userId);
+    }
 
     public List<Profil> getAllProfilBySector(Sector sector) {
         List<Profil> profils = profilRepository.findAllBySectors(sector);

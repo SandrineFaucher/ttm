@@ -99,4 +99,17 @@ public class FileServiceImpl implements FileService {
         compressedDoc.close();
         document.close();
     }
+
+    public void deleteFile(String filePath) {
+        try {
+            Path path = Paths.get(filePath);
+            Files.deleteIfExists(path);
+            System.out.println("Fichier supprimé : " + filePath);
+        } catch (IOException e) {
+            System.err.println("Erreur lors de la suppression du fichier : " + filePath);
+            e.printStackTrace();
+        }
+    }
 }
+
+

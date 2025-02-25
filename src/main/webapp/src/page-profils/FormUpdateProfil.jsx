@@ -6,7 +6,7 @@ import "./formProfil.css";
 import CustomSelect from "../components/CustomSelect.jsx";
 import CustomTextarea from "../components/CustomTextarea.jsx";
 import CustomImage from "../components/CustomImage.jsx";
-import { getSectors, getAccompaniements, getCities, getRegionName } from "../services/profilService.js";
+import {getSectors, getAccompaniements, getCities, getRegionName, updateProfil} from "../services/profilService.js";
 import {AuthContext} from "../context/AuthContext.jsx";
 
 export default function FormUpdateProfil () {
@@ -14,17 +14,19 @@ export default function FormUpdateProfil () {
      * State des données
      */
     const { auth, setAuth } = useContext(AuthContext);
-    const authProfil = auth.profil;
+    const authProfil = auth?.profil;
+
     const [formData, setFormData] = useState({
-        availability: [],
-        sectors:  [],
-        accompaniements: [],
-        content: authProfil?.content || "",
-        city: authProfil?.city ||"",
-        department: authProfil?.department || "",
-        region: authProfil?.region || "",
-        image: authProfil?.image || ""
+        availability:[authProfil.availability],
+        sectors:[authProfil.sectors.map(s =>s.id)],
+        accompaniements:[authProfil.accompaniements.map(a => a.id)] ,
+        content:authProfil.content ?? "",
+        city:authProfil.city ?? "",
+        department:authProfil.department ?? "",
+        region:authProfil.region ?? "",
+        image:authProfil.image ?? ""
     });
+
     const [changeAvailability, setChangeAvailability] = useState(""); // Disponibilité à ajouter
     const [secteurs, setSecteurs] = useState([]); // Stocke la liste des secteurs
     const [accompagnements, setAccompagnements] = useState([]); //Stocke la liste des accompagnements
@@ -147,13 +149,13 @@ export default function FormUpdateProfil () {
         e.preventDefault();
 
         try {
-            // const result = await updateProfil(formData);
-            // console.log("Profil mis à jour :", result);
+            const result = await updateProfil(formData);
+            console.log("Profil mis à jour :", result);
             setAuth({
                 ...auth,
                 availability: formData.availability,
                 sectors: formData.sectors,
-                accompagnements: formData.accompaniements,
+                accompaniements: formData.accompaniements,
                 content: formData.content,
                 city: formData.city,
                 department: formData.department,
@@ -161,6 +163,7 @@ export default function FormUpdateProfil () {
 
             });
             alert("Votre profil a été mis à jour avec succès !");
+
         } catch (error) {
             console.error("Erreur lors de l'envoi du formulaire :", error);
             alert("Une erreur est survenue lors de l'envoi du formulaire.");
