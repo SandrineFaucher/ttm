@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,12 +15,14 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.simplon.ttm.dto.ProfilDto;
+import com.simplon.ttm.dto.UpdateProfilDto;
 import com.simplon.ttm.models.Profil;
 import com.simplon.ttm.models.User;
 import com.simplon.ttm.repositories.ProfilRepository;
@@ -82,7 +85,32 @@ public class ProfilController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @PutMapping(value = "/updateProfil", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Map<String, Object>> updateProfil(@ModelAttribute UpdateProfilDto updateProfilDto,
+            @RequestPart(value = "image", required = false) MultipartFile image) throws IOException {
 
+        // Récupération de l'utilisateur authentifié
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String authenticatedUsername = authentication.getName();
+
+        // Recherche de l'utilisateur en base de données
+        User user = userService.findByUsername(authenticatedUsername)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+
+        // Vérifier que l'utilisateur possède un profil à mettre à jour
+        Optional<Profil> existingProfil = profilService.getProfilByUserId(user.getId());
+
+
+        // Mise à jour du profil
+        Profil updatedProfil = profilService.updateUserProfil(existingProfil, updateProfilDto, image);
+
+        // Création de la réponse
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Profil mis à jour avec succès");
+        response.put("profil", updatedProfil);
+
+        return ResponseEntity.ok(response);
+    }
     @GetMapping("/usersProfils/by-role")
     public ResponseEntity<List<User>> getUsersProfilsByRole(Authentication authentication) {
         // Récupération de l'utilisateur connecté

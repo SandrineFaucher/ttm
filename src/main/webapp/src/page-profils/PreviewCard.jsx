@@ -1,5 +1,5 @@
 import CustomCard from "../components/CustomCard.jsx";
-import React, {useContext} from "react";
+import React, {useContext, useEffect} from "react";
 import {AuthContext} from "../context/AuthContext.jsx";
 
 
@@ -12,6 +12,12 @@ export default function PreviewCard() {
     if (!auth) {
         return <p>Chargement...</p>;
     }
+    // Surveiller les changements de auth
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useEffect(() => {
+        console.log("AuthContext a changé :", auth);
+    }, [auth]); // Déclenché chaque fois que `auth` change
+
     const sectorsContent = auth?.profil?.sectors.map(s =>s.content);
     const accompaniementContent = auth?.profil?.accompaniements.map(s => s.content);
 

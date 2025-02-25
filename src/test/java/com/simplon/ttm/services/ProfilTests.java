@@ -179,21 +179,24 @@ public class ProfilTests {
          */
         void getProfilByUserId() {
                 // given
-                // construction du user avec son id
                 User user = User.builder().id(5L).username("sandrine").build();
-                // construction du profil de ce user
                 Profil profil = Profil.builder().user(user).build();
 
                 // when
-                when(profilRepository.findByUserId(user.getId())).thenReturn(profil);
+                when(profilRepository.findByUserId(5L)).thenReturn(Optional.of(profil));
 
                 // then
-                Profil profilTest = profilServiceImpl.getProfilByUserId(5L);
+                Optional<Profil> profilTest = profilServiceImpl.getProfilByUserId(5L);
 
-                assertEquals(profilTest.getUser().getUsername(), "sandrine");
-                assertEquals(profilTest.getUser().getId(), 5L);
+                // Vérifier que le profil est bien présent
+                assertTrue(profilTest.isPresent(), "Le profil ne devrait pas être vide");
 
+                // Vérifier les valeurs attendues
+                assertEquals("sandrine", profilTest.get().getUser().getUsername());
+                assertEquals(5L, profilTest.get().getUser().getId());
         }
+
+
 
         @Test
         /**
