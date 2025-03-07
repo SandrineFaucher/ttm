@@ -38,9 +38,12 @@ jobs:
 
       - name: Run spring checks
         env:
-          SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/ttm
-          SPRING_DATASOURCE_USERNAME: postgres
-          SPRING_DATASOURCE_PASSWORD: postgres
-        run: gradle check
+           SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/ttm
+           SPRING_DATASOURCE_USERNAME: postgres
+           SPRING_DATASOURCE_PASSWORD: postgres
+        run: |
+            echo "SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}"
+            echo "SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}"
+            gradle check
 
 
