@@ -30,7 +30,12 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-
+      - name: Wait for PostgreSQL
+        run: |
+          until pg_isready -h db -p 5432; do
+            echo "Waiting for PostgreSQL..."
+            sleep 2
+          done
       - name: Run spring checks
         env:
           SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/ttm
