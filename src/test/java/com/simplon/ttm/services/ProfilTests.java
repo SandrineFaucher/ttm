@@ -71,6 +71,7 @@ public class ProfilTests {
                         .username("Parain")
                         .password("parain123")
                         .role(UserRole.GODPARENT)
+                        .profil(null)  // L'utilisateur ne doit pas avoir de profil
                         .build();
 
                 Sector sector1 = Sector.builder()
@@ -113,21 +114,30 @@ public class ProfilTests {
                         .id(2L)
                         .availability("Tous les jeudis")
                         .sectors(List.of(sector1, sector2))
+                        .accompaniements(List.of(accompaniement))
                         .city("Niort")
                         .department("Deux-Sèvres")
                         .region("Nouvelle Aquitaine")
                         .createdAt(date)
                         .user(user)
-                        .image("profil.png") // Simule une image enregistrée
+                        .image("profil_images/profil.png") // Simule une image enregistrée
                         .build();
 
                 // when (Définition des comportements mockés)
                 when(userRepository.findById(profilDto.getUserId())).thenReturn(Optional.of(user));
-                when(sectorRepository.findById(2L)).thenReturn(Optional.of(sector1));
-                when(sectorRepository.findById(3L)).thenReturn(Optional.of(sector2));
-                when(accompaniementRepository.findById(6L)).thenReturn(Optional.of(accompaniement));
-                when(fileService.saveFile(any(MultipartFile.class), eq("profil_images"))).thenReturn(String.valueOf(mockImage));
+
+                // Mock de findAllById pour les secteurs et accompagnements
+                when(sectorRepository.findAllById(profilDto.getSectors())).thenReturn(List.of(sector1, sector2));
+                when(accompaniementRepository.findAllById(profilDto.getAccompaniements())).thenReturn(List.of(accompaniement));
+
+                // Simulation de la sauvegarde d'image qui retourne un chemin ou une URL
+                when(fileService.saveFile(any(MultipartFile.class), eq("profil_images"))).thenReturn("profil_images/profil.png");
+
+                // Simulation de la sauvegarde du profil
                 when(profilRepository.save(any(Profil.class))).thenReturn(expectedProfil);
+
+                // Simulation de la sauvegarde de l'utilisateur (relation bidirectionnelle)
+                when(userRepository.save(any(User.class))).thenReturn(user);
 
                 // Act (Appel du service)
                 Profil profilSaved = profilServiceImpl.saveUserProfil(profilDto, mockImage);
@@ -136,10 +146,18 @@ public class ProfilTests {
                 assertNotNull(profilSaved);
                 assertEquals("Tous les jeudis", profilSaved.getAvailability());
                 assertEquals("Parain", profilSaved.getUser().getUsername());
-                assertEquals(2, profilSaved.getSectors().size()); // Vérifie que les secteurs sont bien associés
+
+                // Vérifie que les secteurs sont bien associés
+                assertEquals(2, profilSaved.getSectors().size());
                 assertTrue(profilSaved.getSectors().contains(sector1));
                 assertTrue(profilSaved.getSectors().contains(sector2));
-                assertEquals("profil.png", profilSaved.getImage()); // Vérifie que l'image est bien enregistrée
+
+                // Vérifie que les accompagnements sont bien associés
+                assertEquals(1, profilSaved.getAccompaniements().size());
+                assertTrue(profilSaved.getAccompaniements().contains(accompaniement));
+
+                // Vérifie que l'image a bien été enregistrée avec le bon chemin
+                assertEquals("profil_images/profil.png", profilSaved.getImage());
         }
 
         @Test
