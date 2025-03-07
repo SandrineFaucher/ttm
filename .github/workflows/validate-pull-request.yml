@@ -30,16 +30,10 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-      - name: Wait for PostgreSQL to be ready
-        run: |
-            until pg_isready -h localhost -p 5432; do
-              echo "Waiting for PostgreSQL..."
-              sleep 2
-            done
 
       - name: Run spring checks
         env:
-          SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/ttm
+          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/ttm
           SPRING_DATASOURCE_USERNAME: postgres
           SPRING_DATASOURCE_PASSWORD: postgres
         run: gradle check
@@ -59,7 +53,7 @@ jobs:
 
       - name: Build with Gradle
         env:
-          SPRING_DATASOURCE_URL: jdbc:postgresql://db:localhost:5432/ttm
+          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/ttm
           SPRING_DATASOURCE_USERNAME: postgres
           SPRING_DATASOURCE_PASSWORD: postgres
         run: gradle build
