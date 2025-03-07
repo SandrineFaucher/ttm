@@ -64,8 +64,8 @@ jobs:
 
       - name: Build with Gradle
         env:
-          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/miniature
-          SPRING_DATASOURCE_USERNAME: miniature
-          SPRING_DATASOURCE_PASSWORD: miniature
+          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/ttm
+          SPRING_DATASOURCE_USERNAME: postgres
+          SPRING_DATASOURCE_PASSWORD: postgres
         run: gradle build
 
