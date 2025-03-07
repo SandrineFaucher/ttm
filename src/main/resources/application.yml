@@ -17,7 +17,7 @@ spring:
       max-request-size: 10MB
       enabled: true
   flyway:
-    enabled: true
+    enabled: false
     clean-on-validation-error: true
     baseline-on-migrate: true
     locations: db/migration/data
