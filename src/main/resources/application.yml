@@ -3,7 +3,7 @@ spring:
     name: trouvetonmatch
   datasource:
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/ttm?charSet=UTF8
+    url: jdbc:postgresql://db:5432/ttm?charSet=UTF8
     username: postgres
     password: postgres
   jpa:
@@ -17,7 +17,7 @@ spring:
       max-request-size: 10MB
       enabled: true
   flyway:
-    enabled: false
+    enabled: true
     locations: db/migration/data
 
   jwt-secret: daf66e01593f61a15b857cf433eee03a005812b31234e149036bbb8dee755dbb

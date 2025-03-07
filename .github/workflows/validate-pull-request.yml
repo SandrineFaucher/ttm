@@ -33,7 +33,7 @@ jobs:
 
       - name: Run spring checks
         env:
-          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/ttm
+          SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/ttm
           SPRING_DATASOURCE_USERNAME: postgres
           SPRING_DATASOURCE_PASSWORD: postgres
         run: gradle check
@@ -53,7 +53,7 @@ jobs:
 
       - name: Build with Gradle
         env:
-          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/ttm
+          SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/ttm
           SPRING_DATASOURCE_USERNAME: postgres
           SPRING_DATASOURCE_PASSWORD: postgres
         run: gradle build
