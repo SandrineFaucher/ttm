@@ -35,13 +35,21 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-      - name: Wait for PostgreSQL to be ready
+      - name: Vérification des services en cours
+        run: docker ps -a
+
+      - name: Affichage des logs PostgreSQL
+        run: docker logs $(docker ps -q --filter "ancestor=postgres") || true
+
+      - name: Vérification de PostgreSQL avec `pg_isready`
+        run: pg_isready -h db -p 5432 -U postgres
+
+      - name: Vérification de la connexion PostgreSQL
         run: |
-          timeout 60s bash -c '
-          until pg_isready -h db -p 5432; do
-            echo "Waiting for PostgreSQL..."
-            sleep 2
-          done'
+              PGPASSWORD=postgres psql -h db -U postgres -d ttm -c "SELECT 'Connexion réussie' AS status;"
+
+      - name: Debug des variables d’environnement
+        run: env | grep SPRING_DATASOURCE || true
       - name: Run spring checks
         env:
           SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/ttm
