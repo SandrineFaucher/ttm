@@ -33,6 +33,7 @@ public class Sector {
 
     @ManyToMany(mappedBy = "sectors")
     @JsonIgnore // Évite les boucles infinies lors de la sérialisation
-    private List<Profil> profils = new ArrayList<>();
+    @Builder.Default
+    private final List<Profil> profils = new ArrayList<>();
 
 }

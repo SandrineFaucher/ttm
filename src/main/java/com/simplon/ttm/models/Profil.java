@@ -50,7 +50,8 @@ public class Profil {
             joinColumns = @JoinColumn(name = "profil_id"),
             inverseJoinColumns = @JoinColumn(name = "sector_id")
     )
-    private List<Sector> sectors = new ArrayList<>();
+    @Builder.Default
+    private final List<Sector> sectors = new ArrayList<>();
 
     @ManyToMany
     @JoinTable(
@@ -58,7 +59,8 @@ public class Profil {
             joinColumns = @JoinColumn(name = "profil_id"),
             inverseJoinColumns = @JoinColumn(name = "accompaniement_id")
     )
-    private List<Accompaniement> accompaniements = new ArrayList<>();
+    @Builder.Default
+    private final List<Accompaniement> accompaniements = new ArrayList<>();
 
     private String content;
 
