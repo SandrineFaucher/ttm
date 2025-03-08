@@ -69,11 +69,13 @@ public class User {
     @JoinTable(name = "user_match",
     joinColumns = @JoinColumn(name = "godparent_id"),
     inverseJoinColumns = @JoinColumn(name = "leaderproject_id"))
+    @Builder.Default
     private Set<User> user1 = new HashSet<>();
     /**
      * l'attribut mappedBy doit faire référence au nom de l'attribut de l'autre côté de la relation
      */
     @ManyToMany(mappedBy = "user1")
+    @Builder.Default
     private Set<User> user2 = new HashSet<>();
 
     /**

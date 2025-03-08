@@ -30,6 +30,7 @@ public class Accompaniement {
 
     @ManyToMany(mappedBy = "accompaniements")
     @JsonIgnore // Évite les boucles infinies
+    @Builder.Default
     private List<Profil> profils = new ArrayList<>();
 
 }
