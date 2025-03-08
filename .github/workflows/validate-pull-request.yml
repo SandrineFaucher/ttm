@@ -30,6 +30,7 @@ jobs:
           --health-timeout 5s
           --health-retries 5
           --log_statement=all
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
