@@ -89,7 +89,7 @@ jobs:
         run: |
           echo "${CHANGELOGS}" > changelogs.md
           CMD_ARGS="--repo ${REPO} --target ${COMMIT} -F changelogs.md"
-          gh release create --repo $REPO --target $COMMIT $VERSION artifacts/*.jar
+          gh release create --repo $REPO --target $COMMIT v$VERSION artifacts/*.jar
       
 
 
