@@ -2,25 +2,22 @@ spring:
   application:
     name: trouvetonmatch
   datasource:
-    driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/ttm?characterEncoding=UTF8
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/ttm
     username: postgres
     password: postgres
+
   jpa:
     show-sql: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      database-platform: org.hibernate.dialect.PostgreSQLDialect
       ddl-auto: update
-  servlet:
-    multipart:
-      max-file-size: 5MB
-      max-request-size: 10MB
-      enabled: true
+
   flyway:
-    enabled: false
+    enabled: true
     clean-on-validation-error: true
     baseline-on-migrate: true
-    locations: db/migration/data
+    locations: classpath:db/migration/data
 
   jwt-secret: daf66e01593f61a15b857cf433eee03a005812b31234e149036bbb8dee755dbb
   jwt-expiration-milliseconds: 604800000

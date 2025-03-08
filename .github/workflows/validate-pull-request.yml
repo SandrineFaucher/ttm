@@ -21,6 +21,8 @@ jobs:
           POSTGRES_DB: ttm
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
         # Définir les vérifications pour attendre que postgres ait démarré
         options: >-
           --health-cmd pg_isready
