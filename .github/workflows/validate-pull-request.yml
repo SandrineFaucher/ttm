@@ -38,14 +38,15 @@ jobs:
           SPRING_DATASOURCE_USERNAME: postgres
           SPRING_DATASOURCE_PASSWORD: postgres
         run: gradle check
-            # - name: Upload artifacts
-            #   uses: actions/upload-artifact@v4
-            #   with:
-            #     name: test-report
-            #     path: ./build/test-results/test/
-            #     if-no-files-found: error
-            #     retention-days: 1
-            #     compression-level: 0
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+           name: test-report
+           path: ./build/test-results/test/
+           if-no-files-found: error
+           retention-days: 1
+           compression-level: 0
 
   build:
     name: Build .jar file
