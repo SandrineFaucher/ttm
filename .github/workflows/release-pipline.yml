@@ -1,9 +1,9 @@
 name: Release-pipline CI/CD
 
 on:
-  push:
-    branches:
-      - main
+#  push:
+#    branches:
+#      - main
 
 permissions:
   contents: write
