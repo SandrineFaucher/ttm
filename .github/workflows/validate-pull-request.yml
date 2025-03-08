@@ -32,18 +32,18 @@ jobs:
           java-version: '17'
       - name: Run spring checks
         env:
-          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/ttm
+          SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/ttm
           SPRING_DATASOURCE_USERNAME: postgres
           SPRING_DATASOURCE_PASSWORD: postgres
         run: gradle check
-            - name: Upload artifacts
-              uses: actions/upload-artifact@v4
-              with:
-                name: test-report
-                path: ./build/test-results/test/
-                if-no-files-found: error
-                retention-days: 1
-                compression-level: 0
+            # - name: Upload artifacts
+            #   uses: actions/upload-artifact@v4
+            #   with:
+            #     name: test-report
+            #     path: ./build/test-results/test/
+            #     if-no-files-found: error
+            #     retention-days: 1
+            #     compression-level: 0
 
   build:
     name: Build .jar file
@@ -58,8 +58,8 @@ jobs:
           java-version: '17'
       - name: Build with Gradle
         env:
-          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/miniature
-          SPRING_DATASOURCE_USERNAME: miniature
-          SPRING_DATASOURCE_PASSWORD: miniature
+          SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/ttm
+          SPRING_DATASOURCE_USERNAME: postgres
+          SPRING_DATASOURCE_PASSWORD: postgres
         run: gradle build
 
