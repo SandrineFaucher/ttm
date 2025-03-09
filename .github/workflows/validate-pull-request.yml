@@ -67,29 +67,20 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
+
       - name: Configure npm to use public registry
         run: npm config set registry https://registry.npmjs.org/
 
       - name: Install dependencies
         run: cd src/main/webapp && npm install
 
-      - name: Installer Lighthouse CI
-        run: npm install -g @lhci/cli@0.14.x
-
       - name: Build webapp
         run: cd src/main/webapp && npm run build
-
-      - name: Run Lighthouse CI
-        run: lhci autorun --collect.staticDistDir=src/main/webapp/dist
-
-      - name: Copy webapp-build to Spring Boot static folder
-        run: |
-          mkdir -p src/main/resources/static/
-          cp -r src/main/webapp/dist/* src/main/resources/static/
 
       - name: Install Java
         uses: actions/setup-java@v4
@@ -102,6 +93,17 @@ jobs:
 
       - name: Build with Gradle
         run: ./gradlew bootjar
+
+      - name: Start Spring Boot server
+        run: |
+          nohup java -jar build/libs/*.jar & 
+          sleep 30 # Attendre que le serveur démarre
+
+      - name: Installer Lighthouse CI
+        run: npm install -g @lhci/cli@0.14.x
+
+      - name: Run Lighthouse CI
+        run: lhci autorun --collect.url=http://localhost:8080/
 
 
 
