@@ -1,9 +1,9 @@
 import React, {useContext, useState, useEffect, useRef} from "react";
 import {Outlet, Link} from "react-router-dom";
 import "./layout.css";
-import logo from "../assets/images/logo.png";
-import ttm_rose from "../assets/images/ttm_rose.png";
-import hologramme_ttm from "../assets/images/hologramme_ttm.png";
+import logo from "../assets/images/logo.webp";
+import ttm_rose from "../assets/images/ttm_rose.webp";
+import hologramme_ttm from "../assets/images/hologramme_ttm.webp";
 import { AuthContext } from "../context/AuthContext.jsx";
 
 
