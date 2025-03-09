@@ -100,7 +100,7 @@ export default function Layout() {
             </main>
             <footer className="footer-line">
                 <div className="footer-bloc1">
-                    <img src={hologramme_ttm} alt="logo d'initiative Deux-Sèvres" />
+                    <img src={hologramme_ttm} alt="logo d'initiative Deux-Sèvres" width="50" height="50"/>
                 </div>
                 <div className="footer-bloc2" aria-label="Informations sur Initiative Deux-Sèvres">
                     <p className="text-bloc2">Votre plateforme : <br/>Initiative Deux-Sèvres</p>
