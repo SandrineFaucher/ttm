@@ -31,6 +31,21 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
+      - name: Wait for PostgreSQL to be ready
+        run: |
+          TIMEOUT=60  # Timeout en secondes
+          INTERVAL=2  # Intervalle de vérification en secondes
+          COUNT=0
+          while ! pg_isready -h localhost -p 5432 -U postgres; do
+            if [ $COUNT -ge $TIMEOUT ]; then
+              echo "Timeout reached. PostgreSQL is not ready."
+              exit 1
+            fi
+            echo "Waiting for PostgreSQL..."
+            sleep $INTERVAL
+            COUNT=$((COUNT + INTERVAL))
+          done
+          echo "PostgreSQL is ready"
       - name: Run spring checks
         env:
           SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/ttm
