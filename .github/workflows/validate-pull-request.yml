@@ -96,13 +96,14 @@ jobs:
 
       - name: Start Spring Boot server
         run: |
-          nohup java -jar build/libs/*.jar & 
+          nohup java -jar -Dspring.profiles.active=ci build/libs/*.jar &
           echo "Waiting for server to start..."
           while ! curl -s http://localhost:8080/ > /dev/null; do 
             sleep 5
             echo "Waiting for server..."
           done
           echo "Server is up!"
+
       - name: Show Spring Boot logs if it fails
         if: failure()
         run: cat nohup.out
