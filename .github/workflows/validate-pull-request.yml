@@ -9,7 +9,6 @@ on:
       - ready_for_review
     branches:
       - develop
-
 jobs:
   check:
     name: Validation du code
@@ -47,7 +46,6 @@ jobs:
            if-no-files-found: error
            retention-days: 1
            compression-level: 0
-
   build:
     name: Build .jar file
     runs-on: ubuntu-latest
