@@ -84,7 +84,7 @@ jobs:
         run: cd src/main/webapp && npm run build
 
       - name: Run Lighthouse CI
-        run: lhci autorun
+        run: lhci autorun --collect.staticDistDir=src/main/webapp/dist
 
       - name: Copy webapp-build to Spring Boot static folder
         run: |
