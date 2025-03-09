@@ -97,7 +97,15 @@ jobs:
       - name: Start Spring Boot server
         run: |
           nohup java -jar build/libs/*.jar & 
-          sleep 30 # Attendre que le serveur démarre
+          echo "Waiting for server to start..."
+          while ! curl -s http://localhost:8080/ > /dev/null; do 
+            sleep 5
+            echo "Waiting for server..."
+          done
+          echo "Server is up!"
+      - name: Show Spring Boot logs if it fails
+        if: failure()
+        run: cat nohup.out
 
       - name: Installer Lighthouse CI
         run: npm install -g @lhci/cli@0.14.x
