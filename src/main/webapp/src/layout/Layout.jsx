@@ -1,9 +1,9 @@
 import React, {useContext, useState, useEffect, useRef} from "react";
 import {Outlet, Link} from "react-router-dom";
 import "./layout.css";
-import logo from "../assets/images/logo.png";
-import ttm_rose from "../assets/images/ttm_rose.png";
-import hologramme_ttm from "../assets/images/hologramme_ttm.png";
+import logo from "../assets/images/logo.webp";
+import ttm_rose from "../assets/images/ttm_rose.webp";
+import hologramme_ttm from "../assets/images/hologramme_ttm.webp";
 import { AuthContext } from "../context/AuthContext.jsx";
 
 
@@ -48,8 +48,8 @@ export default function Layout() {
     return (
         <>
         <header>
-        <Link to="/"><img src={logo} alt="logo-initiative-deux-sèvres" className="logo-entreprise"/></Link>
-        <Link to="/"><div className="div-logo-ttm"><img src={ttm_rose} alt="logo-ttm" className="logo-ttm"/></div></Link>
+        <Link to="/"><img src={logo} alt="logo-initiative-deux-sèvres" className="logo-entreprise" width="250" height="75"/></Link>
+        <Link to="/"><div className="div-logo-ttm"><img src={ttm_rose} alt="logo-ttm" className="logo-ttm" width="1000" height="300"/></div></Link>
             <nav className ={`navbar ${isNavOpen ? 'active' : ''}`}>
             <div className="burger-icon" onClick={toggleNav}>
              {isNavOpen ? '\u2716' : '\u2630' }
@@ -100,7 +100,7 @@ export default function Layout() {
             </main>
             <footer className="footer-line">
             <div className="footer-bloc1">
-                    <img src={hologramme_ttm} alt="logo-mini-ttm" />
+                    <img src={hologramme_ttm} alt="logo-mini-ttm" width="50" height="25"/>
                 </div>
                 <div className="footer-bloc2">
                     <p className="text-bloc2">Votre plateforme : <br/>Initiative Deux-Sèvres</p>
