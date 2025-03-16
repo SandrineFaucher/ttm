@@ -128,10 +128,20 @@ jobs:
 
       - name: Install dependencies
         run: cd src/main/webapp && npm install
-
-      - name: Start webapp
-        run: cd src/main/webapp && npm run dev
-
+      # lance le front en tache arrière plan
+      - name: Start webapp in background
+        run: cd src/main/webapp && npm run dev &
+      # attend que le front soit près
+      - name: Wait for frontend to be ready
+        run: |
+          echo "Waiting for frontend..."
+          for i in {1..30}; do
+            if curl -s http://localhost:5173 | grep -q "<title>"; then
+              echo "Frontend is ready!"
+              break
+            fi
+            sleep 5
+          done
 
 
       - name: Installer Lighthouse CI
