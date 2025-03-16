@@ -85,6 +85,21 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
+      - name: Wait for PostgreSQL to be ready
+        run: |
+          TIMEOUT=60  # Timeout en secondes
+          INTERVAL=2  # Intervalle de vérification en secondes
+          COUNT=0
+          while ! pg_isready -h localhost -p 5432 -U postgres; do
+            if [ $COUNT -ge $TIMEOUT ]; then
+              echo "Timeout reached. PostgreSQL is not ready."
+              exit 1
+            fi
+            echo "Waiting for PostgreSQL..."
+            sleep $INTERVAL
+            COUNT=$((COUNT + INTERVAL))
+          done
+          echo "PostgreSQL is ready"
       # installer gradle
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
@@ -105,21 +120,7 @@ jobs:
       - name: Start webapp
         run: cd src/main/webapp && npm run dev
 
-      - name: Wait for PostgreSQL to be ready
-        run: |
-          TIMEOUT=60  # Timeout en secondes
-          INTERVAL=2  # Intervalle de vérification en secondes
-          COUNT=0
-          while ! pg_isready -h localhost -p 5432 -U postgres; do
-            if [ $COUNT -ge $TIMEOUT ]; then
-              echo "Timeout reached. PostgreSQL is not ready."
-              exit 1
-            fi
-            echo "Waiting for PostgreSQL..."
-            sleep $INTERVAL
-            COUNT=$((COUNT + INTERVAL))
-          done
-          echo "PostgreSQL is ready"
+
 
       - name: Installer Lighthouse CI
         run: npm install -g @lhci/cli@0.14.x
