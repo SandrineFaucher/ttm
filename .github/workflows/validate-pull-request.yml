@@ -76,22 +76,19 @@ jobs:
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
-      # Cloner le repo
+      # passer sur le repo
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      # Installer JDK 17
+      # installer jdk pour demarrer le back
       - name: Setup JDK 17
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
-
-      # Attendre que PostgreSQL soit prêt
       - name: Wait for PostgreSQL to be ready
         run: |
-          TIMEOUT=60
-          INTERVAL=2
+          TIMEOUT=60  # Timeout en secondes
+          INTERVAL=2  # Intervalle de vérification en secondes
           COUNT=0
           while ! pg_isready -h localhost -p 5432 -U postgres; do
             if [ $COUNT -ge $TIMEOUT ]; then
@@ -103,49 +100,14 @@ jobs:
             COUNT=$((COUNT + INTERVAL))
           done
           echo "PostgreSQL is ready"
-
-      # Installer Gradle
+      # installer gradle
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
-
-      # Installer Node.js
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
-
-      # Configurer npm
-      - name: Configure npm to use public registry
-        run: npm config set registry https://registry.npmjs.org/
-
-      # Installer les dépendances du frontend
-      - name: Install Frontend Dependencies
-        run: |
-          cd src/main/webapp
-          npm install
-
-      # Build du frontend avec Vite
-      - name: Build Frontend
-        run: |
-          cd src/main/webapp
-          npm run build
-
-      # Copier le frontend buildé dans le dossier static de Spring Boot
-      - name: Copy webapp-build to Spring Boot static folder
-        run: |
-          mkdir -p src/main/resources/static/
-          cp -r src/main/webapp/dist/* src/main/resources/static/
-
-      # Build du backend avec Gradle
-      - name: Build Backend
-        run: ./gradlew bootjar
-
-      # Démarrer le backend en mode production
-      - name: Start Backend
-        run: java -jar build/libs/*.jar &
-
-      # Attendre que le backend soit prêt
-      - name: Wait for Backend
+      # lance java en tache de fond
+      - name: Start Java in background
+        run: ./gradlew bootrun &
+      # attend que java soit lancé
+      - name: Wait for backend to be ready
         run: |
           echo "Waiting for backend..."
           for i in {1..30}; do
@@ -156,13 +118,81 @@ jobs:
             sleep 5
           done
 
-      # Installer Lighthouse CI
-      - name: Install Lighthouse CI
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Configure npm to use public registry
+        run: npm config set registry https://registry.npmjs.org/
+
+      - name: Install dependencies
+        run: cd src/main/webapp && npm install
+      # lance le front en tache arrière plan
+      - name: Start webapp in background
+        run: cd src/main/webapp && npm run dev &
+      # attend que le front soit près
+      - name: Wait for frontend to be ready
+        run: |
+          echo "Waiting for frontend..."
+          for i in {1..30}; do
+            if curl -s http://localhost:5173 | grep -q "<title>"; then
+              echo "Frontend is ready!"
+              break
+            fi
+            sleep 5
+          done
+
+      - name: Installer Lighthouse CI
         run: npm install -g @lhci/cli@0.14.x
 
-      # Exécuter Lighthouse CI
       - name: Run Lighthouse CI
-        run: lhci autorun --collect.url=http://localhost:8080
+        run: lhci autorun --collect.url=http://localhost:5173
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Configure npm to use public registry
+        run: npm config set registry https://registry.npmjs.org/
+
+      - name: Install dependencies
+        run: cd src/main/webapp && npm install
+
+      - name: Build webapp
+        run: cd src/main/webapp && npm run build
+
+      - name: Copy webapp-build to Spring Boot static folder
+        run: |
+          mkdir -p src/main/resources/static/
+          cp -r src/main/webapp/dist/* src/main/resources/static/
+
+      - name: Install Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: 17
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+
+      - name: Build with Gradle
+        run: ./gradlew bootjar
+
+      - name: Upload Spring Boot artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-ttm
+          path: build/libs/*.jar
 
 
 
