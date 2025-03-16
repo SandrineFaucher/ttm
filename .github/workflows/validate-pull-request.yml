@@ -108,10 +108,15 @@ jobs:
         run: ./gradlew bootrun &
       # attend que java soit lancé
       - name: Wait for backend to be ready
-        run: sleep 30  # Ajuste ce temps si besoin
-      # lance la migration flyway
-      - name: Run Flyway migrations
-        run: ./gradlew flywayMigrate
+        run: |
+          echo "Waiting for backend..."
+          for i in {1..30}; do
+            if curl -s http://localhost:8080/actuator/health | grep -q '"status":"UP"'; then
+              echo "Backend is ready!"
+              break
+            fi
+            sleep 5
+          done
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
