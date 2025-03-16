@@ -76,8 +76,20 @@ jobs:
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
+      # passer sur le repo
       - name: Checkout repository
         uses: actions/checkout@v4
+      # installer jdk pour demarrer le back
+      - name: Setup JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      # installer gradle
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+      - name : Start java
+        run: ./gradlew bootrun
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -90,20 +102,8 @@ jobs:
       - name: Install dependencies
         run: cd src/main/webapp && npm install
 
-      - name: Build webapp
-        run: cd src/main/webapp && npm run build
-
-      - name: Install Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: "temurin"
-          java-version: 17
-
-      - name: Setup Gradle
-        uses: gradle/gradle-build-action@v2
-
-      - name: Build with Gradle
-        run: ./gradlew bootjar
+      - name: Start webapp
+        run: cd src/main/webapp && npm run dev
 
       - name: Wait for PostgreSQL to be ready
         run: |
@@ -120,31 +120,6 @@ jobs:
             COUNT=$((COUNT + INTERVAL))
           done
           echo "PostgreSQL is ready"
-
-      - name: Start Spring Boot server
-        env:
-          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/ttm
-          SPRING_DATASOURCE_USERNAME: postgres
-          SPRING_DATASOURCE_PASSWORD: postgres
-        run: |
-          nohup java -jar -Dspring.profiles.active=ci build/libs/*.jar & 
-          echo "Waiting for server to start..."
-          timeout=60
-          while ! curl -s http://localhost:8080/ > /dev/null; do 
-            sleep 5
-            echo "Waiting for server..."
-            ((timeout-=5))
-            if [ $timeout -le 0 ]; then
-              echo "Server failed to start within 60 seconds"
-              cat nohup.out || true
-              exit 1
-            fi
-          done
-          echo "Server is up!"
-
-      - name: Show Spring Boot logs if it fails
-        if: failure()
-        run: cat nohup.out || true
 
       - name: Installer Lighthouse CI
         run: npm install -g @lhci/cli@0.14.x

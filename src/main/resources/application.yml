@@ -6,6 +6,7 @@ spring:
     url: jdbc:postgresql://localhost:5432/ttm?charSet=UTF8
     username: postgres
     password: postgres
+
   jpa:
     show-sql: true
     hibernate:
