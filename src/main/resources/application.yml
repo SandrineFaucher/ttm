@@ -6,7 +6,9 @@ spring:
     url: jdbc:postgresql://localhost:5432/ttm?charSet=UTF8
     username: postgres
     password: postgres
-
+  flyway:
+    enabled: true
+    locations: db/migration/data
   jpa:
     show-sql: true
     hibernate:
