@@ -62,9 +62,6 @@ jobs:
            retention-days: 1
            compression-level: 0
 
-
-
-
   lighthouseci:
     runs-on: ubuntu-latest
     services:
@@ -111,26 +108,6 @@ jobs:
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
 
-      # Build du backend avec Gradle
-      - name: Build Backend
-        run: ./gradlew build
-
-      # Démarrer le backend en mode production
-      - name: Start Backend
-        run: java -jar build/libs/*.jar &
-
-      # Attendre que le backend soit prêt
-      - name: Wait for Backend
-        run: |
-          echo "Waiting for backend..."
-          for i in {1..30}; do
-            if curl -s http://localhost:8080/actuator/health | grep -q '"status":"UP"'; then
-              echo "Backend is ready!"
-              break
-            fi
-            sleep 5
-          done
-
       # Installer Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -153,20 +130,27 @@ jobs:
           cd src/main/webapp
           npm run build
 
-      # Servir le frontend en mode statique
-      - name: Serve Frontend
+      # Copier le frontend buildé dans le dossier static de Spring Boot
+      - name: Copy webapp-build to Spring Boot static folder
         run: |
-          cd src/main/webapp
-          npm install -g serve
-          serve -s dist &
+          mkdir -p src/main/resources/static/
+          cp -r src/main/webapp/dist/* src/main/resources/static/
 
-      # Attendre que le frontend soit prêt
-      - name: Wait for Frontend
+      # Build du backend avec Gradle
+      - name: Build Backend
+        run: ./gradlew bootjar
+
+      # Démarrer le backend en mode production
+      - name: Start Backend
+        run: java -jar build/libs/*.jar &
+
+      # Attendre que le backend soit prêt
+      - name: Wait for Backend
         run: |
-          echo "Waiting for frontend..."
+          echo "Waiting for backend..."
           for i in {1..30}; do
-            if curl -s http://localhost:3000 | grep -q "<title>"; then
-              echo "Frontend is ready!"
+            if curl -s http://localhost:8080/actuator/health | grep -q '"status":"UP"'; then
+              echo "Backend is ready!"
               break
             fi
             sleep 5
@@ -178,7 +162,10 @@ jobs:
 
       # Exécuter Lighthouse CI
       - name: Run Lighthouse CI
-        run: lhci autorun --collect.url=http://localhost:5173
+        run: lhci autorun --collect.url=http://localhost:8080
+
+
+
 
 
 
