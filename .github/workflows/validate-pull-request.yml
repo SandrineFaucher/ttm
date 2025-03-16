@@ -62,6 +62,9 @@ jobs:
            retention-days: 1
            compression-level: 0
 
+
+
+
   lighthouseci:
     runs-on: ubuntu-latest
     services:
@@ -76,19 +79,22 @@ jobs:
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
-      # passer sur le repo
+      # Cloner le repo
       - name: Checkout repository
         uses: actions/checkout@v4
-      # installer jdk pour demarrer le back
+
+      # Installer JDK 17
       - name: Setup JDK 17
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
+
+      # Attendre que PostgreSQL soit prêt
       - name: Wait for PostgreSQL to be ready
         run: |
-          TIMEOUT=60  # Timeout en secondes
-          INTERVAL=2  # Intervalle de vérification en secondes
+          TIMEOUT=60
+          INTERVAL=2
           COUNT=0
           while ! pg_isready -h localhost -p 5432 -U postgres; do
             if [ $COUNT -ge $TIMEOUT ]; then
@@ -100,14 +106,21 @@ jobs:
             COUNT=$((COUNT + INTERVAL))
           done
           echo "PostgreSQL is ready"
-      # installer gradle
+
+      # Installer Gradle
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
-      # lance java en tache de fond
-      - name: Start Java in background
-        run: ./gradlew bootrun &
-      # attend que java soit lancé
-      - name: Wait for backend to be ready
+
+      # Build du backend avec Gradle
+      - name: Build Backend
+        run: ./gradlew build
+
+      # Démarrer le backend en mode production
+      - name: Start Backend
+        run: java -jar build/libs/*.jar &
+
+      # Attendre que le backend soit prêt
+      - name: Wait for Backend
         run: |
           echo "Waiting for backend..."
           for i in {1..30}; do
@@ -118,37 +131,55 @@ jobs:
             sleep 5
           done
 
+      # Installer Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
 
+      # Configurer npm
       - name: Configure npm to use public registry
         run: npm config set registry https://registry.npmjs.org/
 
-      - name: Install dependencies
-        run: cd src/main/webapp && npm install
-      # lance le front en tache arrière plan
-      - name: Start webapp in background
-        run: cd src/main/webapp && npm run dev &
-      # attend que le front soit près
-      - name: Wait for frontend to be ready
+      # Installer les dépendances du frontend
+      - name: Install Frontend Dependencies
+        run: |
+          cd src/main/webapp
+          npm install
+
+      # Build du frontend avec Vite
+      - name: Build Frontend
+        run: |
+          cd src/main/webapp
+          npm run build
+
+      # Servir le frontend en mode statique
+      - name: Serve Frontend
+        run: |
+          cd src/main/webapp
+          npm install -g serve
+          serve -s dist &
+
+      # Attendre que le frontend soit prêt
+      - name: Wait for Frontend
         run: |
           echo "Waiting for frontend..."
           for i in {1..30}; do
-            if curl -s http://localhost:5173 | grep -q "<title>"; then
+            if curl -s http://localhost:3000 | grep -q "<title>"; then
               echo "Frontend is ready!"
               break
             fi
             sleep 5
           done
 
-
-      - name: Installer Lighthouse CI
+      # Installer Lighthouse CI
+      - name: Install Lighthouse CI
         run: npm install -g @lhci/cli@0.14.x
 
+      # Exécuter Lighthouse CI
       - name: Run Lighthouse CI
         run: lhci autorun --collect.url=http://localhost:5173
+
 
 
 
