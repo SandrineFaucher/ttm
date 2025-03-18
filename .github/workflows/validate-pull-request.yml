@@ -51,7 +51,7 @@ jobs:
           SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/ttm
           SPRING_DATASOURCE_USERNAME: postgres
           SPRING_DATASOURCE_PASSWORD: postgres
-        run: gradle check -Dspring.profiles.active=ci
+        run: gradle check
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4

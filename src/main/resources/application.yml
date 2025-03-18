@@ -8,14 +8,13 @@ spring:
     password: postgres
   flyway:
     enabled: true
-    baseline-on-migrate: true  # Permet de lancer Flyway même si la base n'est pas vide
-    locations: db/migration/data
+    locations: classpath:db/migration/data
   jpa:
     show-sql: true
     hibernate:
       dialect: org.hibernate.dialect.PostgreSQLDialect
-      ddl-auto: update
-    defer-datasource-initialization: true  # JPA attend la fin de Flyway
+      ddl-auto: validate # Hibernate ne crée/modifie pas les tables
+    defer-datasource-initialization: false  # JPA attend la fin de Flyway
   servlet:
     multipart:
       max-file-size: 5MB
