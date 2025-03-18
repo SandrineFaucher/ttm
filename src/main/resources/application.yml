@@ -14,7 +14,7 @@ spring:
     hibernate:
       dialect: org.hibernate.dialect.PostgreSQLDialect
       ddl-auto: validate # Hibernate ne crée/modifie pas les tables
-    defer-datasource-initialization: false  # JPA attend la fin de Flyway
+
   servlet:
     multipart:
       max-file-size: 5MB
