@@ -6,19 +6,20 @@ spring:
     url: jdbc:postgresql://localhost:5432/ttm?charSet=UTF8
     username: postgres
     password: postgres
+  flyway:
+    enabled: true
+    locations: classpath:db/migration/data
   jpa:
     show-sql: true
     hibernate:
       dialect: org.hibernate.dialect.PostgreSQLDialect
-      ddl-auto: update
+      ddl-auto: validate # Hibernate ne crée/modifie pas les tables
+
   servlet:
     multipart:
       max-file-size: 5MB
       max-request-size: 10MB
       enabled: true
-  flyway:
-    enabled: true
-    locations: db/migration/data
 
   jwt-secret: daf66e01593f61a15b857cf433eee03a005812b31234e149036bbb8dee755dbb
   jwt-expiration-milliseconds: 604800000

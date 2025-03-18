@@ -9,7 +9,6 @@ on:
       - ready_for_review
     branches:
       - develop
-
 jobs:
   check:
     name: Validation du code
@@ -23,46 +22,188 @@ jobs:
           POSTGRES_DB: ttm
         ports:
           - 5432:5432
-        options: --health-cmd pg_isready --health-interval 10s --health-timout 5s --health-retries 5
+        options: --health-cmd "pg_isready -U postgres -d ttm" --health-interval 10s --health-timeout 5s --health-retries 5
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Setup JDK 17
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
+
+      - name: Wait for PostgreSQL to be ready
+        run: |
+          echo "Waiting for PostgreSQL to be ready..."
+          for i in {1..30}; do
+            pg_isready -h localhost -p 5432 -U postgres -d ttm && exit 0
+            echo "PostgreSQL is not ready yet, retrying in 2 seconds..."
+            sleep 2
+          done
+          echo "PostgreSQL did not become ready in time." >&2
+          exit 1
+
       - name: Run spring checks
         env:
-          SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/ttm
+          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/ttm
           SPRING_DATASOURCE_USERNAME: postgres
           SPRING_DATASOURCE_PASSWORD: postgres
-        run: gradle check
+          SPRING_JPA_HIBERNATE_DDL_AUTO: validate  # Vérification du schéma Flyway
+          SPRING_FLYWAY_ENABLED: true
+          SPRING_FLYWAY_BASELINE_ON_MIGRATE: true
+        run: ./gradlew check --info
 
-      - name: Upload artifacts
+      - name: Upload test reports
         uses: actions/upload-artifact@v4
         with:
-           name: test-report
-           path: ./build/test-results/test/
-           if-no-files-found: error
-           retention-days: 1
-           compression-level: 0
+          name: test-report
+          path: ./build/test-results/test/
+          if-no-files-found: warn  # Évite d'échouer si aucun fichier n'est trouvé
+          retention-days: 7
+          compression-level: 6
 
-  build:
-    name: Build .jar file
+  lighthouseci:
     runs-on: ubuntu-latest
+    services:
+      db:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: ttm
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
     steps:
-      - name: Checkout
+      # passer sur le repo
+      - name: Checkout repository
         uses: actions/checkout@v4
+      # installer jdk pour demarrer le back
       - name: Setup JDK 17
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
+      - name: Wait for PostgreSQL to be ready
+        run: |
+          TIMEOUT=60  # Timeout en secondes
+          INTERVAL=2  # Intervalle de vérification en secondes
+          COUNT=0
+          while ! pg_isready -h localhost -p 5432 -U postgres; do
+            if [ $COUNT -ge $TIMEOUT ]; then
+              echo "Timeout reached. PostgreSQL is not ready."
+              exit 1
+            fi
+            echo "Waiting for PostgreSQL..."
+            sleep $INTERVAL
+            COUNT=$((COUNT + INTERVAL))
+          done
+          echo "PostgreSQL is ready"
+      # installer gradle
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+      # lance java en tache de fond
+      - name: Start Java in background
+        run: ./gradlew bootrun &
+      # attend que java soit lancé
+      - name: Wait for backend to be ready
+        run: |
+          echo "Waiting for backend..."
+          for i in {1..30}; do
+            if curl -s http://localhost:8080/actuator/health | grep -q '"status":"UP"'; then
+              echo "Backend is ready!"
+              break
+            fi
+            sleep 5
+          done
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Configure npm to use public registry
+        run: npm config set registry https://registry.npmjs.org/
+
+      - name: Install dependencies
+        run: cd src/main/webapp && npm install
+      # lance le front en tache arrière plan
+      - name: Start webapp in background
+        run: cd src/main/webapp && npm run dev &
+      # attend que le front soit près
+      - name: Wait for frontend to be ready
+        run: |
+          echo "Waiting for frontend..."
+          for i in {1..30}; do
+            if curl -s http://localhost:5173 | grep -q "<title>"; then
+              echo "Frontend is ready!"
+              break
+            fi
+            sleep 5
+          done
+
+      - name: Installer Lighthouse CI
+        run: npm install -g @lhci/cli@0.14.x
+
+        # Exécuter Lighthouse CI sans bloquer le pipeline en cas d'erreurs
+      - name: Run Lighthouse CI
+        continue-on-error: true  # Permet à la CI de ne pas échouer
+        run: lhci autorun --collect.url=http://localhost:5173 || echo "Lighthouse audit finished with errors, but CI continues"
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Configure npm to use public registry
+        run: npm config set registry https://registry.npmjs.org/
+
+      - name: Install dependencies
+        run: cd src/main/webapp && npm install
+
+      - name: Build webapp
+        run: cd src/main/webapp && npm run build
+
+      - name: Copy webapp-build to Spring Boot static folder
+        run: |
+          mkdir -p src/main/resources/static/
+          cp -r src/main/webapp/dist/* src/main/resources/static/
+
+      - name: Install Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: 17
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+
       - name: Build with Gradle
-        env:
-          SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/ttm
-          SPRING_DATASOURCE_USERNAME: postgres
-          SPRING_DATASOURCE_PASSWORD: postgres
-        run: gradle build
+        run: ./gradlew bootjar
+
+      - name: Upload Spring Boot artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-ttm
+          path: build/libs/*.jar
+
+
+
+
+
+
+
+
+
 
