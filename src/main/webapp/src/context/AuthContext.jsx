@@ -1,9 +1,11 @@
 import React, { createContext, useState, useEffect } from "react";
 import * as userService from "../services/userService.js";
+import PropTypes from "prop-types";
+import {UserProvider} from "./UserContext.jsx";
 
 export const AuthContext = createContext(null);
 
-// eslint-disable-next-line react/prop-types
+
 export const AuthProvider = ({ children }) => {
     const [auth, setAuth] = useState(null);
 
@@ -39,6 +41,8 @@ export const AuthProvider = ({ children }) => {
         </AuthContext.Provider>
     );
 };
-
+AuthProvider.propTypes = {
+    children: PropTypes.node.isRequired,
+};
 
 
