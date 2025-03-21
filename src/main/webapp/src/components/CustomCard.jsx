@@ -1,10 +1,11 @@
 import "./customCard.css"
 import PropTypes from "prop-types";
 
-const CustomCard =({ key, title, image, availability, sectors, accompaniements, city, department, region, description}) =>{
+const CustomCard =({ clickable, onClick, title, image, availability, sectors, accompaniements, city, department, region, description}) =>{
 console.log("Image :" ,image)
     return (
-        <div className="body-card">
+        <div className={`body-card ${clickable ? "cursor-pointer" : ""}`}
+        onClick={clickable ? onClick : undefined} >
             <p className="location">{region} {city}{department}</p>
             <h2 className="pseudo-user">{title}</h2>
             <img className="profil_image" src={image} alt="photo-profil"/>
@@ -28,7 +29,8 @@ console.log("Image :" ,image)
     )
 };
 CustomCard.prototype = {
-    key:PropTypes.number,
+    clickable: PropTypes.bool,
+    onClick: PropTypes.func,
     title : PropTypes.string,
     availability: PropTypes.string,
     sectors: PropTypes.string,

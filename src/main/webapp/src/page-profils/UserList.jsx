@@ -1,11 +1,16 @@
 import { useEffect, useState } from "react";
 import { getProfilsByRoles } from "../services/profilService.js";
 import CustomCard from "../components/CustomCard.jsx";
+import {useNavigate} from "react-router-dom";
+import { useUser } from "../context/UserContext.jsx";
 
 const UsersList = () => {
+    const navigate = useNavigate();
+    const { setSelectedUser } = useUser();
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
 
 
     useEffect(() => {
@@ -43,6 +48,11 @@ const UsersList = () => {
 
                     return (
                         <CustomCard
+                            clickable={true}
+                            onClick={() => {
+                                setSelectedUser(user); // Stocke l'utilisateur dans le contexte
+                                navigate(`/detailCard/${user.id}`);
+                            }}
                             key={user.id}
                             title={user.username}
                             city={user.profil?.city || "Ville inconnue"}

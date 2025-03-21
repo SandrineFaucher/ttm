@@ -25,34 +25,38 @@ export default function UserProfil(){
         console.log("Le profil a été mis à jour, recharge de PreviewCard !");
     }, [isAuthProfil]); // Se déclenche uniquement quand isAuthProfil change
     return (
-            <>
+        <>
             <h1>Mon Profil </h1>
-                <div className="container">
-                    <div className="block">
-                        {isAuthProfil ? (
-                            <>
-                                <PreviewCard />
-                                <h2>Modifier mon profil</h2>
-                                <FormUpdateProfil />
-                            </>
-                        ) : (
-                            <>
-                                <h2>Remplir mon profil</h2>
-                                <FormProfil />
-                            </>
-                        )}
-                    </div>
-                    <div className="block">
-                        <h2>Modifier mes données</h2>
-                        <div className="component">
-                            <UserUpdate/>
-                        </div>
-                        <div className="component">
-                            <UpdatePassword/>
-                        </div>
-                    </div>
+            <div className="container">
 
+                <div className="block">
+                    {isAuthProfil && <PreviewCard/>}
                 </div>
-            </>
+
+                <div className="block">
+                    {isAuthProfil ? (
+                        <>
+                            <h2>Modifier mon profil</h2>
+                            <FormUpdateProfil/>
+                        </>
+                    ) : (
+                        <>
+                            <h2>Remplir mon profil</h2>
+                            <FormProfil/>
+                        </>
+                    )}
+                </div>
+
+                <div className="block">
+                    <h2>Modifier mes données</h2>
+                    <div className="component">
+                        <UserUpdate/>
+                    </div>
+                    <div className="component">
+                        <UpdatePassword/>
+                    </div>
+                </div>
+            </div>
+        </>
     )
 }

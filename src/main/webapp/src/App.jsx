@@ -9,6 +9,8 @@ import AdminView from "./page-back-office/AdminView.jsx";
 import FormLogin from "./page-home/FormLogin.jsx";
 import { AuthProvider } from "./context/AuthContext.jsx";
 import UserProfil from "./page-profils/UserProfil.jsx";
+import DetailCard from "./page-profils/DetailCard.jsx";
+import {UserProvider} from "./context/UserContext.jsx";
 
 
 
@@ -17,6 +19,7 @@ export default function App() {
 
   return (
   <AuthProvider>
+    <UserProvider>
       <Routes>
         <Route path={"/"} element={<Layout />}>
           <Route index element={<Home/>}/>
@@ -26,8 +29,10 @@ export default function App() {
           <Route path="adminView" element={<AdminView/>}/>
           <Route path="/login" element={<FormLogin />} />
           <Route path="/userProfil" element={<UserProfil/>} />
+          <Route path="/detailCard/:id" element={<DetailCard/>} />
         </Route>
       </Routes>
+    </UserProvider>
   </AuthProvider>
     );
 }

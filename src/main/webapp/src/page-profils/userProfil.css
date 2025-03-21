@@ -2,6 +2,7 @@
 /* Conteneur principal */
 .container {
     display: flex;
+    justify-content: space-around;
     flex-direction: column;
     gap: 16px;
     padding: 16px;
