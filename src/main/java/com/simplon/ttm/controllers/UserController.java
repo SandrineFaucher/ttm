@@ -1,5 +1,6 @@
 package com.simplon.ttm.controllers;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,7 +42,7 @@ public class UserController {
         return this.userRepository.findAll();
     }
 
-     /**
+    /**
      * @param userUpdateDTO
      * @return l'utilisateur avec les modifications eu usernme et de l'email
      */
@@ -69,6 +71,30 @@ public class UserController {
         // Appeler le service pour mettre à jour le mot de passe
         User updateUserPassword = userService.updatePasswordByUsername(authenticatedUsername, updatePasswordDto);
         return ResponseEntity.ok(updateUserPassword);
+    }
+
+    @PostMapping("/match/{userId2}")
+    public ResponseEntity<String> saveMatch(@PathVariable long userId2, Principal principal) {
+        // Récupérer l'utilisateur authentifié
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String authenticatedUsername = authentication.getName();
+
+        // Trouver l'utilisateur dans la base de données
+        Optional<User> authenticatedUser = userRepository.findByUsername(authenticatedUsername);
+
+        if (authenticatedUser.isPresent()) {
+            long userId1 = authenticatedUser.get().getId();
+
+            // Sauvegarder le match
+            boolean isMatched = userService.saveMatch(userId1, userId2);
+
+            if (isMatched) {
+                return ResponseEntity.ok("Match enregistré avec succès !");
+            } else {
+                return ResponseEntity.badRequest().body("Impossible d'enregistrer le match.");
+            }
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Utilisateur non authentifié.");
     }
 }
 

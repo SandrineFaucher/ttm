@@ -18,6 +18,8 @@ import com.simplon.ttm.models.UserRole;
 import com.simplon.ttm.repositories.UserRepository;
 import com.simplon.ttm.services.UserService;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -151,19 +153,28 @@ public class UserServiceImpl implements UserService {
      * @param userId2
      * @return boolean
      */
+
     public boolean saveMatch(long userId1, long userId2) {
-        Optional <User> userA = userRepository.findById(userId1);
-        Optional<User> userB = userRepository.findById(userId2);
+        if (userId1 == userId2) {
+            return false; // Un utilisateur ne peut pas matcher avec lui-même
+        }
 
-        if(userA.isPresent() && userB.isPresent()){
-            User user1 = userA.get();
-            User user2 = userB.get();
+        Optional<User> optionalUser1 = userRepository.findById(userId1);
+        Optional<User> optionalUser2 = userRepository.findById(userId2);
 
-            user1.getUser1().add(user2);
-            user2.getUser2().add(user1);
-    
-            userRepository.save(user1);
-            userRepository.save(user2);
+        if (optionalUser1.isPresent() && optionalUser2.isPresent()) {
+            User user1 = optionalUser1.get();
+            User user2 = optionalUser2.get();
+
+            // Vérifier si le match n'existe pas déjà
+            if (!user1.getUser1().contains(user2)) {
+                user1.getUser1().add(user2);
+                user2.getUser1().add(user1); // Ajout réciproque dans le bon attribut
+
+                userRepository.save(user1);
+                userRepository.save(user2);
+            }
+
             return true;
         }
         return false;
