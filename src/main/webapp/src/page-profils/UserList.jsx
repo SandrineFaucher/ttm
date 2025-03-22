@@ -61,9 +61,6 @@ const UsersList = () => {
                             sectors={sector}
                             accompaniements={accompaniement}
                             image={imageUrl}
-                            description={user.profil?.content || "Aucune description"}
-
-
                         />
                     );
                 })
