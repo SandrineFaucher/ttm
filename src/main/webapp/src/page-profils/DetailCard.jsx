@@ -1,6 +1,6 @@
 
 import React from "react";
-import {useParams} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 import {useUser} from "../context/UserContext.jsx";
 import "./detailCard.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -37,7 +37,7 @@ export default function DetailCard(){
                 <p>{selectedUser.profil?.content}</p>
             </article>
             <nav className="card-detail-nav">
-                <FontAwesomeIcon className="icon-message" icon={faMessage} />
+                <Link to={`/${id}/messagerie`}><FontAwesomeIcon className="icon-message" icon={faMessage} /></Link>
                 <div className="icon-container">
                 <FontAwesomeIcon className="left-hand" icon={faHandBackFist} />
                 <FontAwesomeIcon className="right-hand" icon={faHandBackFist} />

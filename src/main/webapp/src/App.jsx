@@ -24,7 +24,7 @@ export default function App() {
         <Route path={"/"} element={<Layout />}>
           <Route index element={<Home/>}/>
           <Route path="profils" element={<Profils/>}/>
-          <Route path="messagerie" element={<Messagerie/>}/>
+          <Route path="/:id/messagerie" element={<Messagerie/>}/>
           <Route path="boite-a-outils" element={<Document/>}/>
           <Route path="adminView" element={<AdminView/>}/>
           <Route path="/login" element={<FormLogin />} />
