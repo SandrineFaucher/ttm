@@ -24,5 +24,7 @@ public interface UserService {
     Optional<User> findByUsername(String authenticatedUsername);
 
     User updatePasswordByUsername(String authenticatedUsername, UpdatePasswordDto updatePasswordDto);
+
+    boolean saveMatch(long userId1, long userId2);
 }
 
