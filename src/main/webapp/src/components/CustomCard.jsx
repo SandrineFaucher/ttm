@@ -21,10 +21,6 @@ console.log("Image :" ,image)
             <h5>Accompagnements :</h5>
             <p>{accompaniements}</p>
             </div>
-            <div className="small-containers">
-            <h5>Le petit mot en plus :</h5>
-            <p>{description}</p>
-            </div>
         </div>
     )
 };
