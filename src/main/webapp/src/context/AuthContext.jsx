@@ -1,7 +1,7 @@
 import React, { createContext, useState, useEffect } from "react";
 import * as userService from "../services/userService.js";
 import PropTypes from "prop-types";
-import {UserProvider} from "./UserContext.jsx";
+
 
 export const AuthContext = createContext(null);
 

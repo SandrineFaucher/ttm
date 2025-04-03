@@ -118,6 +118,8 @@ public class ProfilController {
 
         // Récupération de la liste des utilisateurs selon la logique de rôle
         List<User> users = userService.getUsersVisibleToCurrentUser(currentUsername);
+        // Afficher le résultat en console
+        System.out.println(users);
         return ResponseEntity.ok(users);
     }
 }

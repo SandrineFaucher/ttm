@@ -196,6 +196,7 @@ export async function updateProfil(formData) {
 
 export async function getProfilsByRoles() {
     try {
+        console.log("📡 Envoi de la requête API...");
         const response = await fetch("http://localhost:8080/usersProfils/by-role", {
             method: 'GET',
             headers: {
@@ -204,17 +205,16 @@ export async function getProfilsByRoles() {
             },
             credentials: 'include'  // Inclut le cookie JWT (HttpOnly) dans la requête
         });
-
+        console.log("📡 Réponse HTTP :", response.status, response.statusText);
         // Vérifie si la réponse est correcte (status 200)
         if (!response.ok) {
-            throw new Error(`Failed to fetch users profils : ${response.statusText}`);
+            throw new Error(`Failed to fetch users profils : ${response.status}`);
         }
         const profilsOfUsers = await response.json();
-
         return profilsOfUsers;
 
     } catch (error) {
-        console.error("Error fetching profils of users :", error);
+        console.error("❌ Erreur détaillée :", error);
         throw new Error("Failed to fetch profils of users");
     }
 }

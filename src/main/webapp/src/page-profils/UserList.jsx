@@ -10,6 +10,7 @@ const UsersList = () => {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const usersWithProfil = users.filter(user => user.profil);
 
 
 
@@ -17,7 +18,7 @@ const UsersList = () => {
         const fetchUsers = async () => {
             try {
                 const profils = await getProfilsByRoles();
-                console.log("Données reçues :", profils);
+                console.log("🔍 Données reçues de l'API :", JSON.stringify(profils, null, 2));
                 setUsers(profils);
             } catch (err) {
                 setError(err.message);
@@ -36,11 +37,12 @@ const UsersList = () => {
 
     return (
         <div className="users-container">
-            {users.length > 0 ? (
 
-                users.map((user) => {
-                const sector = user.profil?.sectors.map(s =>s.content)|| "Non renseigné";
-                const accompaniement = user.profil?.accompaniements.map(a => a.content) || "Non renseigné";
+            {usersWithProfil.length > 0 ? (
+
+                usersWithProfil.map((user) => {
+                const sector = user.profil?.sectors.map(s =>s.content)|| ["Non renseigné"];
+                const accompaniement = user.profil?.accompaniements.map(a => a.content) || ["Non renseigné"];
                 const baseUrl = "http://localhost:8080/";
                 const imagePath = user.profil?.image ;
                 const defaultImage = "uploads/profil_images/default_profile_picture.png";
