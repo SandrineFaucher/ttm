@@ -45,7 +45,7 @@ public class SpringSecurity {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/","/login", "/authenticate", "/uploads/**").permitAll()
+                        .requestMatchers("/**","/login", "/authenticate", "/uploads/**").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/userUpdate/**").authenticated()
                         .anyRequest().authenticated()
                 )
@@ -67,6 +67,7 @@ public class SpringSecurity {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));  // L'origine autorisée
+        corsConfiguration.setAllowedOrigins(Arrays.asList("https://jiangxy.github.io"));
         corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         corsConfiguration.setAllowedHeaders(Arrays.asList("Content-Type", "Authorization", "multipart/form-data")); // Ajoute des autorisations
         corsConfiguration.setExposedHeaders(Arrays.asList("Content-Disposition")); // Permet la gestion des fichiers en retour
