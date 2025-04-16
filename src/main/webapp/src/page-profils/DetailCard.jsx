@@ -1,6 +1,6 @@
 
 import React from "react";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {useUser} from "../context/UserContext.jsx";
 import "./detailCard.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -9,7 +9,8 @@ import { faMessage, faHandBackFist} from '@fortawesome/free-solid-svg-icons';
 
 
 export default function DetailCard(){
-    const { id } = useParams();
+    // const { id } = useParams();
+    const navigate = useNavigate();
     const { selectedUser } = useUser();
     const baseUrl = "http://localhost:8080/";
     const imagePath = selectedUser?.profil?.image;
@@ -37,7 +38,8 @@ export default function DetailCard(){
                 <p>{selectedUser.profil?.content}</p>
             </article>
             <nav className="card-detail-nav">
-                <FontAwesomeIcon className="icon-message" icon={faMessage} />
+                <FontAwesomeIcon className="icon-message" icon={faMessage}
+                                 onClick={() => navigate(`/messagerie/${selectedUser.id}`)}/>
                 <div className="icon-container">
                 <FontAwesomeIcon className="left-hand" icon={faHandBackFist} />
                 <FontAwesomeIcon className="right-hand" icon={faHandBackFist} />
