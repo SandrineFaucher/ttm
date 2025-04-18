@@ -1,11 +1,16 @@
 package com.simplon.ttm.controllers;
 
 import java.security.Principal;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
+import org.bson.Document;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 import com.simplon.ttm.dto.SendMessageDto;
 import com.simplon.ttm.models.Message;
@@ -23,49 +28,55 @@ public class MessageController {
     private final SimpMessagingTemplate template;
     private final UserRepository userRepository;
 
+
     public MessageController(MongoService mongoService, SimpMessagingTemplate template, UserRepository userRepository) {
         this.mongoService = mongoService;
         this.template = template;
         this.userRepository = userRepository;
     }
+    // Map qui permet de conserver une connexion établie entre deux interlocuteurs pour ne pas la répéter
+    private final Map<String, Boolean> activeListeners = new ConcurrentHashMap<>();
 
-        @MessageMapping("/requestMessages")
+    @MessageMapping("/requestMessages")
     public void openMessagePage(SendMessageDto request, Principal auth) {
         //Récupération du user authentifié
             String username = auth.getName();
             User sender = userRepository.findByUsername(username).orElseThrow();
             Long senderId = sender.getId();
-        //Conversion de mes Long id du sender et de dest  en string
-        var messages = mongoService.getMessagesForConversation(
-                String.valueOf(senderId),
-                String.valueOf(request.getDestId())
-        );
+            Long destId = request.getDestId();
+            String Key = senderId + "_" + destId;
+
+
+        var messages = mongoService.getMessagesForConversation(senderId, destId);
         template.convertAndSend("/getMessages", messages);
 
-        mongoService.listenForNewMessages("1", "2")
-                .forEach(doc -> {
-                    switch (Objects.requireNonNull(doc.getOperationType())) {
-                        case INSERT:
-                            assert doc.getFullDocument() != null;
-                            template.convertAndSend("/newMessage", doc.getFullDocument().toJson());
-                            break;
-                        case DELETE:
-                            assert doc.getDocumentKey() != null;
-                            template.convertAndSend("/deleteMessage", doc.getDocumentKey().get("_id").asObjectId().getValue());
-                            break;
-                        case UPDATE:
-                            assert doc.getUpdateDescription() != null;
-                            assert doc.getUpdateDescription().getUpdatedFields() != null;
-                            template.convertAndSend("/updateMessage", doc.getUpdateDescription().getUpdatedFields().toJson());
-                            break;
-                        case REPLACE:
-                            assert doc.getFullDocument() != null;
-                            template.convertAndSend("/updateMessage", doc.getFullDocument().toJson());
-                            break;
-                        default:
-                            log.warn("Not yet implemented OperationType: {}", doc.getOperationType());
-                    }
-                });
+        if(!activeListeners.containsKey(Key)) {
+            activeListeners.put(Key, true);
+            mongoService.listenForNewMessages(senderId, destId)
+                    .forEach(doc -> {
+                        switch (Objects.requireNonNull(doc.getOperationType())) {
+                            case INSERT:
+                                assert doc.getFullDocument() != null;
+                                template.convertAndSend("/newMessage", doc.getFullDocument().toJson());
+                                break;
+                            case DELETE:
+                                assert doc.getDocumentKey() != null;
+                                template.convertAndSend("/deleteMessage", doc.getDocumentKey().get("_id").asObjectId().getValue());
+                                break;
+                            case UPDATE:
+                                assert doc.getUpdateDescription() != null;
+                                assert doc.getUpdateDescription().getUpdatedFields() != null;
+                                template.convertAndSend("/updateMessage", doc.getUpdateDescription().getUpdatedFields().toJson());
+                                break;
+                            case REPLACE:
+                                assert doc.getFullDocument() != null;
+                                template.convertAndSend("/updateMessage", doc.getFullDocument().toJson());
+                                break;
+                            default:
+                                log.warn("Not yet implemented OperationType: {}", doc.getOperationType());
+                        }
+                    });
+        }
     }
 
     @MessageMapping("/send")
@@ -82,5 +93,32 @@ public class MessageController {
         String content = message.getContent();
 
         mongoService.insert(sender, dest, content);
+    }
+
+    @MessageMapping("/delete")
+    public void deleteMessage(Map<String, String> payload, Principal auth) {
+        // Récupération de l'objectId du message
+        String objectId = payload.get("_id");
+        // Récupérer l'utilisateur authentifié
+        String username = auth.getName();
+        User sender = userRepository.findByUsername(username).orElseThrow();
+
+        Optional<Document> messageToDelete = mongoService.findMessageById(objectId);
+
+        if (messageToDelete.isEmpty()) {
+            throw new RuntimeException("Message introuvable");
+        }
+
+        Document message = messageToDelete.get();
+
+        // Vérifie si le sender du message correspond à l'utilisateur authentifié
+        Long senderIdFromMessage = message.getLong("sender");
+        if (!Objects.equals(senderIdFromMessage, sender.getId())) {
+            throw new RuntimeException("Vous n'avez pas le droit de supprimer ce message");
+        }
+        // Supprimer le message
+        mongoService.deleteMessageById(objectId);
+        // Notifier les autres interlocuteurs
+        template.convertAndSend("/deleteMessage", objectId);
     }
 }
