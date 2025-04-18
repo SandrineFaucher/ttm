@@ -5,11 +5,13 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.bson.BSONObject;
 import org.bson.BsonValue;
 import org.bson.Document;
 import org.bson.conversions.Bson;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -26,10 +28,12 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoIterable;
 import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Updates;
 import com.mongodb.client.model.changestream.ChangeStreamDocument;
 import com.mongodb.client.model.changestream.FullDocument;
 import com.mongodb.client.result.InsertOneResult;
 import com.mongodb.internal.operation.ChangeStreamOperation;
+import com.simplon.ttm.models.Message;
 import com.simplon.ttm.models.User;
 
 import jakarta.annotation.PostConstruct;
@@ -62,7 +66,7 @@ public class MongoService {
                 .getInsertedId();
     }
 
-    public MongoIterable<Document> getMessagesForConversation(String user1, String user2) {
+    public MongoIterable<Document> getMessagesForConversation(Long user1, Long user2) {
         return messageCollection.aggregate(Arrays.asList(
                         Aggregates.match(
                                 Filters.and(
@@ -71,7 +75,7 @@ public class MongoService {
                 .map(v -> v);
     }
 
-    public ChangeStreamIterable<Document> listenForNewMessages(String user1, String user2) {
+    public ChangeStreamIterable<Document> listenForNewMessages(Long user1, Long user2) {
         return messageCollection
                 .watch(Arrays.asList(
                         Aggregates.match(
@@ -81,4 +85,22 @@ public class MongoService {
                 .fullDocument(FullDocument.UPDATE_LOOKUP);
     }
 
+    public void updateMessageContent(String objectId, String newContent) {
+        ObjectId id = new ObjectId(objectId);
+        messageCollection.updateOne(
+                Filters.eq("_id", id),
+                Updates.set("content", newContent)
+        );
+    }
+
+    public void deleteMessageById(String objectId) {
+        ObjectId id = new ObjectId(objectId);
+        messageCollection.deleteOne(Filters.eq("_id", id));
+    }
+
+    public Optional<Document> findMessageById(String objectId) {
+        ObjectId id = new ObjectId(objectId);
+        Document doc = messageCollection.find(Filters.eq("_id", id)).first();
+        return Optional.ofNullable(doc);
+    }
 }

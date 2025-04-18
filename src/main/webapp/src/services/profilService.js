@@ -180,7 +180,7 @@ export async function updateProfil(formData) {
         const data = text ? JSON.parse(text) : {};
         console.log("Réponse serveur:", data);
 
-        // Si la réponse contient une URL d'image, affichez-la
+        // Si la réponse contient une URL d'image, l'afficher
         if (data.image) {
             const img = document.createElement('img');
             img.src = data.image;
