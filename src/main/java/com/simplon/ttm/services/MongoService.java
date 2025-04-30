@@ -67,12 +67,19 @@ public class MongoService {
     }
 
     public MongoIterable<Document> getMessagesForConversation(Long user1, Long user2) {
-        return messageCollection.aggregate(Arrays.asList(
-                        Aggregates.match(
-                                Filters.and(
-                                        Filters.in("sender", user1, user2),
-                                        Filters.in("dest", user1, user2)))))
-                .map(v -> v);
+    return messageCollection.aggregate(Arrays.asList(
+                    Aggregates.match(
+                            Filters.and(
+                                    Filters.in("sender", user1, user2),
+                                    Filters.in("dest", user1, user2)))))
+            .map(document -> {
+                ObjectId objectId = document.getObjectId("_id");
+                if (objectId != null) {
+                    //conversion qui permet de passer l'ObjectId en string pour le front
+                    document.put("_id", objectId.toHexString());
+                }
+                return document;
+            });
     }
 
     public ChangeStreamIterable<Document> listenForNewMessages(Long user1, Long user2) {
@@ -83,14 +90,6 @@ public class MongoService {
                                         Filters.in("fullDocument.sender", user1, user2),
                                         Filters.in("fullDocument.dest", user1, user2)))))
                 .fullDocument(FullDocument.UPDATE_LOOKUP);
-    }
-
-    public void updateMessageContent(String objectId, String newContent) {
-        ObjectId id = new ObjectId(objectId);
-        messageCollection.updateOne(
-                Filters.eq("_id", id),
-                Updates.set("content", newContent)
-        );
     }
 
     public void deleteMessageById(String objectId) {
