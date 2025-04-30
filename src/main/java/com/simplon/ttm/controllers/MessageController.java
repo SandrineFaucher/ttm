@@ -56,7 +56,11 @@ public class MessageController {
                     .forEach(doc -> {
                         switch (Objects.requireNonNull(doc.getOperationType())) {
                             case INSERT:
-                                assert doc.getFullDocument() != null;
+//                              //conversion qui permet de passer l'ObjectId en string vers le front
+                                Document fullDoc = doc.getFullDocument();
+                                if (fullDoc != null && fullDoc.getObjectId("_id") != null) {
+                                    fullDoc.put("_id", fullDoc.getObjectId("_id").toHexString());
+                                }
                                 template.convertAndSend("/newMessage", doc.getFullDocument().toJson());
                                 break;
                             case DELETE:
