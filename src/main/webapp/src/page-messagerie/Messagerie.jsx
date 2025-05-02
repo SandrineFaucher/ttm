@@ -97,16 +97,23 @@
 //
 // }
 
-import { useEffect, useRef, useState, useContext } from "react";
+import React, { useEffect, useRef, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { Stomp } from "@stomp/stompjs";
 import { AuthContext } from "../context/AuthContext";
-
+import {useUser} from "../context/UserContext.jsx";
+import {faXmark, faPaperPlane} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import './messagerie.css';
 
 export default function Messagerie() {
-    const { id: destId } = useParams();
+    const { id: _destId } = useParams();
+    const destId = Number(_destId);
+    const { selectedUser: userDest } = useUser();
+    const destUsername = userDest?.username;
     const { auth } = useContext(AuthContext);
     const senderId = auth?.id;
+    const authUsername = auth?.username
 
     const [messages, setMessages] = useState([]);
     const [content, setContent] = useState("");
@@ -148,8 +155,6 @@ export default function Messagerie() {
                     });
                     subscriptionsRef.current.newMessage = sub;
                 }
-
-                // Souscrit à updateMessage si non existant
 
                 // Souscrit à deleteMessage si non existant
                 if (!subscriptionsRef.current.deleteMessage) {
@@ -234,11 +239,26 @@ export default function Messagerie() {
                     <ul>
                         {messages.map((message) => {
                             const messageId = message._id;
+                            const idSender = message.sender;
+                            const isAuth = idSender === senderId;
+                            const isDest = idSender === destId;
+
+                            console.log("auth : " ,isAuth);
+                            console.log("dest :", destId);
+                            console.log("destUsername ", destUsername);
                             return (
                                 <li key={messageId}>
-                                    <p className="username">{message.sender}</p>
+                                    <p className="username">
+                                        {idSender && isAuth
+                                            ? authUsername
+                                            : idSender && isDest
+                                            ? destUsername
+                                        : "utilisateur inconnu"}
+                                    </p>
+                                    <div className="message">
                                     <p className="content">{message.content}</p>
-                                    <button onClick={() => handleDelete(messageId)}>Supprimer</button>
+                                    <div onClick={() => handleDelete(messageId)}><FontAwesomeIcon className="icon-delete" icon={faXmark} /></div>
+                                    </div>
                                 </li>
                             );
                         })}
@@ -252,7 +272,7 @@ export default function Messagerie() {
                         onChange={(e) => setContent(e.target.value)}
                         placeholder="Écris ton message ici..."
                     />
-                    <button onClick={sendMessage}>Envoyer</button>
+                    <div onClick={sendMessage}><FontAwesomeIcon icon={faPaperPlane} /></div>
 
                 </div>
             </div>

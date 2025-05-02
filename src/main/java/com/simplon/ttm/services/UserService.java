@@ -3,6 +3,8 @@ package com.simplon.ttm.services;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.security.access.prepost.PreAuthorize;
+
 import com.simplon.ttm.dto.RegisterDto;
 import com.simplon.ttm.dto.UpdatePasswordDto;
 import com.simplon.ttm.dto.UserUpdateDto;
@@ -11,6 +13,7 @@ import com.simplon.ttm.models.User;
 
 
 public interface UserService {
+
     User saveUserWithRole(RegisterDto user);
 
     List<User> getUsersVisibleToCurrentUser(String username);
