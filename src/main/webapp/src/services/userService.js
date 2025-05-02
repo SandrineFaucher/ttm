@@ -169,5 +169,49 @@ export async function handleLoginAndAuthenticate(formData) {
     }
 }
 
+export async function addMatch(userId2){
+    try{
+        const response = await fetch(`http://localhost:8080/match/${userId2}`, {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json"
+            },
+            credentials: 'include'  // Inclut le cookie JWT (HttpOnly) dans la requête
+        });
+        // Vérification de la réponse
+        if (response.ok) {
+            const data = await response.text();  // Récupère la réponse JSON
+
+            // Traite la réponse si le match est bien enregistré
+            console.log("Match enregistré avec succès!", data);
+        }
+    } catch (error) {
+        console.error("Erreur lors du match :", error);
+
+    }
+}
+
+export async function getMatches(){
+    try{
+        const response = await fetch("http://localhost:8080/matches", {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json"
+            },
+            credentials: 'include'  // Inclut le cookie JWT (HttpOnly) dans la requête
+        });
+        if (response.ok) {
+            const data = await response.json();
+            console.log("matchesIds : ", data);
+            return data;
+
+        }
+    }catch (error){
+        console.error("Erreur lors de la récupération des matchs :", error);
+    }
+}
+
 
 
