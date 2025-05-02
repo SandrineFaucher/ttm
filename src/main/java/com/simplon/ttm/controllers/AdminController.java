@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,6 +34,7 @@ public class AdminController {
      * @param userMapping
      * @return user with role
      */
+
     @PostMapping("/admin/register")
     public ResponseEntity<Map<String, Object>> registerUser(@Valid @RequestBody RegisterDto userMapping) {
         System.out.println("Ok");
