@@ -46,6 +46,7 @@ public class SpringSecurity {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login", "/authenticate", "/uploads/**").permitAll()
+                        .requestMatchers("/matches").authenticated()
                         .requestMatchers(HttpMethod.PUT, "/userUpdate/**").authenticated()
                         .anyRequest().authenticated()
                 )
