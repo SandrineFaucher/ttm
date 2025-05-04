@@ -11,3 +11,13 @@ main{
       text-align: center;
       word-break: break-word;
 }
+aside{
+    text-align: center;
+}
+/* Styles pour les écrans de taille moyenne (tablettes) */
+@media (min-width: 768px) {
+    aside{
+        width: 40%;
+    }
+
+}

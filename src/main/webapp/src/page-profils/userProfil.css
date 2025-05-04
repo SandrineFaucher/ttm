@@ -11,9 +11,13 @@
 /* Style pour chaque bloc */
 .block {
     width: 100%;
-    background-color: rgb(229, 245, 231);
+    min-height: auto;
     border-radius: 8px;
-    padding: 12px;
+    background: #fff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    padding: 15px;
+    margin-bottom: 15px;
+    text-align: center;
 
 }
 .component {
@@ -25,7 +29,7 @@
     .container {
         flex-direction: row;
         justify-content: space-between;
-        align-items: center;
+
     }
     .block{
         width: auto;

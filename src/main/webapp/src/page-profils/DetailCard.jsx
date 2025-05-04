@@ -28,12 +28,15 @@ export default function DetailCard(){
             <section className="header-card-detail">
             <h2>{selectedUser.username}</h2>
             <img src={imageUrl} alt="Profil" />
-            <p>Ville : {selectedUser.profil?.city}</p>
-            <p>Région : {selectedUser.profil?.region}</p>
-            <p>Secteurs d'activité : {sectorsContent}</p>
-            <p>Accompagnements : {accompaniementContent}</p>
+            <p>{selectedUser.profil?.city}</p>
+            <p> {selectedUser.profil?.region}</p>
+            </section>
+            <section className="secteur-reseau">
+                <p><strong>Secteurs :</strong> {sectorsContent}</p>
+            <p><strong>Accompagnements :</strong> {accompaniementContent}</p>
             </section>
             <article className="article-descriptif">
+                <div className="point-top"></div>
                 <h3>Description</h3>
                 <p>{selectedUser.profil?.content}</p>
             </article>
