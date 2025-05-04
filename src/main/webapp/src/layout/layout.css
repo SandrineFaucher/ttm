@@ -1,5 +1,4 @@
 * {
-    margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -10,22 +9,22 @@ li{
 }
 
 header{
-    background-color: rgb(245, 237, 237);
+    background-color: #ffffff;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    border-bottom: 2px solid #72c91f;
+    box-shadow: rgb(0 0 0 / 50%) 0px 6px 6px -6px;
+
 }
 a{
-  text-align: center;
   text-decoration: none;
 }
 .logo-entreprise{
   margin-top: 30px;
   max-width: 25%;
   height: auto;
-  aspect-ratio: 250 / 75;
-  text-align: center;
+  text-align: left;
 }
 .div-logo-ttm{
   display: flex;
@@ -35,7 +34,6 @@ a{
   margin-top: 30px;
   max-width: 40%;
   height: auto;
-  aspect-ratio: 1000 / 300 ;
   align-items: center;
   
 }
@@ -130,7 +128,7 @@ nav ul{
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: rgb(245, 237, 237);
+    background-color: #ffffff;
     padding: 1rem;
   }
 
@@ -150,6 +148,8 @@ nav ul{
   .nav-links li a {
     color: #e31766;
     text-decoration: none;
+    font-weight: bolder;
+    font-size: larger;
   }
   
   .burger-icon {
@@ -172,22 +172,21 @@ nav ul{
   .nav-links.open {
     display: flex;
   }
-
   .footer-line{
     display: flex;
     flex-direction: column;
-    background-color: rgb(245, 237, 237);
+    background-color: #ffffff;
     justify-content: space-around;
+    box-shadow: rgb(0 0 0 / 50%) 0px -6px 6px -6px;
   }
   .footer-bloc1{
-    margin: 15px;
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
   }
   .footer-bloc1 img{
-    max-height: 25px;
-    height: auto;
-    aspect-ratio: 50 / 50;
-
+    width: auto;
   }
   .footer-bloc2{
     margin: 15px;
@@ -209,8 +208,8 @@ nav ul{
   .footer-bloc4{
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-evenly;
-    margin: 15px;
+    justify-content: space-around;
+    margin-bottom: 10px;
     align-content: center;
     font-size: x-large;
     color: #e31766;
@@ -255,6 +254,9 @@ nav ul{
     }
     .social-icon{
       width: 50px;
+    }
+    .footer-bloc4{
+      width: 30%;
     }
   }
   

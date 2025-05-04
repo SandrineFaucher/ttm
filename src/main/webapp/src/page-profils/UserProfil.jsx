@@ -29,7 +29,7 @@ export default function UserProfil(){
             <h1>Mon Profil </h1>
             <div className="container">
 
-                <div className="block">
+                <div className="block-preview">
                     {isAuthProfil && <PreviewCard/>}
                 </div>
 

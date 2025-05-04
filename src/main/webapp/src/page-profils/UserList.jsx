@@ -18,7 +18,7 @@ const UsersList = () => {
         const fetchUsers = async () => {
             try {
                 const profils = await getProfilsByRoles();
-                console.log("🔍 Données reçues de l'API :", JSON.stringify(profils, null, 2));
+                console.log("Données reçues de l'API :", JSON.stringify(profils, null, 2));
                 setUsers(profils);
             } catch (err) {
                 setError(err.message);

@@ -4,19 +4,34 @@
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
     padding: 15px;
-    text-align: center;
     margin-bottom: 15px;
+    text-align: center;
+}
+h2{
+    font-weight: normal;
 }
 
 .location {
     font-size: 14px;
-    color: #666;
+    color: #333333;
     margin-bottom: 10px;
     padding-bottom: 10px;
     position: relative;
 }
-
-/* Bordure incrustée entre la localisation et le pseudo */
+/* Point au début de la ligne verte  */
+.location::before {
+    content: "";
+    position: absolute;
+    bottom: -5px; /* aligne verticalement avec la ligne */
+    left: calc(50% + 30%); /* 50% + moitié de 60% de width */
+    width: 10px;
+    height: 10px;
+    background: #e31766; /* rose */
+    border-radius: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+}
+/* Bordure  */
 .location::after {
     content: "";
     position: absolute;
@@ -24,30 +39,28 @@
     bottom: 0;
     width: 60%;
     height: 2px;
-    background: rgba(0, 0, 0, 0.1);
+    background: #72c91f;
     transform: translateX(-50%);
 }
 
 .pseudo-user {
-    margin: 10px 0;
-    color: #333;
+    margin: 3px;
 }
 
-.profil_image {
-    width: 80px;
+.profil-image {
+    max-widthwidth: 80px;
     height: 80px;
     border-radius: 50%;
     object-fit: cover;
-    border: 1px solid #e31766;
-    margin: 2px;
+    align-items: center;
+    /*border: 1px solid #e31766;*/
+
 }
-h3{
-    margin-top: 5px;
-    font-size: 1rem;
+
+.body-card > .card-container{
+    max-width: max-content;
+    text-align: left;
 }
-.small-containers{
-    background-color: rgb(229, 245, 231);
-    border-radius: 8px;
-    margin: 4px;
-    padding: 5px;
+h5{
+    margin: 0;
 }

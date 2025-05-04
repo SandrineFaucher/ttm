@@ -3,7 +3,9 @@ import React, {useContext, useEffect} from "react";
 import {AuthContext} from "../context/AuthContext.jsx";
 
 
+
 export default function PreviewCard() {
+
     /**
      * Récupération des variables en utilisant le contexte
      */

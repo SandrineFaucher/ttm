@@ -59,7 +59,7 @@ export default function FormRegister() {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form className="form-register" onSubmit={handleSubmit}>
             <CustomInput
                 label="Pseudo"
                 type="text"
