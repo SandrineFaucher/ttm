@@ -31,6 +31,7 @@
     font-size: 16px;
     margin: 5px 0;
 }
+
 .secteur-reseau{
     text-align: left;
 }
@@ -48,6 +49,7 @@
     justify-content: center;
     align-items: center;
 }
+
 .article-descriptif {
     position: relative;
     padding-left: 25px; /* espace pour la ligne verticale */
@@ -84,6 +86,7 @@
     background-color: #e31766; /* rose */
     border-radius: 50%;
     z-index: 1;
+
 }
 
 /* ROTATION DES ICONS POINGS */

@@ -41,8 +41,10 @@ export default function DetailCard(){
                 <p>{selectedUser.profil?.content}</p>
             </article>
             <nav className="card-detail-nav">
+
                 <FontAwesomeIcon className="icon-message" icon={faMessage}
                                  onClick={() => navigate(`/messagerie/${selectedUser.id}`)}/>
+
                 <div className="icon-container">
                 <FontAwesomeIcon className="left-hand" icon={faHandBackFist} />
                 <FontAwesomeIcon className="right-hand" icon={faHandBackFist} />

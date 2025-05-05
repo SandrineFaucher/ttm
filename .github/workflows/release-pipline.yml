@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - develop
 
 permissions:
   contents: write
@@ -12,13 +13,13 @@ jobs:
   get-version:
     uses: shiipou/github-actions/.github/workflows/get-version.yml@main
     with:
-
-      release-branches: '^(main)$'
+      release-branch: 'main'
+      prerelease-branches: 'develop'
       
   build:
     name: Build
     runs-on: ubuntu-latest
-    if: ${{ needs.get-version.outputs.will-release == 'true' }}
+    if: ${{ needs.get-version.outputs.version != '' }}
     needs:
       - get-version
 
@@ -67,7 +68,7 @@ jobs:
 
 
   release:
-    if: ${{ needs.get-version.outputs.will-release == 'true' }}
+    if: ${{ needs.get-version.outputs.version != '' }}
     needs: [ get-version, build ]
     runs-on: ubuntu-latest
     steps:
@@ -83,12 +84,11 @@ jobs:
           VERSION: "${{ needs.get-version.outputs.version }}"
           REPO: "${{ github.repository }}"
           COMMIT: "${{ github.sha }}"
-          CHANGELOGS: "${{ needs.get-version.outputs.changelogs }}"
+          CHANGELOGS: "${{ needs.get-version.outputs.changelog }}"
           GH_TOKEN: ${{ github.token }}
         run: |
           echo "${CHANGELOGS}" > changelogs.md
-          CMD_ARGS="--repo ${REPO} --target ${COMMIT} -F changelogs.md"
-          gh release create --repo $REPO --target $COMMIT v$VERSION artifacts/*.jar
+          gh release create --repo $REPO --target $COMMIT -F changelogs.md v$VERSION artifacts/*.jar
       
 
 

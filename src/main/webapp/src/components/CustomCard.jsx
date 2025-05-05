@@ -5,6 +5,7 @@ const CustomCard =({ clickable, onClick, title, image, availability, sectors, ac
 console.log("Image :" ,image)
     return (
         <div className={`body-card ${clickable ? "cursor-pointer" : ""}`}
+
              onClick={clickable ? onClick : undefined}>
 
             <h2 className="pseudo-user">{title}</h2>
