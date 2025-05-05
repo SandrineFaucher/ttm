@@ -54,14 +54,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    // Récupération du token à partir de son nom dans le cookie "jwt"
-    //    private String getTokenFromRequest(HttpServletRequest request) {
-    //        String jwtToken = request.getHeader("jwt");  // Récupère le JWT depuis l'en-tête "jwt"
-    //        if (StringUtils.hasText(jwtToken)) {
-    //            return jwtToken;  // Si le token existe, le retourne
-    //        }
-    //        return null;  // Aucun token trouvé
-    //    }
     private String getTokenFromRequest(HttpServletRequest request) {
         // Vérifie si le JWT est présent dans les cookies
         if (request.getCookies() != null) {
