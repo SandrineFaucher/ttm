@@ -36,24 +36,7 @@ public class AuthController {
     private AuthService authService;
     private UserRepository userRepository;
 
-    //@PostMapping("/login")
-    //    public ResponseEntity<?> login(@RequestBody LoginDto loginDto, HttpServletResponse response) {
-    //        // Étape 1 : Authentifier l'utilisateur et générer un token
-    //        String token = authService.login(loginDto);
-    //
-    //        // Étape 2 : Créer un cookie avec le token JWT
-    //        Cookie cookie = new Cookie("JWT", token);  // Le nom du cookie est "JWT"
-    //        cookie.setHttpOnly(true); // Empêche l'accès au cookie via JavaScript (sécurisé contre XSS)
-    //        cookie.setSecure(true); // Assure que le cookie est uniquement envoyé via HTTPS (sécurisé contre les attaques man-in-the-middle)
-    //        cookie.setPath("/"); // Le cookie sera envoyé pour toutes les routes
-    //        cookie.setMaxAge(86400); // Durée du cookie en secondes (1 jour ici, ajuste selon tes besoins)
-    //
-    //        // Étape 3 : Ajouter le cookie dans la réponse
-    //        response.addCookie(cookie);
-    //
-    //        // Étape 4 : Retourner une réponse avec un message de succès
-    //        return ResponseEntity.ok("Login successful");  // Pas besoin de renvoyer le token, il est dans le cookie
-    //    }
+
 
     @PostMapping("/login")
     public ResponseEntity<Map<String, String>> login(@RequestBody LoginDto loginDto, HttpServletResponse response) {

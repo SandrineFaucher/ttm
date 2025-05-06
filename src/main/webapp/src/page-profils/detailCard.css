@@ -32,6 +32,9 @@
     margin: 5px 0;
 }
 
+.secteur-reseau{
+    text-align: left;
+}
 .article-descriptif {
     margin-top: 20px;
 }
@@ -46,13 +49,44 @@
     justify-content: center;
     align-items: center;
 }
+
+.article-descriptif {
+    position: relative;
+    padding-left: 25px; /* espace pour la ligne verticale */
+    margin: 20px 0;
+}
+
+/* Ligne verticale à gauche + point */
+.article-descriptif::before {
+    content: "";
+    position: absolute;
+    left: 8px;
+    top: 0;
+    width: 2px;
+    height: 100%;
+    background-color: #72c91f; /* ligne verticale verte */
+}
+
 .article-descriptif::after {
     content: "";
     display: block;
     width: 60%;
     height: 2px;
-    background: rgba(0, 0, 0, 0.4);
-    margin: 20px auto; /* Ajoute de l'espace autour de la ligne */
+    background: rgba(0, 0, 0, 0.4); /* ligne horizontale */
+    margin: 20px auto; /* centrée et espacée */
+}
+
+/* Petit point en haut de la ligne verticale */
+.article-descriptif .point-top {
+    position: absolute;
+    left: 3px;
+    top: 0;
+    width: 10px;
+    height: 10px;
+    background-color: #e31766; /* rose */
+    border-radius: 50%;
+    z-index: 1;
+
 }
 
 /* ROTATION DES ICONS POINGS */

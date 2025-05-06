@@ -13,7 +13,11 @@ spring:
     show-sql: true
     hibernate:
       dialect: org.hibernate.dialect.PostgreSQLDialect
-      ddl-auto: validate # Hibernate ne crée/modifie pas les tables
+      ddl-auto: none # empeche Hibernate de prendre le dessus sur flyway
+
+  mongo:
+    url: mongodb://localhost:27017/?replicaSet=rs0
+    db: ttm
 
   servlet:
     multipart:

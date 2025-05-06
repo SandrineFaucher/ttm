@@ -1,6 +1,6 @@
 
 import React from "react";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {useUser} from "../context/UserContext.jsx";
 import "./detailCard.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -9,7 +9,8 @@ import { faMessage, faHandBackFist} from '@fortawesome/free-solid-svg-icons';
 
 
 export default function DetailCard(){
-    const { id } = useParams();
+    // const { id } = useParams();
+    const navigate = useNavigate();
     const { selectedUser } = useUser();
     const baseUrl = "http://localhost:8080/";
     const imagePath = selectedUser?.profil?.image;
@@ -27,17 +28,23 @@ export default function DetailCard(){
             <section className="header-card-detail">
             <h2>{selectedUser.username}</h2>
             <img src={imageUrl} alt="Profil" />
-            <p>Ville : {selectedUser.profil?.city}</p>
-            <p>Région : {selectedUser.profil?.region}</p>
-            <p>Secteurs d'activité : {sectorsContent}</p>
-            <p>Accompagnements : {accompaniementContent}</p>
+            <p>{selectedUser.profil?.city}</p>
+            <p> {selectedUser.profil?.region}</p>
+            </section>
+            <section className="secteur-reseau">
+                <p><strong>Secteurs :</strong> {sectorsContent}</p>
+            <p><strong>Accompagnements :</strong> {accompaniementContent}</p>
             </section>
             <article className="article-descriptif">
+                <div className="point-top"></div>
                 <h3>Description</h3>
                 <p>{selectedUser.profil?.content}</p>
             </article>
             <nav className="card-detail-nav">
-                <FontAwesomeIcon className="icon-message" icon={faMessage} />
+
+                <FontAwesomeIcon className="icon-message" icon={faMessage}
+                                 onClick={() => navigate(`/messagerie/${selectedUser.id}`)}/>
+
                 <div className="icon-container">
                 <FontAwesomeIcon className="left-hand" icon={faHandBackFist} />
                 <FontAwesomeIcon className="right-hand" icon={faHandBackFist} />

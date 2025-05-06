@@ -2,8 +2,10 @@ import React,{useState} from "react";
 import CustomInput from "../components/CustomImput.jsx";
 import CustomSelect from "../components/CustomSelect.jsx";
 import { Register } from "../services/userService.js";
+import { useNotification } from '../context/NotificationContext.jsx';
 
 export default function FormRegister() {
+    const { notifySuccess, notifyError } = useNotification();
     /**
      * State du formulaire
      */
@@ -45,21 +47,21 @@ export default function FormRegister() {
 
         // Validation des mots de passe
         if (formData.password !== formData.passwordConfirm) {
-            alert("Les mots de passe ne correspondent pas !");
+            notifyError("Les mots de passe ne correspondent pas !");
             return;
         }
         try {
             const response = await Register(formData);
             console.log("Registration successful:", response);
-            alert("Utilisateur enregistré avec succès !");
+            notifySuccess("Utilisateur enregistré avec succès !");
         } catch (error) {
             console.error("Erreur lors de l'enregistrement :", error.message || error);
-            alert(`Échec de l'enregistrement : ${error.message || "Erreur inconnue."}`);
+            notifyError(`Échec de l'enregistrement : ${error.message || "Erreur inconnue."}`);
         }
     };
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form className="form-register" onSubmit={handleSubmit}>
             <CustomInput
                 label="Pseudo"
                 type="text"

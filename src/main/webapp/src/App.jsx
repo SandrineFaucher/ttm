@@ -11,6 +11,7 @@ import { AuthProvider } from "./context/AuthContext.jsx";
 import UserProfil from "./page-profils/UserProfil.jsx";
 import DetailCard from "./page-profils/DetailCard.jsx";
 import {UserProvider} from "./context/UserContext.jsx";
+import {NotificationProvider} from "./context/NotificationContext.jsx";
 
 
 
@@ -18,12 +19,14 @@ export default function App() {
 
 
   return (
+<NotificationProvider>
   <AuthProvider>
     <UserProvider>
       <Routes>
         <Route path={"/"} element={<Layout />}>
           <Route index element={<Home/>}/>
           <Route path="profils" element={<Profils/>}/>
+          <Route path="messagerie/:id" element={<Messagerie/>}/>
           <Route path="messagerie" element={<Messagerie/>}/>
           <Route path="boite-a-outils" element={<Document/>}/>
           <Route path="adminView" element={<AdminView/>}/>
@@ -34,5 +37,6 @@ export default function App() {
       </Routes>
     </UserProvider>
   </AuthProvider>
+</NotificationProvider>
     );
 }

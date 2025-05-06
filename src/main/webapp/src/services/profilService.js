@@ -180,7 +180,7 @@ export async function updateProfil(formData) {
         const data = text ? JSON.parse(text) : {};
         console.log("Réponse serveur:", data);
 
-        // Si la réponse contient une URL d'image, affichez-la
+        // Si la réponse contient une URL d'image, l'afficher
         if (data.image) {
             const img = document.createElement('img');
             img.src = data.image;
@@ -205,7 +205,7 @@ export async function getProfilsByRoles() {
             },
             credentials: 'include'  // Inclut le cookie JWT (HttpOnly) dans la requête
         });
-        console.log("📡 Réponse HTTP :", response.status, response.statusText);
+
         // Vérifie si la réponse est correcte (status 200)
         if (!response.ok) {
             throw new Error(`Failed to fetch users profils : ${response.status}`);
@@ -214,7 +214,9 @@ export async function getProfilsByRoles() {
         return profilsOfUsers;
 
     } catch (error) {
-        console.error("❌ Erreur détaillée :", error);
+
+        console.error("Erreur détaillée :", error);
+
         throw new Error("Failed to fetch profils of users");
     }
 }

@@ -17,6 +17,7 @@ export default function Layout() {
     const [isNavOpen, setIsNavOpen] = useState(false);
     const [isProfilOpen, setIsProfilOpen] = useState(false);
     const profilRef = useRef(null);
+    const isAuth = auth?.role === "ADMIN";
 
     const toggleNav = () => {
         setIsNavOpen(!isNavOpen)
@@ -80,9 +81,9 @@ export default function Layout() {
                     {isProfilOpen && (
                         <div className="menu" aria-label="Sous menu du profil">
                             <ul className="dropdown-content">
-                                <li>
+                                {isAuth && <li>
                                     <Link to="/AdminView" className="menu-link" aria-label="Lien d'administrateur">Back-office</Link>
-                                </li>
+                                </li>}
                                 <li>
                                     <Link to="/userProfil" className="menu-link" aria-label="Lien vers le profil utilisateur">Mon profil</Link>
                                 </li>

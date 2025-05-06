@@ -1,0 +1,23 @@
+.message{
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 20px;
+    align-items: center;
+}
+.content{
+    width: 200px;
+    background-color: #bddd96;
+    padding: 10px;
+    margin-right: 5px;
+    border-radius: 5px;
+    word-break: break-all;
+}
+.icon-delete{
+    color: red;
+}
+
+.input-area{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}

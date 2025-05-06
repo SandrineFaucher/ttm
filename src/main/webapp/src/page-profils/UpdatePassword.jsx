@@ -2,9 +2,11 @@ import React, {useContext, useState} from "react";
 import CustomInput from "../components/CustomImput.jsx";
 import { AuthContext } from "../context/AuthContext.jsx";
 import { UpdateUserPassword} from "../services/userService.js";
+import { useNotification } from '../context/NotificationContext.jsx';
 
 
 export default function UpdatePassword() {
+    const { notifySuccess, notifyError } = useNotification();
     const {auth, setAuth } = useContext(AuthContext);
     const [formData, setFormData] = useState({
 
@@ -28,7 +30,7 @@ export default function UpdatePassword() {
 
         // Validation des mots de passe
         if (formData.newPassword !== formData.confirmPassword) {
-            alert("Les mots de passe ne correspondent pas !");
+            notifyError("Les mots de passe ne correspondent pas !");
             return;
         }
 
@@ -39,10 +41,10 @@ export default function UpdatePassword() {
                 ...auth,
                 password: formData.newPassword,
             });
-            alert("Mot de passe modifié avec succès !");
+            notifySuccess("Mot de passe modifié avec succès !");
         } catch (error) {
             console.error("Erreur lors de la modification:", error.message || error);
-            alert(`Échec de la modification: ${error.message || "Erreur inconnue."}`);
+            notifyError(`Échec de la modification: ${error.message || "Erreur inconnue."}`);
         }
     };
 
