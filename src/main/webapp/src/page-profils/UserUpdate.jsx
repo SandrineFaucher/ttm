@@ -2,8 +2,10 @@ import {useContext, useState, useEffect} from "react";
 import CustomInput from "../components/CustomImput.jsx";
 import { AuthContext } from "../context/AuthContext.jsx";
 import { UpdateUser} from "../services/userService.js";
+import { useNotification } from '../context/NotificationContext.jsx';
 
 export default function UserUpdate() {
+    const { notifySuccess, notifyError } = useNotification();
     const { auth, setAuth } = useContext(AuthContext);
     const [formData, setFormData] = useState({
         //si le contexte est chargé, affiche les données sinon la valeur est null
@@ -46,10 +48,10 @@ const handleSubmit = async (e) => {
             username: formData.username,
             email: formData.email,
         });
-        alert("Utilisateur mis à jour avec succès !");
+        notifySuccess("Utilisateur mis à jour avec succès !");
     } catch (error) {
         console.error("Erreur lors de la mise à  jour :", error.message || error);
-        alert(`Échec de la mise à jour : ${error.message || "Erreur inconnue."}`);
+        notifyError(`Échec de la mise à jour : ${error.message || "Erreur inconnue."}`);
     }
 };
 

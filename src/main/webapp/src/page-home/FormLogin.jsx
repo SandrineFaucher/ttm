@@ -3,10 +3,13 @@ import CustomInput from "../components/CustomImput.jsx";
 import {handleLoginAndAuthenticate} from "../services/userService.js";
 import {AuthContext} from "../context/AuthContext.jsx";
 import {useNavigate} from "react-router-dom";
+import { useNotification } from '../context/NotificationContext.jsx';
+
 
 
 
 const FormLogin = () => {
+    const { notifySuccess, notifyError } = useNotification();
     const navigate = useNavigate();
     const { setAuth } = useContext(AuthContext);
     const [formData, setFormData] = useState({
@@ -23,6 +26,7 @@ const FormLogin = () => {
         });
     };
     const handleSubmit = async (e) => {
+
         e.preventDefault();
         console.log("Form submitted:", formData);
         try {
@@ -33,12 +37,12 @@ const FormLogin = () => {
             setAuth(authenticatedUser); // Met à jour le contexte avec l'utilisateur connecté
 
             console.log("Login successful:", authenticatedUser);
-            alert("Vous êtes bien connecté !");
+            notifySuccess("Vous êtes bien connecté !");
             // redirige vers la pages des profils une fois loggé
             navigate("/Profils");
         } catch (error) {
             console.error("Erreur de connexion :", error);
-            alert("Échec de la connexion.");
+            notifyError("Échec de la connexion.");
         }
     };
     return (

@@ -7,8 +7,10 @@ import CustomSelect from "../components/CustomSelect.jsx";
 import CustomTextarea from "../components/CustomTextarea.jsx";
 import CustomImage from "../components/CustomImage.jsx";
 import { getSectors, getAccompaniements, getCities, getRegionName, postProfil } from "../services/profilService.js";
+import { useNotification } from '../context/NotificationContext.jsx';
 
 export default function FormProfil () {
+    const { notifySuccess, notifyError } = useNotification();
     /**
      * State des données
      */
@@ -149,10 +151,10 @@ export default function FormProfil () {
         try {
             const result = await postProfil(formData);
             console.log("Profil enregistré avec succès :", result);
-            alert("Votre profil a été enregistré avec succès !");
+            notifySuccess("Votre profil a été enregistré avec succès !");
         } catch (error) {
             console.error("Erreur lors de l'envoi du formulaire :", error);
-            alert("Une erreur est survenue lors de l'envoi du formulaire.");
+            notifyError("Une erreur est survenue lors de l'envoi du formulaire.");
         }
     };
 
