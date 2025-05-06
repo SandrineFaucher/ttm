@@ -46,7 +46,6 @@ export default function DetailCard(){
     return (
         <section className="detail-card-container">
             <section className="header-card-detail">
-
             <h2>{selectedUser.username}</h2>
             <img src={imageUrl} alt="Profil" />
             <p>{selectedUser.profil?.city}</p>
@@ -56,7 +55,6 @@ export default function DetailCard(){
                 <p><strong>Secteurs :</strong> {sectorsContent}</p>
             <p><strong>Accompagnements :</strong> {accompaniementContent}</p>
 
-                
             </section>
             <article className="article-descriptif">
                 <div className="point-top"></div>
