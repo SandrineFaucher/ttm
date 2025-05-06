@@ -214,4 +214,25 @@ export async function getMatches(){
 }
 
 
+export async function getUserDetails(userId) {
+    try {
+        const response = await fetch(`http://localhost:8080/users/${userId}`, {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json"
+            },
+            credentials: 'include'
+        });
+        if (response.ok) {
+            const data = await response.json();
+            return data;
+        }
+    } catch (error) {
+        console.error("Erreur lors de la récupération des détails de l'utilisateur :", error);
+    }
+}
+
+
+
 

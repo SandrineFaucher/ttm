@@ -12,6 +12,7 @@ import UserProfil from "./page-profils/UserProfil.jsx";
 import DetailCard from "./page-profils/DetailCard.jsx";
 import {UserProvider} from "./context/UserContext.jsx";
 import {NotificationProvider} from "./context/NotificationContext.jsx";
+import ListOfConversations from "./page-messagerie/ListOfConversations.jsx";
 
 
 
@@ -27,12 +28,12 @@ export default function App() {
           <Route index element={<Home/>}/>
           <Route path="profils" element={<Profils/>}/>
           <Route path="messagerie/:id" element={<Messagerie/>}/>
-          <Route path="messagerie" element={<Messagerie/>}/>
           <Route path="boite-a-outils" element={<Document/>}/>
           <Route path="adminView" element={<AdminView/>}/>
           <Route path="/login" element={<FormLogin />} />
           <Route path="/userProfil" element={<UserProfil/>} />
           <Route path="/detailCard/:id" element={<DetailCard/>} />
+          <Route path="/listeOfConversations" element={<ListOfConversations/>} />
         </Route>
       </Routes>
     </UserProvider>

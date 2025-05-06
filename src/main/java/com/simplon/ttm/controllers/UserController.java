@@ -121,5 +121,11 @@ public class UserController {
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
+
+    @GetMapping("/users/{userId}")
+    public ResponseEntity<User> getUser(@PathVariable long userId) {
+        Optional<User> user = userRepository.findById(userId);
+        return ResponseEntity.ok(user.orElse(null));
+    }
 }
 
