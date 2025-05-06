@@ -8,8 +8,10 @@ import CustomTextarea from "../components/CustomTextarea.jsx";
 import CustomImage from "../components/CustomImage.jsx";
 import {getSectors, getAccompaniements, getCities, getRegionName, updateProfil} from "../services/profilService.js";
 import {AuthContext} from "../context/AuthContext.jsx";
+import { useNotification } from '../context/NotificationContext.jsx';
 
 export default function FormUpdateProfil () {
+    const { notifySuccess, notifyError } = useNotification();
     /**
      * State des données
      */
@@ -162,11 +164,11 @@ export default function FormUpdateProfil () {
                 region: formData.region
 
             });
-            alert("Votre profil a été mis à jour avec succès !");
+            notifySuccess("Votre profil a été mis à jour avec succès !");
 
         } catch (error) {
             console.error("Erreur lors de l'envoi du formulaire :", error);
-            alert("Une erreur est survenue lors de l'envoi du formulaire.");
+            notifyError("Une erreur est survenue lors de l'envoi du formulaire.");
         }
     };
 
@@ -261,6 +263,4 @@ export default function FormUpdateProfil () {
             <button type="submit">Modifier</button>
         </form>
     );
-
-
 }
