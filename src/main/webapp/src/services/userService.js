@@ -214,6 +214,7 @@ export async function getMatches(){
 }
 
 
+
 export async function getUserDetails(userId) {
     try {
         const response = await fetch(`http://localhost:8080/users/${userId}`, {
