@@ -1,101 +1,3 @@
-// import React, {useState, useMemo, useEffect, useContext, useRef} from "react";
-// import { useParams } from "react-router-dom";
-// import { Stomp } from '@stomp/stompjs';
-// import { AuthContext } from "../context/AuthContext.jsx";
-//
-//
-// export default function Messagerie(){
-//     const { id: destId } = useParams();
-//     const {auth } = useContext(AuthContext);
-//     const senderId = auth?.id;
-//     const [loadMessage, setLoadMessages ] = useState(false);
-//     const [loader, setLoader] = useState(false);
-//     const [messages, setMessages] = useState([]);
-//     const [content, setContent] = useState("");
-//     const [isConnected, setIsConnected] = useState(false);
-//
-//     //connexion au websocket
-//     const client = useMemo(()=>{
-//         return Stomp.client("ws://localhost:8080/ws")
-//     }, []);
-//
-//     /**
-//      * Récupérer les messages entre deux interlocuteurs
-//      */
-//
-//     useEffect(() => {
-//         // permet de vérifier si la connexion est déjà établie pour ne pas la répéter
-//         if (!isConnected) {
-//             setLoader(true);
-//             client.connect({}, () => {
-//                 setIsConnected(true); // défini la connexion établie
-//
-//                 client.subscribe('/getMessages', (e) => {
-//                     console.log('Receive Message', e.body);
-//                     setMessages(JSON.parse(e.body));
-//                     setLoader(false);
-//                 });
-//
-//                 client.subscribe('/newMessage', (e) => {
-//                     console.log('New Message', e.body);
-//                     setMessages((prev) => [...prev, JSON.parse(e.body)]);
-//                 });
-//
-//                 client.send('/requestMessages', {}, JSON.stringify({
-//                     senderId: senderId,
-//                     destId: parseInt(destId)
-//                 }));
-//             });
-//         }
-//     }, [client, destId, senderId, isConnected]);
-//
-//
-//     /**
-//      * Envoyer un message qui est persisté en base mongodb pour l'utilisateur récupéré dans l'url
-//      */
-//     const sendMessage = () => {
-//         if (!content.trim()) return;
-//         client.send("/send", {}, JSON.stringify({
-//             destId: parseInt(destId),
-//             content: content.trim()
-//         }));
-//         setContent("");
-//     };
-//
-//     return (
-//         <>
-//             <h1>Page Messagerie</h1>
-//
-//             <div className="message-card">
-//                 <div className="messages-box">
-//                     <ul>
-//                         {messages.map((message, index) => {
-//                             return (
-//                                 <li
-//                                     key={`${message._id.timestamp}-${index}`}
-//                                 >
-//                                     <p className="username">{message.sender}</p>
-//                                     <p className="content">{message.content}</p>
-//                                 </li>
-//                             );
-//                         })}
-//                     </ul>
-//                 </div>
-//
-//                 <div className="input-area">
-//                     <input
-//                         type="text"
-//                         value={content}
-//                         onChange={(e) => setContent(e.target.value)}
-//                         placeholder="Écris ton message ici..."
-//                     />
-//                     <button onClick={sendMessage} >Envoyer</button>
-//                 </div>
-//             </div>
-//         </>
-//     )
-//
-// }
 
 import React, { useEffect, useRef, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
@@ -105,6 +7,7 @@ import {useUser} from "../context/UserContext.jsx";
 import {faXmark, faPaperPlane} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import './messagerie.css';
+import {getUserDetails} from "../services/userService.js";
 
 export default function Messagerie() {
     const { id: _destId } = useParams();
@@ -114,6 +17,7 @@ export default function Messagerie() {
     const { auth } = useContext(AuthContext);
     const senderId = auth?.id;
     const authUsername = auth?.username
+    const [userDetails, setUserDetails] = useState({});
 
     const [messages, setMessages] = useState([]);
     const [content, setContent] = useState("");
@@ -147,7 +51,7 @@ export default function Messagerie() {
                     subscriptionsRef.current.getMessages = sub;
                 }
 
-                // Souscrit à newMessage si non existant
+                //Souscrit à newMessage si non existant
                 if (!subscriptionsRef.current.newMessage) {
                     const sub = client.subscribe("/newMessage", (e) => {
                         console.log("New Message", e.body);
@@ -229,6 +133,33 @@ export default function Messagerie() {
             console.warn("WebSocket non connecté !");
         }
     };
+
+    useEffect(() => {
+        const fetchUserDetails = async () => {
+            const knownIds = new Set(Object.keys(userDetails));
+            const idsToFetch = messages
+                .map((m) => m.sender)
+                .filter((id) => id && !knownIds.has(String(id)));
+
+            if (idsToFetch.length === 0) return;
+
+            const newDetails = { ...userDetails };
+
+            for (const id of idsToFetch) {
+                const user = await getUserDetails(id);
+                if (user) {
+                    newDetails[id] = user;
+                }
+            }
+
+            setUserDetails(newDetails);
+        };
+
+        if (messages.length > 0) {
+            fetchUserDetails();
+        }
+    }, [messages]);
+
     return (
         <>
             <h1>Page Messagerie</h1>
@@ -240,24 +171,15 @@ export default function Messagerie() {
                         {messages.map((message) => {
                             const messageId = message._id;
                             const idSender = message.sender;
-                            const isAuth = idSender === senderId;
-                            const isDest = idSender === destId;
 
-                            console.log("auth : " ,isAuth);
-                            console.log("dest :", destId);
-                            console.log("destUsername ", destUsername);
                             return (
                                 <li key={messageId}>
                                     <p className="username">
-                                        {idSender && isAuth
-                                            ? authUsername
-                                            : idSender && isDest
-                                            ? destUsername
-                                        : "utilisateur inconnu"}
+                                        {userDetails[idSender]?.username ?? "utilisateur inconnu"}
                                     </p>
                                     <div className="message">
-                                    <p className="content">{message.content}</p>
-                                    <div onClick={() => handleDelete(messageId)}><FontAwesomeIcon className="icon-delete" icon={faXmark} /></div>
+                                        <p className="content">{message.content}</p>
+                                        <div onClick={() => handleDelete(messageId)}><FontAwesomeIcon className="icon-delete" icon={faXmark}/></div>
                                     </div>
                                 </li>
                             );

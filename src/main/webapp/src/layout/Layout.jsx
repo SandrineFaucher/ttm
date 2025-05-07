@@ -18,6 +18,7 @@ export default function Layout() {
     const [isProfilOpen, setIsProfilOpen] = useState(false);
     const profilRef = useRef(null);
     const isAuth = auth?.role === "ADMIN";
+    const isAuthLeaderproject = auth?.role === 'LEADERPROJECT';
 
     const toggleNav = () => {
         setIsNavOpen(!isNavOpen)
@@ -64,9 +65,11 @@ export default function Layout() {
                     <li>
                         <Link to="/Profils"><FontAwesomeIcon icon={faAddressCard} className="icon"/><div className="page-name">Profils</div></Link>
                     </li>
+                    { !isAuthLeaderproject &&
                     <li>
-                        <Link to="/Messagerie"><FontAwesomeIcon icon={faMessage} className="icon"/><div className="page-name">Messagerie</div></Link>
+                        <Link to="/listeOfConversations"><FontAwesomeIcon icon={faMessage} className="icon"/><div className="page-name">Messagerie</div></Link>
                     </li>
+                    }
                     <li>
                         <Link to="/boite-a-outils"><FontAwesomeIcon icon={faToolbox} className="icon"/><div className="page-name">Boîte à Outils</div></Link>
                     </li>

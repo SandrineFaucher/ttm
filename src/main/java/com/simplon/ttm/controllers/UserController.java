@@ -3,6 +3,7 @@ package com.simplon.ttm.controllers;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,8 @@ import com.simplon.ttm.repositories.UserRepository;
 import com.simplon.ttm.services.UserService;
 
 import jakarta.validation.Valid;
+import lombok.Builder;
+
 @CrossOrigin(origins = "http://localhost:5173" ,allowCredentials = "true")
 @RestController
 
@@ -74,9 +77,8 @@ public class UserController {
     }
 
     @PostMapping("/match/{userId2}")
-    public ResponseEntity<String> saveMatch(@PathVariable long userId2, Principal principal) {
+    public ResponseEntity<String> saveMatch(@PathVariable long userId2, Authentication authentication) {
         // Récupérer l'utilisateur authentifié
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String authenticatedUsername = authentication.getName();
 
         // Trouver l'utilisateur dans la base de données
@@ -96,5 +98,36 @@ public class UserController {
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Utilisateur non authentifié.");
     }
+
+
+    @GetMapping("/matches")
+    public ResponseEntity<List<Long>> getUserMatches(Authentication authentication) {
+        // Récupérer le nom d'utilisateur à partir du principal
+        String authenticatedUsername = authentication.getName();
+
+        // Trouver l'utilisateur dans la base de données
+        Optional<User> authenticatedUser = userRepository.findByUsername(authenticatedUsername);
+
+        if (authenticatedUser.isPresent()) {
+            User user = authenticatedUser.get();
+
+            List<Long> matchedUserIds = user.getUser1()
+                    .stream()
+                    .map(User::getId)
+                    .collect(Collectors.toList());
+
+            return ResponseEntity.ok(matchedUserIds);
+        }
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+
+
+    @GetMapping("/users/{userId}")
+    public ResponseEntity<User> getUser(@PathVariable long userId) {
+        Optional<User> user = userRepository.findById(userId);
+        return ResponseEntity.ok(user.orElse(null));
+    }
+
 }
 
