@@ -5,9 +5,11 @@ import {useUser} from "../context/UserContext.jsx";
 import { AuthContext } from "../context/AuthContext.jsx";
 import "./detailCard.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 import {faMessage, faCalendarDays, faHandshake} from '@fortawesome/free-solid-svg-icons';
 import { addMatch} from "../services/userService.js";
 import { useNotification } from '../context/NotificationContext.jsx';
+
 
 
 
