@@ -5,9 +5,13 @@ import {useUser} from "../context/UserContext.jsx";
 import { AuthContext } from "../context/AuthContext.jsx";
 import "./detailCard.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 import {faMessage, faCalendarDays, faHandshake} from '@fortawesome/free-solid-svg-icons';
 import { addMatch} from "../services/userService.js";
 import { useNotification } from '../context/NotificationContext.jsx';
+import {faMessage, faHandBackFist, faCalendarDays} from '@fortawesome/free-solid-svg-icons';
+import { addMatch} from "../services/userService.js";
+
 
 
 
@@ -19,10 +23,12 @@ export default function DetailCard(){
     const imagePath = selectedUser?.profil?.image;
     const defaultImage = "uploads/profil_images/default_profile_picture.png";
     const imageUrl = imagePath ? `${baseUrl}${imagePath}` : `${baseUrl}${defaultImage}`;
+
     const { matchedUserIds, addMatchedUser} = useContext(AuthContext);
     const { auth } = useContext(AuthContext);
     const [match, setMatch] = useState(false);
     const isAuthLeaderproject = auth?.role === "LEADERPROJECT";
+
 
     useEffect(() => {
         if (selectedUser && matchedUserIds.includes(selectedUser.id)) {
@@ -42,6 +48,7 @@ export default function DetailCard(){
             setMatch(true);
             addMatchedUser(selectedUser.id);
             notifySuccess("Votre match est bien enregistré")
+
         } catch (error) {
             console.error("Erreur lors de l'envoi du match :", error);
         }
@@ -70,13 +77,17 @@ export default function DetailCard(){
             <nav className="card-detail-nav">
                 <div className={`icon-container ${match ? 'matched' : ''}`}>
                     <FontAwesomeIcon
+
                         className={`hand ${match ? 'matched' : ''}`}
                         icon={faHandshake}
+
                         onClick={!match ? handleMatchClick : undefined}
                     />
                 </div>
 
+
                 {match && isAuthLeaderproject &&(
+
                     <>
                         <FontAwesomeIcon
                             className="icon-message"
