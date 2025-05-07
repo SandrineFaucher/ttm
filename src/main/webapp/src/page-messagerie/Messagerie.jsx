@@ -7,6 +7,7 @@ import {useUser} from "../context/UserContext.jsx";
 import {faXmark, faPaperPlane} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import './messagerie.css';
+import {getUserDetails} from "../services/userService.js";
 
 export default function Messagerie() {
     const { id: _destId } = useParams();
@@ -16,6 +17,7 @@ export default function Messagerie() {
     const { auth } = useContext(AuthContext);
     const senderId = auth?.id;
     const authUsername = auth?.username
+    const [userDetails, setUserDetails] = useState({});
 
     const [messages, setMessages] = useState([]);
     const [content, setContent] = useState("");
@@ -49,7 +51,7 @@ export default function Messagerie() {
                     subscriptionsRef.current.getMessages = sub;
                 }
 
-                // Souscrit à newMessage si non existant
+                //Souscrit à newMessage si non existant
                 if (!subscriptionsRef.current.newMessage) {
                     const sub = client.subscribe("/newMessage", (e) => {
                         console.log("New Message", e.body);
@@ -131,6 +133,33 @@ export default function Messagerie() {
             console.warn("WebSocket non connecté !");
         }
     };
+
+    useEffect(() => {
+        const fetchUserDetails = async () => {
+            const knownIds = new Set(Object.keys(userDetails));
+            const idsToFetch = messages
+                .map((m) => m.sender)
+                .filter((id) => id && !knownIds.has(String(id)));
+
+            if (idsToFetch.length === 0) return;
+
+            const newDetails = { ...userDetails };
+
+            for (const id of idsToFetch) {
+                const user = await getUserDetails(id);
+                if (user) {
+                    newDetails[id] = user;
+                }
+            }
+
+            setUserDetails(newDetails);
+        };
+
+        if (messages.length > 0) {
+            fetchUserDetails();
+        }
+    }, [messages]);
+
     return (
         <>
             <h1>Page Messagerie</h1>
@@ -142,24 +171,15 @@ export default function Messagerie() {
                         {messages.map((message) => {
                             const messageId = message._id;
                             const idSender = message.sender;
-                            const isAuth = idSender === senderId;
-                            const isDest = idSender === destId;
 
-                            console.log("auth : " ,isAuth);
-                            console.log("dest :", destId);
-                            console.log("destUsername ", destUsername);
                             return (
                                 <li key={messageId}>
                                     <p className="username">
-                                        {idSender && isAuth
-                                            ? authUsername
-                                            : idSender && isDest
-                                            ? destUsername
-                                        : "utilisateur inconnu"}
+                                        {userDetails[idSender]?.username ?? "utilisateur inconnu"}
                                     </p>
                                     <div className="message">
-                                    <p className="content">{message.content}</p>
-                                    <div onClick={() => handleDelete(messageId)}><FontAwesomeIcon className="icon-delete" icon={faXmark} /></div>
+                                        <p className="content">{message.content}</p>
+                                        <div onClick={() => handleDelete(messageId)}><FontAwesomeIcon className="icon-delete" icon={faXmark}/></div>
                                     </div>
                                 </li>
                             );
