@@ -90,17 +90,11 @@
 }
 
 /* ROTATION DES ICONS POINGS */
-.left-hand {
-    font-size: 25px;
-    color: #333;
-    transform: rotate(45deg);
-    padding-right: 5px;
-}
 
-.right-hand {
+.hand {
     font-size: 25px;
     color: #333;
-    transform: rotate(-45deg);
+
 }
 
 .icon-container {

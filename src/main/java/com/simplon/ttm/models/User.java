@@ -69,6 +69,7 @@ public class User {
      * définition table intermédiaire pour valider un match
      */
     @ManyToMany
+    @Builder.Default
     @JoinTable(name = "user_match",
     joinColumns = @JoinColumn(name = "godparent_id"),
     inverseJoinColumns = @JoinColumn(name = "leaderproject_id"))
@@ -78,6 +79,7 @@ public class User {
      * l'attribut mappedBy doit faire référence au nom de l'attribut de l'autre côté de la relation
      */
     @ManyToMany(mappedBy = "user1")
+    @Builder.Default
     @JsonIgnore
     private Set<User> user2 = new HashSet<>();
 
