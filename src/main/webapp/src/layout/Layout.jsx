@@ -9,7 +9,7 @@ import { AuthContext } from "../context/AuthContext.jsx";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; 
 import { faHouse, faMessage, faAddressCard, faToolbox, faUser } from '@fortawesome/free-solid-svg-icons';
-import { faInstagram, faTiktok, faSquareFacebook, faLinkedin } from '@fortawesome/free-brands-svg-icons';
+import {faInstagram, faSquareFacebook, faLinkedin, faXTwitter} from '@fortawesome/free-brands-svg-icons';
 import {LogoutLi} from "./LogoutLi.jsx";
 
 export default function Layout() {
@@ -113,8 +113,8 @@ export default function Layout() {
                     <p><a href="tel:+0679875609">0679875609</a><br/><a href="mailto:accompagnement@initiativedeuxsevres.fr" >accompagnement@initiativedeuxsevres.fr</a></p>
                 </div>
                 <nav className="footer-bloc4" aria-label="Liens vers les réseaux sociaux">
-                    <Link to="" className="social-link" target="_blank" aria-label="Instagram"><FontAwesomeIcon icon={faInstagram} className="social-icon"/></Link>
-                    <Link to="" className="social-link" target="_blank" aria-label="TikTok"><FontAwesomeIcon icon={faTiktok} className="social-icon" /></Link>
+                    <Link to="https://www.instagram.com/initiative_deux_sevres/" className="social-link" target="_blank" aria-label="Instagram"><FontAwesomeIcon icon={faInstagram} className="social-icon"/></Link>
+                    <Link to="https://x.com/i/flow/login?redirect_after_login=%2FInitiativeFR" className="social-link" target="_blank" aria-label="TikTok"><FontAwesomeIcon icon={faXTwitter} className="social-icon" /></Link>
                     <Link to="https://www.facebook.com/profile.php?id=61556616180678" className="social-link" target="_blank" aria-label="Facebook"><FontAwesomeIcon icon={faSquareFacebook} className="social-icon" /></Link>
                     <Link to="https://www.linkedin.com/company/initiative-deux-sevres/posts/?feedView=all" className="social-link" target="_blank" aria-label="Linkedin"><FontAwesomeIcon icon={faLinkedin} className="social-icon" /></Link>
                 </nav>

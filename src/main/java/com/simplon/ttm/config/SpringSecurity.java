@@ -61,7 +61,8 @@ public class SpringSecurity {
                         .logoutUrl("/logout")
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID", "JWT")
-                        .logoutSuccessUrl("/"));
+                        .logoutSuccessUrl("/")
+                        .permitAll());
         return http.build();
     }
 
