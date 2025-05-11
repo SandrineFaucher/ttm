@@ -44,7 +44,8 @@ public class MessageController {
             User sender = userRepository.findByUsername(username).orElseThrow();
             Long senderId = sender.getId();
             Long destId = request.getDestId();
-            String Key = senderId + "_" + destId;
+            //garantit la reciprocité du binome
+            String Key = senderId < destId ? senderId + "_" + destId : destId + "_" + senderId;
 
 
         var messages = mongoService.getMessagesForConversation(senderId, destId);
