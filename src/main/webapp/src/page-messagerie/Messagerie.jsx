@@ -13,10 +13,8 @@ export default function Messagerie() {
     const { id: _destId } = useParams();
     const destId = Number(_destId);
     const { selectedUser: userDest } = useUser();
-    const destUsername = userDest?.username;
     const { auth } = useContext(AuthContext);
     const senderId = auth?.id;
-    const authUsername = auth?.username
     const [userDetails, setUserDetails] = useState({});
 
     const [messages, setMessages] = useState([]);
@@ -186,13 +184,16 @@ export default function Messagerie() {
                             const idSender = message.sender;
 
                             return (
-                                <li key={messageId}>
+                                <li
+                                    key={messageId}
+                                    className={senderId === idSender ? "message-item sent" : "message-item received"}
+                                >
                                     <p className="username">
                                         {userDetails[idSender]?.username ?? "utilisateur inconnu"}
                                     </p>
                                     <div className="message">
                                         <p className="content">{message.content}</p>
-                                        <div onClick={() => handleDelete(messageId)}><FontAwesomeIcon className="icon-delete" icon={faXmark}/></div>
+                                        <div  onClick={() => handleDelete(messageId)}><FontAwesomeIcon className="icon-delete" icon={faXmark}/></div>
                                     </div>
                                 </li>
                             );
