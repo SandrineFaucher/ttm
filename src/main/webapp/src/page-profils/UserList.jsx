@@ -12,11 +12,15 @@ const UsersList = () => {
     const [error, setError] = useState(null);
     const usersWithProfil = users.filter(user => user.profil);
 
+
+
     useEffect(() => {
         const fetchUsers = async () => {
             try {
                 const profils = await getProfilsByRoles();
+
                 console.log("Données reçues de l'API :", JSON.stringify(profils, null, 2));
+
                 setUsers(profils);
             } catch (err) {
                 setError(err.message);
@@ -78,11 +82,10 @@ const UsersList = () => {
                                 city={user.profil?.city || "Ville inconnue"}
                                 department={user.profil?.department || "Département inconnu"}
                                 region={user.profil?.region || "Région inconnue"}
-                                availability={user.profil?.availability || "Non renseignées"}
-                                sectors={sector}
-                                accompaniements={accompaniement}
-                                image={imageUrl}
-                                content={user.profil?.content || "Pas de description"}
+                                availability={user.profil?.availability|| "Non renseignées"}
+                            sectors={sector}
+                            accompaniements={accompaniement}
+                            image={imageUrl}content={user.profil?.content || "Pas de description"}
                             />
                         );
                     }
@@ -90,7 +93,7 @@ const UsersList = () => {
 
                     return null; // Optionnel : si aucun rôle ne correspond, ne rien afficher
 
-                    
+
                 })
             ) : (
                 <p>Aucun utilisateur trouvé.</p>
