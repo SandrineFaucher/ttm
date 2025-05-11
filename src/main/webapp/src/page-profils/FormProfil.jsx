@@ -16,7 +16,7 @@ export default function FormProfil () {
      */
 
     const [formData, setFormData] = useState({
-        availability:[],
+        availability:"",
         sectors:[],
         accompaniements:[],
         content:"",
