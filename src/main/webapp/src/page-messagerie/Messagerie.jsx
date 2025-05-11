@@ -29,53 +29,22 @@ export default function Messagerie() {
 
     // --- Setup WebSocket ---
     useEffect(() => {
+        // Si le client WebSocket n'existe pas encore, on l'initialise
         if (!clientRef.current) {
             clientRef.current = Stomp.client("ws://localhost:8080/ws");
         }
 
         const client = clientRef.current;
 
+        // Si le client n'est pas encore connecté, on établit la connexion
         if (!client.connected && !isConnected) {
-            setLoader(true);
+            setLoader(true); // Active l'indicateur de chargement
 
+            // Connexion au serveur WebSocket
             client.connect({}, () => {
-                setIsConnected(true);
+                setIsConnected(true); // Met à jour l'état de connexion
 
-                // Souscrit à getMessages si non existant
-                if (!subscriptionsRef.current.getMessages) {
-                    const sub = client.subscribe("/getMessages", (e) => {
-                        console.log("Receive Message", e.body);
-                        setMessages(JSON.parse(e.body));
-                        setLoader(false);
-                    });
-                    subscriptionsRef.current.getMessages = sub;
-                }
-
-                //Souscrit à newMessage si non existant
-                if (!subscriptionsRef.current.newMessage) {
-                    const sub = client.subscribe("/newMessage", (e) => {
-                        console.log("New Message", e.body);
-                        setMessages((prev) => [...prev, JSON.parse(e.body)]);
-                    });
-                    subscriptionsRef.current.newMessage = sub;
-                }
-
-                // Souscrit à deleteMessage si non existant
-                if (!subscriptionsRef.current.deleteMessage) {
-                    const sub = clientRef.current.subscribe("/deleteMessage", (e) => {
-                        const deletedId = e.body;
-                        console.log("Message supprimé reçu :", deletedId);
-
-                        setMessages((prev) =>
-                            prev.filter((msg) =>
-                                msg._id !== deletedId && msg._id?.$oid !== deletedId
-                            )
-                        );
-                    });
-                    subscriptionsRef.current.deleteMessage = sub;
-                }
-
-                // Request initial messages
+                // Envoie une requête pour récupérer les messages initiaux de la conversation
                 client.send(
                     "/requestMessages",
                     {},
@@ -84,20 +53,64 @@ export default function Messagerie() {
                         destId: parseInt(destId),
                     })
                 );
+
+                // Souscrit à la réception des messages initiaux (liste complète des messages)
+                if (!subscriptionsRef.current.getMessages) {
+                    const sub = client.subscribe("/getMessages", (e) => {
+                        console.log("Receive Message", e.body);
+                        setMessages(JSON.parse(e.body)); // Met à jour la liste des messages
+                        setLoader(false); // Désactive le chargement une fois les messages reçus
+                    });
+                    subscriptionsRef.current.getMessages = sub; // Stocke l'abonnement
+                }
+
+                // Souscrit à l'arrivée de nouveaux messages
+                if (!subscriptionsRef.current.newMessage) {
+                    const sub = client.subscribe("/newMessage", (e) => {
+                        console.log("New Message", e.body);
+                        const newMsg = JSON.parse(e.body);
+
+                        // Ajoute le message seulement s'il n'existe pas déjà dans la liste
+                        setMessages((prev) =>
+                            prev.some((msg) => msg._id === newMsg._id) ? prev : [...prev, newMsg]
+                        );
+                    });
+                    subscriptionsRef.current.newMessage = sub;
+                }
+
+                // Souscrit aux notifications de suppression de messages
+                if (!subscriptionsRef.current.deleteMessage) {
+                    const sub = client.subscribe("/deleteMessage", (e) => {
+                        const deletedId = e.body;
+                        console.log("Message supprimé reçu :", deletedId);
+
+                        // Retire le message de la liste s'il correspond à l'ID reçu
+                        setMessages((prev) =>
+                            prev.filter((msg) =>
+                                msg._id !== deletedId && msg._id?.$oid !== deletedId
+                            )
+                        );
+                    });
+                    subscriptionsRef.current.deleteMessage = sub;
+                }
             });
         }
 
-        // Optional cleanup if component unmounts
+        // Nettoyage à la désactivation du composant ou changement des dépendances
         return () => {
             if (client.connected) {
+                // Désabonne de tous les topics
                 Object.values(subscriptionsRef.current).forEach((sub) => sub.unsubscribe());
+                subscriptionsRef.current = {}; // Réinitialise les références d'abonnements
+
+                // Déconnecte le client WebSocket proprement
                 client.disconnect(() => {
                     console.log("WebSocket disconnected");
-                    setIsConnected(false);
+                    setIsConnected(false); // Met à jour l'état de connexion
                 });
             }
         };
-    }, [senderId, destId]);
+    }, [senderId, destId]); // Relance le useEffect quand l'expéditeur ou le destinataire change
 
     // --- Send Message ---
     const sendMessage = () => {
