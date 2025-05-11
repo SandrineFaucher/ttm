@@ -64,3 +64,13 @@ h2{
 h5{
     margin: 0;
 }
+
+/* Affiche l'élément */
+.visible {
+    display: block; /* ou flex ou selon le type de layout */
+}
+
+/* Cache l'élément */
+.hidden {
+    display: none;
+}
