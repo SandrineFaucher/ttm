@@ -64,8 +64,9 @@ export default function DetailCard(){
             <p> {selectedUser.profil?.region}</p>
             </section>
             <section className="secteur-reseau">
+                <p><strong>Disponibilités :</strong>{selectedUser.profil?.availability}</p>
                 <p><strong>Secteurs :</strong> {sectorsContent}</p>
-            <p><strong>Accompagnements :</strong> {accompaniementContent}</p>
+                <p><strong>Accompagnements :</strong> {accompaniementContent}</p>
 
 
             </section>

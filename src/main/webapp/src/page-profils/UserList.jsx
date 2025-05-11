@@ -62,6 +62,7 @@ const UsersList = () => {
                             city={user.profil?.city || "Ville inconnue"}
                             department={user.profil?.department || "Département inconnu"}
                             region={user.profil?.region || "Région inconnue"}
+                            availability={user.profil?.availability|| "Non renseignées"}
                             sectors={sector}
                             accompaniements={accompaniement}
                             image={imageUrl}
