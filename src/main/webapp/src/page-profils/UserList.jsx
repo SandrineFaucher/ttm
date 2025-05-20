@@ -90,7 +90,7 @@ const UsersList = () => {
 
                     return null; // Optionnel : si aucun rôle ne correspond, ne rien afficher
 
-                    
+
                 })
             ) : (
                 <p>Aucun utilisateur trouvé.</p>
