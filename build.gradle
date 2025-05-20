@@ -3,6 +3,25 @@ plugins {
 	id 'org.springframework.boot' version '3.4.4'
 	id 'io.spring.dependency-management' version '1.1.6'
 }
+def reactAppDir = file("src/main/webapp")
+
+task npmInstall(type: Exec) {
+	workingDir = reactAppDir
+	commandLine = ["cmd", "/c", "npm install"]
+}
+
+task npmBuild(type: Exec) {
+	workingDir = reactAppDir
+	commandLine = ["cmd", "/c", "npm install"]
+	dependsOn npmInstall
+}
+
+task copyFrontend(type: Copy) {
+	dependsOn npmBuild
+	from "${reactAppDir}/build"
+	into "src/main/resources/static"
+}
+processResources.dependsOn(copyFrontend)
 
 group = 'com.simplon'
 version = System.getenv("VERSION") ?: '0.0.1-SNAPSHOT'
