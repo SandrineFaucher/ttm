@@ -14,7 +14,6 @@ spring:
     hibernate:
       dialect: org.hibernate.dialect.PostgreSQLDialect
       ddl-auto: none # empeche Hibernate de prendre le dessus sur flyway
-
   mongo:
     url: mongodb://localhost:27017/?replicaSet=rs0
     db: ttm
@@ -33,5 +32,7 @@ logging:
     org.springframework: debug
 
 debug: true
-
+server:
+  servlet:
+    context-path: /api
 
