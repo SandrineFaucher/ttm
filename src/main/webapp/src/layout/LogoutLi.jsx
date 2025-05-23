@@ -8,7 +8,7 @@ export const LogoutLi = () => {
 
     const handleLogout = async () => {
         try {
-            await fetch("http://localhost:8080/logout", {
+            await fetch("/api/logout", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

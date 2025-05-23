@@ -19,7 +19,7 @@ export default function DetailCard(){
     const { notifySuccess, notifyError } = useNotification();
     const navigate = useNavigate();
     const { selectedUser } = useUser();
-    const baseUrl = "http://localhost:8080/";
+    const baseUrl = "/api/";
     const imagePath = selectedUser?.profil?.image;
     const defaultImage = "uploads/profil_images/default_profile_picture.png";
     const imageUrl = imagePath ? `${baseUrl}${imagePath}` : `${baseUrl}${defaultImage}`;

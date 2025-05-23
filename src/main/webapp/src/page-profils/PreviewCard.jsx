@@ -23,7 +23,7 @@ export default function PreviewCard() {
     const sectorsContent = auth?.profil?.sectors.map(s =>s.content);
     const accompaniementContent = auth?.profil?.accompaniements.map(s => s.content);
 
-    const baseUrl = "http://localhost:8080/";
+    const baseUrl = "/api/";
     const imagePath = auth?.profil?.image;
     const defaultImage = "uploads/profil_images/default_profile_picture.png";
     const imageUrl = imagePath ? `${baseUrl}${imagePath}` : `${baseUrl}${defaultImage}`;
