@@ -8,7 +8,7 @@
  */
 export async function Register(formData) {
     try {
-        const response = await fetch("http://localhost:8080/admin/register", {
+        const response = await fetch("/api/admin/register", {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",
@@ -34,7 +34,7 @@ export async function Register(formData) {
 
 export async function UpdateUser(formData){
     try {
-        const response = await fetch("http://localhost:8080/userUpdate", {
+        const response = await fetch("/api/userUpdate", {
             method: 'PUT',
             headers:{
                 "Content-Type": "application/json",
@@ -56,7 +56,7 @@ export async function UpdateUser(formData){
 }
 export async function UpdateUserPassword(formData){
     try{
-        const response = await fetch("http://localhost:8080/userPasswordUpdate", {
+        const response = await fetch("/api/userPasswordUpdate", {
             method: 'PUT',
             headers:{
                 "Content-Type": "application/json",
@@ -84,7 +84,7 @@ export async function UpdateUserPassword(formData){
  */
 export async function Login(formData){
     try{
-        const response = await fetch("http://localhost:8080/login", {
+        const response = await fetch("/api/login", {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",
@@ -112,7 +112,7 @@ export async function Login(formData){
  */
 export async function getAuthenticateUser() {
     try {
-        const response = await fetch("http://localhost:8080/authenticate", {
+        const response = await fetch("/api/authenticate", {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",
@@ -171,7 +171,7 @@ export async function handleLoginAndAuthenticate(formData) {
 
 export async function addMatch(userId2){
     try{
-        const response = await fetch(`http://localhost:8080/match/${userId2}`, {
+        const response = await fetch(`/api/match/${userId2}`, {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",
@@ -194,7 +194,7 @@ export async function addMatch(userId2){
 
 export async function getMatches(){
     try{
-        const response = await fetch("http://localhost:8080/matches", {
+        const response = await fetch("/api/matches", {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",
@@ -217,7 +217,7 @@ export async function getMatches(){
 
 export async function getUserDetails(userId) {
     try {
-        const response = await fetch(`http://localhost:8080/users/${userId}`, {
+        const response = await fetch(`/api/users/${userId}`, {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",

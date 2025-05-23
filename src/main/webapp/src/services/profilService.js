@@ -1,6 +1,6 @@
 export async function getSectors() {
     try {
-        const response = await fetch("http://localhost:8080/sectors", {
+        const response = await fetch("/api/sectors", {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",
@@ -25,7 +25,7 @@ export async function getSectors() {
 
 export async function getAccompaniements() {
     try {
-        const response = await fetch("http://localhost:8080/accompaniements", {
+        const response = await fetch("/api/accompaniements", {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",
@@ -108,7 +108,7 @@ export async function postProfil(formData) {
         }
 
         // Envoi des données au serveur
-        const response = await fetch("http://localhost:8080/profil", {
+        const response = await fetch("/api/profil", {
             method: "POST",
             headers: { Accept: "application/json" }, // Pas de `Content-Type` avec FormData
             body: formDataToSend,
@@ -164,7 +164,7 @@ export async function updateProfil(formData) {
         }
 
         // Envoi des données au serveur
-        const response = await fetch("http://localhost:8080/updateProfil", {
+        const response = await fetch("/api/updateProfil", {
             method: "PUT",
             headers: { Accept: "application/json" }, // Pas de `Content-Type` avec FormData
             body: formDataToSend,
@@ -197,7 +197,7 @@ export async function updateProfil(formData) {
 export async function getProfilsByRoles() {
     try {
         console.log("📡 Envoi de la requête API...");
-        const response = await fetch("http://localhost:8080/usersProfils/by-role", {
+        const response = await fetch("/api/usersProfils/by-role", {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",

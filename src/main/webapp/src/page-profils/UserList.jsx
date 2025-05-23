@@ -37,7 +37,7 @@ const UsersList = () => {
                 usersWithProfil.map((user) => {
                     const sector = user.profil?.sectors.map(s => s.content) || ["Non renseigné"];
                     const accompaniement = user.profil?.accompaniements.map(a => a.content) || ["Non renseigné"];
-                    const baseUrl = "http://localhost:8080/";
+                    const baseUrl = "/api/";
                     const imagePath = user.profil?.image;
                     const defaultImage = "uploads/profil_images/default_profile_picture.png";
                     const imageUrl = imagePath ? `${baseUrl}${imagePath}` : `${baseUrl}${defaultImage}`;
