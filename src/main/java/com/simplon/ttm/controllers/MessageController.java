@@ -83,7 +83,44 @@ public class MessageController {
                     });
         }
     }
-
+//@MessageMapping("/requestMessages")
+//public void openMessagePage(SendMessageDto request, Principal auth) {
+//    String username = auth.getName();
+//    User sender = userRepository.findByUsername(username).orElseThrow();
+//    Long senderId = sender.getId();
+//    Long destId = request.getDestId();
+//
+//    var messages = mongoService.getMessagesForConversation(senderId, destId);
+//    template.convertAndSend("/getMessages", messages);
+//
+//    // TEMP : toujours écouter les messages
+//    mongoService.listenForNewMessages(senderId, destId)
+//            .forEach(doc -> {
+//                switch (Objects.requireNonNull(doc.getOperationType())) {
+//                    case INSERT:
+//                        Document fullDoc = doc.getFullDocument();
+//                        if (fullDoc != null && fullDoc.getObjectId("_id") != null) {
+//                            fullDoc.put("_id", fullDoc.getObjectId("_id").toHexString());
+//                        }
+//                        template.convertAndSend("/newMessage", doc.getFullDocument().toJson());
+//                        break;
+//                    case DELETE:
+//                        assert doc.getDocumentKey() != null;
+//                        template.convertAndSend("/deleteMessage", doc.getDocumentKey().get("_id").asObjectId().getValue());
+//                        break;
+//                    case UPDATE:
+//                        assert doc.getUpdateDescription() != null;
+//                        template.convertAndSend("/updateMessage", doc.getUpdateDescription().getUpdatedFields().toJson());
+//                        break;
+//                    case REPLACE:
+//                        assert doc.getFullDocument() != null;
+//                        template.convertAndSend("/updateMessage", doc.getFullDocument().toJson());
+//                        break;
+//                    default:
+//                        log.warn("Not yet implemented OperationType: {}", doc.getOperationType());
+//                }
+//            });
+//}
     @MessageMapping("/send")
     public void sendMessage(SendMessageDto message, Principal auth) throws Exception {
         //Récupération de mon user connecté

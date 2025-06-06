@@ -27,17 +27,13 @@ export default function Messagerie() {
 
     // --- Setup WebSocket ---
     useEffect(() => {
-        const isLocalhost = window.location.hostname === "localhost";
-        const protocol = isLocalhost ? "ws" : "wss";
-        const host = isLocalhost ? "localhost:8080" : "sfaucherttm.nocturlab.fr";
-        const path = isLocalhost ? "/ws" : "/api/ws";
-        const wsUrl = `${protocol}://${host}${path}`;
-        // Si le client WebSocket n'existe pas encore, on l'initialise
+
         if (!clientRef.current) {
-            clientRef.current = Stomp.client(wsUrl);
+            clientRef.current = Stomp.client("ws://localhost:8080/api/ws");  // <-- ici URL proxy WebSocket
         }
 
         const client = clientRef.current;
+        console.log(client);
 
         // Si le client n'est pas encore connecté, on établit la connexion
         if (!client.connected && !isConnected) {
