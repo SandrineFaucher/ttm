@@ -46,7 +46,7 @@ public class SpringSecurity {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/authenticate", "/uploads/**").permitAll()
+                        .requestMatchers("/login", "/authenticate", "/uploads/**", "/ws/**").permitAll()
                         .requestMatchers("/matches").authenticated()
                         .requestMatchers(HttpMethod.PUT, "/userUpdate/**").authenticated()
                         .anyRequest().authenticated()
@@ -68,7 +68,7 @@ public class SpringSecurity {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));  // L'origine autorisée
+        corsConfiguration.setAllowedOriginPatterns(Arrays.asList("http://localhost:5173"));
 //        corsConfiguration.setAllowedOrigins(Arrays.asList("https://jiangxy.github.io"));
         corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         corsConfiguration.setAllowedHeaders(Arrays.asList("Content-Type", "Authorization", "multipart/form-data")); // Ajoute des autorisations
