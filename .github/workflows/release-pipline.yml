@@ -27,45 +27,84 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+        # Setup Node.js for front build
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
 
-      - name: Configure npm to use public registry
-        run: npm config set registry https://registry.npmjs.org/
-
-      - name: Install dependencies
+      - name: Install frontend dependencies
         run: cd src/main/webapp && npm install
 
-      - name: Build webapp
+      - name: Build frontend
         run: cd src/main/webapp && npm run build
 
-      - name: Copy webapp-build to Spring Boot static folder
-        run: |
-          mkdir -p src/main/resources/static/
-          cp -r src/main/webapp/dist/* src/main/resources/static/
-
-      - name: Install Java
+        # Setup Java for backend build
+      - name: Setup Java
         uses: actions/setup-java@v4
         with:
-          distribution: "temurin"
+          distribution: 'temurin'
           java-version: 17
 
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
 
-      - name: Build with Gradle
-        env:
-          VERSION: "${{ needs.get-version.outputs.version }}"
+      - name: Build backend
         run: ./gradlew bootjar
+#      - name: Setup Node.js
+#        uses: actions/setup-node@v4
+#        with:
+#          node-version: 18
+#
+#      - name: Configure npm to use public registry
+#        run: npm config set registry https://registry.npmjs.org/
+#
+#      - name: Install dependencies
+#        run: cd src/main/webapp && npm install
+#
+#      - name: Build webapp
+#        run: cd src/main/webapp && npm run build
+#
+#      - name: Copy webapp-build to Spring Boot static folder
+#        run: |
+#          mkdir -p src/main/resources/static/
+#          cp -r src/main/webapp/dist/* src/main/resources/static/
+#
+#      - name: Install Java
+#        uses: actions/setup-java@v4
+#        with:
+#          distribution: "temurin"
+#          java-version: 17
+#
+#      - name: Setup Gradle
+#        uses: gradle/gradle-build-action@v2
+#
+#      - name: Build with Gradle
+#        env:
+#          VERSION: "${{ needs.get-version.outputs.version }}"
+#        run: ./gradlew bootjar
 
-      - name: Upload Spring Boot artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-ttm
-          path: build/libs/*.jar
+#      - name: Upload Spring Boot artifact
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: build-ttm
+#          path: build/libs/*.jar
 
+      # Docker Login
+      - name: Login to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      # Build & Push frontend image
+      - name: Build frontend image
+        run: |
+          docker build -t ghcr.io/sfaucher26/ttm/front:latest -f front.Dockerfile .
+          docker push ghcr.io/sfaucher26/ttm/front:latest
+
+      # Build & Push backend image
+      - name: Build backend image
+        run: |
+          docker build -t ghcr.io/sfaucher26/ttm/back:latest -f back.Dockerfile .
+          docker push ghcr.io/sfaucher26/ttm/back:latest
 
   release:
     if: ${{ needs.get-version.outputs.version != '' }}
@@ -90,6 +129,22 @@ jobs:
           echo "${CHANGELOGS}" > changelogs.md
           gh release create --repo $REPO --target $COMMIT -F changelogs.md v$VERSION artifacts/*.jar
       
+  publish:
+    if: ${{ needs.get-version.outputs.will-release == ‘true’ }} && ${{ needs.get-version.outputs.is-prerelease == ‘false’}}
+    needs: [ get-version, build]
+    runs-on: unbuntu-latest
 
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.REMOTE_SSH_KEY }}
+          port: 22
+          script: |
+            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+            docker-compose pull
+            docker-compose up -d
 
  

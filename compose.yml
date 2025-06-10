@@ -1,0 +1,76 @@
+services:
+  web:
+   # image: registry.nocturlab.fr/sfaucher/sfttmfront:latest
+    image: ghcr.io/sfaucher26/ttm/front:latest
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.sfttm-web.rule=Host(`sfaucherttm.nocturlab.fr`)
+      - traefik.http.services.sfttm-web.loadbalancer.server.port=80
+    networks:
+      - traefik
+    depends_on:
+      - api
+
+  api:
+    image: ghcr.io/sfaucher26/ttm/back:latest
+#    image: registry.nocturlab.fr/sfaucher/sfttmback:latest
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.sfttm-api.rule=Host(`sfaucherttm.nocturlab.fr`) && PathPrefix(`/api`)
+      - traefik.http.services.sfttm-api.loadbalancer.server.port=8080
+    networks:
+      - traefik
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/app
+      SPRING_DATASOURCE_USERNAME: app
+      SPRING_DATASOURCE_PASSWORD: app
+      SPRING_DATA_MONGO_URI: mongodb://mongo:27017/app
+    depends_on:
+      db:
+        condition: service_healthy
+      mongo:
+        condition: service_started
+    restart: always
+
+
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: app
+      POSTGRES_DB: app
+    volumes:
+      - pg_data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 3s
+    networks:
+      - db
+
+  mongo:
+    image: mongo:6
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongo localhost:27017/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - db
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo-data:
+  pg_data:
+
+networks:
+  db:
+  traefik:
+    external: true
+    name: traefik_default
+
+
