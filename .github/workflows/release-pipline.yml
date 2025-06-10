@@ -130,7 +130,8 @@ jobs:
           key: ${{ secrets.REMOTE_SSH_KEY }}
           port: 22
           script: |
-            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+            git pull origin main
+            docker compose down
             docker compose pull
             docker compose up -d
 
