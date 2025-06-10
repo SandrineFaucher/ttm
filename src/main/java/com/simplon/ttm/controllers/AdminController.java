@@ -18,7 +18,7 @@ import com.simplon.ttm.services.UserService;
 
 import jakarta.validation.Valid;
 
-@CrossOrigin(origins = "http://localhost:5173")
+
 @RestController
 public class AdminController {
 

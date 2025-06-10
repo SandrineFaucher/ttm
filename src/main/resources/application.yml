@@ -33,6 +33,7 @@ logging:
 
 debug: true
 server:
+  host: http://localhost:5173
   servlet:
     context-path: /api
 

@@ -32,7 +32,7 @@ import com.simplon.ttm.services.UserService;
 
 
 
-@CrossOrigin(origins = "http://localhost:5173" ,allowCredentials = "true")
+
 @RestController
 public class ProfilController {
     private  ProfilRepository profilRepository;

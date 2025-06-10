@@ -29,7 +29,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-@CrossOrigin(origins = "http://localhost:5173" ,allowCredentials = "true")
+
 @RestController
 public class AuthController {
 

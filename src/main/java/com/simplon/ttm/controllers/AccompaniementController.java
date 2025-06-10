@@ -21,7 +21,7 @@ import com.simplon.ttm.services.AccompaniementService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 
-@CrossOrigin(origins = "http://localhost:5173")
+
 @RestController
 public class AccompaniementController {
     private final AccompaniementService accompaniementService;

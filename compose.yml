@@ -22,6 +22,7 @@ services:
       - traefik
       - db
     environment:
+      SERVER_HOST: https://sfaucherttm.nocturlab.fr
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/app
       SPRING_DATASOURCE_USERNAME: app
       SPRING_DATASOURCE_PASSWORD: app

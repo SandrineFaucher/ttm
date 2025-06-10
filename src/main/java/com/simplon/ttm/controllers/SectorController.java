@@ -21,7 +21,7 @@ import com.simplon.ttm.services.SectorService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 
-@CrossOrigin(origins = "http://localhost:5173")
+
 @RestController
 public class SectorController {
     private final SectorService sectorService;

@@ -27,9 +27,7 @@ import com.simplon.ttm.services.UserService;
 import jakarta.validation.Valid;
 import lombok.Builder;
 
-@CrossOrigin(origins = "http://localhost:5173" ,allowCredentials = "true")
 @RestController
-
 public class UserController {
     private UserService userService;
     private UserRepository userRepository;
