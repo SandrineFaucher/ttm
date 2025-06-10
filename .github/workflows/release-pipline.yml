@@ -131,7 +131,7 @@ jobs:
           gh release create --repo $REPO --target $COMMIT -F changelogs.md v$VERSION artifacts/*.jar
       
   publish:
-    if: ${{ needs.get-version.outputs.will-release == ‘true’ }} && ${{ needs.get-version.outputs.is-prerelease == ‘false’}}
+    if: ${{ needs.get-version.outputs.version != '' && needs.get-version.outputs.channel == '' }}
     needs: [ get-version, build]
     runs-on: unbuntu-latest
 
