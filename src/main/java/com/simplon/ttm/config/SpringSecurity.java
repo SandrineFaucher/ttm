@@ -75,6 +75,7 @@ public class SpringSecurity {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.setAllowedOrigins(Arrays.asList(API_HOST, "https://jiangxy.github.io"));
         corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        corsConfiguration.setAllowedHeaders(Arrays.asList("*"));
         corsConfiguration.setAllowedHeaders(Arrays.asList("Content-Type", "Authorization", "multipart/form-data")); // Ajoute des autorisations
         corsConfiguration.setExposedHeaders(Arrays.asList("Content-Disposition")); // Permet la gestion des fichiers en retour
         corsConfiguration.setAllowCredentials(true);  // Permet l'envoi des cookies ou credentials
