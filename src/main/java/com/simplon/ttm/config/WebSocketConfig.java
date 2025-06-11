@@ -14,12 +14,13 @@ import jakarta.validation.Valid;
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
-    @Value("${server.host}")
-    private  String HOST;
+//    @Value("${server.host}")
+//    private  String HOST;
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws").setAllowedOriginPatterns(HOST);
+        registry.addEndpoint("/ws")
+                .setAllowedOriginPatterns("*");
     }
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {

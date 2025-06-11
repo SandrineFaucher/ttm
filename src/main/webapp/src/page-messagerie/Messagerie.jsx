@@ -27,28 +27,12 @@ export default function Messagerie() {
 
     // --- Setup WebSocket ---
     useEffect(() => {
-        // const isLocal = window.location.hostname === 'localhost';
-        //
-        // const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
-        // const host = window.location.host;
-        // const wsPath = isLocal ? '/api/ws' : '/ws';
-        //
-        // const wsUrl = `${protocol}://${host}${wsPath}`;
-        // // const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws'
-        // // const host = window.location.host;
-        // // const wsUrl = `${protocol}://${host}/ws`
-        // console.log("Trying to connect to WS at:", wsUrl);
-        // clientRef.current = Stomp.client(wsUrl);
-        // if (!clientRef.current) {
-        //     clientRef.current = Stomp.client(wsUrl);  // <-- ici URL proxy WebSocket
-        // }
-        const isLocalhost = window.location.hostname === 'localhost';
         const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
         const host = window.location.host;
-        const wsPath = isLocalhost ? '/api/ws' : '/ws';
-
-        const wsUrl = `${protocol}://${host}${wsPath}`;
+        const wsUrl = `${protocol}://${host}/api/ws`;
         console.log("Trying to connect to WS at:", wsUrl);
+
+        clientRef.current = Stomp.client(wsUrl);
 
         if (!clientRef.current) {
             clientRef.current = Stomp.client(wsUrl);
