@@ -63,7 +63,7 @@ public class SpringSecurity {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)  // Pas de session HTTP classique
                 )
                 .logout( logout -> logout
-                        .logoutUrl("/logout")
+                        .logoutUrl("/api/logout")
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID", "JWT")
                         .logoutSuccessUrl("/"));

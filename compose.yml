@@ -13,13 +13,13 @@ services:
 
   api:
     image: ghcr.io/sfaucher26/ttm/back:latest
-#    image: registry.nocturlab.fr/sfaucher/sfttmback:latest
     labels:
       - traefik.enable=true
       - traefik.http.routers.sfttm-api.rule=Host(`sfaucherttm.nocturlab.fr`) && PathPrefix(`/api`)
       - traefik.http.services.sfttm-api.loadbalancer.server.port=8080
     networks:
       - traefik
+      - api
       - db
     environment:
       SERVER_HOST: https://sfaucherttm.nocturlab.fr
@@ -69,6 +69,7 @@ volumes:
   pg_data:
 
 networks:
+  api:
   db:
   traefik:
     external: true
