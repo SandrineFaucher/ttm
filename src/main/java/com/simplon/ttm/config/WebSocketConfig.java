@@ -19,7 +19,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws").setAllowedOriginPatterns(HOST, "https://jiangxy.github.io");
+        registry.addEndpoint("/ws").setAllowedOriginPatterns(HOST, "https://saucherttm.nocturlab.fr/api/ws");
     }
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
