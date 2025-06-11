@@ -71,7 +71,7 @@ public class AuthController {
         // Récupère l'utilisateur authentifié
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
-        // Si vous souhaitez retourner une entité `User`, utilisez le repository pour la charger
+        // Retourne une entité `User`
         Optional<User> optionalUser = userRepository.findByUsername(userDetails.getUsername());
         if (optionalUser.isPresent()) {
             return ResponseEntity.ok(optionalUser.get());
