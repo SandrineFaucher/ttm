@@ -69,7 +69,7 @@ export const getCities = async (searchTerm) => {
 
 export const getRegionName = async (regionCode) => {
     try {
-        const response = await fetch(`https://geo.api.gouv.fr/regions/${regionCode}`);
+        const response = await fetch(`${API_BASE_URL}/regions/${regionCode}`);
         if (!response.ok) {
             throw new Error("Erreur lors de la récupération de la région");
         }
