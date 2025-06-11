@@ -15,11 +15,11 @@ import jakarta.validation.Valid;
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Value("${server.host}")
-    private final String HOST;
+    private  String HOST;
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws").setAllowedOriginPatterns(HOST);
+        registry.addEndpoint("/ws").setAllowedOriginPatterns(HOST, "https://jiangxy.github.io");
     }
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
