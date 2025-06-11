@@ -27,9 +27,11 @@ export default function Messagerie() {
 
     // --- Setup WebSocket ---
     useEffect(() => {
-
+        const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws'
+        const host = window.location.host;
+        const wsUrl = `${protocol}://${host}/api/ws`
         if (!clientRef.current) {
-            clientRef.current = Stomp.client("ws://localhost:8080/api/ws");  // <-- ici URL proxy WebSocket
+            clientRef.current = Stomp.client(wsUrl);  // <-- ici URL proxy WebSocket
         }
 
         const client = clientRef.current;
