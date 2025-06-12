@@ -25,8 +25,6 @@ jobs:
       # Build and push Mongo initDockerfile
       - name: Build and push Mongo replicaSet image
         run: |
-          docker build \
-          -t ghcr.io/sfaucher26/ttm/mongo/initmongo:latest \
-          -f ./mongo/initmongo.Dockerfile \
-          ./mongo
+          cd mongo
+          docker build -t ghcr.io/sfaucher26/ttm/mongo/initmongo:latest -f initmongo.Dockerfile .
           docker push ghcr.io/sfaucher26/ttm/mongo/initmongo:latest
