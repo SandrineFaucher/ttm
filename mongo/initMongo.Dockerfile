@@ -1,5 +1,6 @@
 FROM mongo:6
 
-COPY init-replica.sh /docker-entrypoint-initdb.d/init-replica.sh
+COPY init-replica.js /docker-entrypoint-initdb.d/init-replica.js
 
-RUN chmod +x /docker-entrypoint-initdb.d/init-replica.sh
+
+RUN chmod +x /docker-entrypoint-initdb.d/init-replica.js
