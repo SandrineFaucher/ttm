@@ -6,10 +6,6 @@ import {useContext} from "react";
 const CustomCard =({ clickable, onClick, title, image, availability, sectors, accompaniements, city, department, region, content, userRole}) =>{
 console.log("Image :" ,image)
     const {auth } = useContext(AuthContext);
-    const isAuthLeaderproject = auth?.role === "LEADERPROJECT";
-    const isAuthGodparent = auth?.role === "GODPARENT";
-    const isAdmin = auth?.role === "ADMIN";
-    const isUser = auth?.role === "USER";
 
  return (
         <div className={`body-card ${clickable ? "cursor-pointer" : ""}`}
@@ -23,10 +19,10 @@ console.log("Image :" ,image)
                         <p>{availability}</p>
                         <h5>Description :</h5>
                         <p>{content}</p>
-                        <div className={isAuthLeaderproject  ? "hidden" : "visible"}>
+                        <div >
                             <h5>Secteurs / réseaux :</h5>
                             <p>{sectors}</p>
-                            <h5>Besoin d'accompagnement :</h5>
+                            <h5>Accompagnement :</h5>
                             <p>{accompaniements}</p>
                         </div>
 

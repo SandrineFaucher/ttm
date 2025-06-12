@@ -47,7 +47,7 @@ export default function ListOfConversations (){
 
     return (
         <>
-            <h2>Liste des conversations </h2>
+            <h1>Conversations </h1>
             <ul>
                 {listOfLeaderProject.map(userId => (
                     <li key={userId}>

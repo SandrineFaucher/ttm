@@ -90,9 +90,10 @@ export default function Layout() {
                                 <li>
                                     <Link to="/userProfil" className="menu-link" aria-label="Lien vers le profil utilisateur">Mon profil</Link>
                                 </li>
+                                {auth &&
                                 <li aria-label="Lien pour la déconnection">
                                     <LogoutLi/>
-                                </li>
+                                </li>}
                             </ul>
                         </div>
                     )}

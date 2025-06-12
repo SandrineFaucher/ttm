@@ -43,29 +43,7 @@ const UsersList = () => {
                     const imageUrl = imagePath ? `${baseUrl}${imagePath}` : `${baseUrl}${defaultImage}`;
                     const userRole = user?.role;
 
-                    // Condition si l'utilisateur a le rôle GODPARENT on ne voit pas tout
-                    if (userRole === "GODPARENT") {
-                        return (
-                            <CustomCard
-                                userRole={userRole}
-                                clickable={true}
-                                onClick={() => {
-                                    setSelectedUser(user); // Stocke l'utilisateur dans le contexte
-                                    navigate(`/detailCard/${user.id}`);
-                                }}
-                                key={user.id}
-                                title={user.username}
-                                region={user.profil?.region || "Région inconnue"}
-                                availability={user.profil?.availability || "Non renseignées"}
-                                image={imageUrl}
-                                description={user.profil?.description || "Pas de description"}
-                            />
-                        );
-                    }
-
-                    // Condition pour LEADERPROJECT, ADMIN ou USER ont peut tout voir
-                    if (userRole === "LEADERPROJECT" || userRole === "ADMIN" || userRole === "USER") {
-                        return (
+                     return (
                             <CustomCard
                                 userRole={userRole}
                                 clickable={true}
@@ -85,11 +63,6 @@ const UsersList = () => {
                                 content={user.profil?.content || "Pas de description"}
                             />
                         );
-                    }
-
-
-                    return null; // Optionnel : si aucun rôle ne correspond, ne rien afficher
-
 
                 })
             ) : (
