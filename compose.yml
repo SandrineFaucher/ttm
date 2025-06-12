@@ -31,7 +31,7 @@ services:
       db:
         condition: service_healthy
       mongo:
-        condition: service_started
+        condition: service_healthy
     restart: always
 
 
@@ -54,8 +54,9 @@ services:
 
   mongo:
     image: mongo:6
+    command: ["mongod", "--replSet", "rs0"]
     healthcheck:
-      test: echo 'db.runCommand("ping").ok' | mongo localhost:27017/test --quiet
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
       interval: 10s
       timeout: 5s
       retries: 5
