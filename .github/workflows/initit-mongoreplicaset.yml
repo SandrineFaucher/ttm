@@ -15,6 +15,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       # Docker Login
       - name: Login to GHCR
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
@@ -22,5 +25,5 @@ jobs:
       # Build and push Mongo initDockerfile
       - name: Build Mongo Dockerfile replicaSet init
         run: |
-          docker build -t ghcr.io/sfaucher26/ttm/mongo/initmongo:latest -f initmongo.Dockerfile .
+          docker build -t ghcr.io/sfaucher26/ttm/mongo/initmongo:latest -f initmongo.Dockerfile mongo/
           docker push ghcr.io/sfaucher26/ttm/mongo/initmongo:latest
