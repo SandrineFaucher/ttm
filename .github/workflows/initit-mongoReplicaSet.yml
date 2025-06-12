@@ -1,0 +1,26 @@
+name: Initialisation Mongo replicaSet
+
+on:
+  push:
+    paths:
+      - mongo/**
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  build:
+    name: Build Mongo initDockerfile
+    runs-on: ubuntu-latest
+
+    steps:
+      # Docker Login
+      - name: Login to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      # Build and push Mongo initDockerfile
+      - name: Build Mongo Dockerfile replicaSet init
+        run: |
+          docker build -t ghcr.io/sfaucher26/ttm/mongo/initMongo:latest -f initMongo.Dockerfile .
+          docker push ghcr.io/sfaucher26/ttm/mongo/initMongo:latest
