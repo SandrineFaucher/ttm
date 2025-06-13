@@ -6,6 +6,10 @@ services:
       - traefik.enable=true
       - traefik.http.routers.sfttm-web.rule=Host(`sfaucherttm.nocturlab.fr`)
       - traefik.http.services.sfttm-web.loadbalancer.server.port=80
+    ports:
+      - "8080:80"
+    environment:
+      API_HOST: api:8080
     networks:
       - traefik
     depends_on:
@@ -13,12 +17,14 @@ services:
 
   api:
     image: ghcr.io/sfaucher26/ttm/back:latest
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.sfttm-api.rule=Host(`sfaucherttm.nocturlab.fr`) && PathPrefix(`/api`)
-      - traefik.http.services.sfttm-api.loadbalancer.server.port=8080
+#    labels:
+#      - traefik.enable=true
+#      - traefik.http.routers.sfttm-api.rule=Host(`sfaucherttm.nocturlab.fr`) && PathPrefix(`/api`)
+#      - traefik.http.services.sfttm-api.loadbalancer.server.port=8080
+    ports:
+      - "8081:80"
     networks:
-      - traefik
+#      - traefik
       - api
       - db
     environment:
