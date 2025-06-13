@@ -35,17 +35,13 @@ public class SpringSecurity {
 
     private JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    private PasswordEncoder passwordEncoder;
-
 
     public SpringSecurity(JwtAuthenticationFilter jwtAuthenticationFilter,
             JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
-            UserDetailsService userDetailsService,
-            PasswordEncoder passwordEncoder) {
+            UserDetailsService userDetailsService) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
         this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
         this.userDetailsService = userDetailsService;
-        this.passwordEncoder = passwordEncoder;
     }
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

@@ -42,7 +42,7 @@ public class MongoReplicaInitializer {
                 // S'il ne l'est pas je l'initialise
                 Document config = new Document("_id", "rs0")
                         .append("members", List.of(
-                                new Document("_id", 0).append("host", "localhost:27017")
+                                new Document("_id", 0).append("host", host.replace("mongodb://", ""))
                         ));
 
                 adminDb.runCommand(new Document("replSetInitiate", config));
