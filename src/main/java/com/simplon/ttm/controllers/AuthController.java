@@ -10,6 +10,7 @@ import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.security.core.Authentication;
 
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,11 +36,11 @@ public class AuthController {
 
     private AuthService authService;
     private UserRepository userRepository;
-
-
+    private PasswordEncoder passwordEncoder;
 
     @PostMapping("/login")
     public ResponseEntity<Map<String, String>> login(@RequestBody LoginDto loginDto, HttpServletResponse response) {
+        String password = passwordEncoder.encode(loginDto.getPassword());
         //authentifie un utilisateur et génère un token
         String token = authService.login(loginDto);
 
