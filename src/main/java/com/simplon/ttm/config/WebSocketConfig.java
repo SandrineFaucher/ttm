@@ -20,7 +20,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
-                .setAllowedOriginPatterns(API_HOST.replace("https://", "wss://").replace("http://", "ws://"));
+                .setAllowedOriginPatterns(API_HOST);
     }
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
