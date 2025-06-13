@@ -14,13 +14,13 @@ import jakarta.validation.Valid;
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
-//    @Value("${server.host}")
-//    private  String HOST;
+    @Value("${server.host}")
+    private String API_HOST;
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
-                .setAllowedOriginPatterns("*");
+                .setAllowedOriginPatterns(API_HOST.replace("https://", "wss://").replace("http://", "ws://"));
     }
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
