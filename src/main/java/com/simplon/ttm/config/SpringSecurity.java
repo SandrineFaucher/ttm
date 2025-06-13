@@ -47,7 +47,7 @@ public class SpringSecurity {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/authenticate", "/uploads/**", "/ws/**").permitAll()
+                        .requestMatchers("/login", "/api/login", "/authenticate", "/uploads/**", "/ws/**").permitAll()
                         .requestMatchers("/matches").authenticated()
                         .requestMatchers(HttpMethod.PUT, "/userUpdate/**").authenticated()
                         .anyRequest().authenticated()
@@ -71,7 +71,6 @@ public class SpringSecurity {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.setAllowedOrigins(Arrays.asList(API_HOST));
         corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        corsConfiguration.setAllowedHeaders(Arrays.asList("*"));
         corsConfiguration.setAllowedHeaders(Arrays.asList("Content-Type", "Authorization", "multipart/form-data")); // Ajoute des autorisations
         corsConfiguration.setExposedHeaders(Arrays.asList("Content-Disposition")); // Permet la gestion des fichiers en retour
         corsConfiguration.setAllowCredentials(true);  // Permet l'envoi des cookies ou credentials
