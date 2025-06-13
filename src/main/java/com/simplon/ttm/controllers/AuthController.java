@@ -40,7 +40,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<Map<String, String>> login(@RequestBody LoginDto loginDto, HttpServletResponse response) {
-        String password = passwordEncoder.encode(loginDto.getPassword());
+//        String password = passwordEncoder.encode(loginDto.getPassword());
         //authentifie un utilisateur et génère un token
         String token = authService.login(loginDto);
 
