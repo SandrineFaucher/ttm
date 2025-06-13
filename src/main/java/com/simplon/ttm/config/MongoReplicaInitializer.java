@@ -3,6 +3,7 @@ package com.simplon.ttm.config;
 import java.util.List;
 
 import org.bson.Document;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,10 +15,14 @@ import com.mongodb.client.MongoDatabase;
 
 @Configuration
 public class MongoReplicaInitializer {
+
+    @Value("${spring.data.mongodb.uri}")
+    private String MONGO_HOST;
+
     @Bean
     public CommandLineRunner initReplicaSetIfNeeded() {
         return args -> {
-            try (MongoClient mongoClient = MongoClients.create("mongodb://localhost:27017")) {
+            try (MongoClient mongoClient = MongoClients.create(MONGO_HOST)) {
                 MongoDatabase adminDb = mongoClient.getDatabase("admin");
 
                 // Je vérifie si le replica est déjà initialisé
