@@ -1,2 +1,2 @@
 INSERT INTO users (username, email, password, role, created_at, updated_at)
-VALUES ('adminUser', 'admin@admin.com', '$2a$10$IJaE8rMf/XUJDuvMFhvGjuSoIkFy0TngvC1GLdyBZRfFHmQIF0LUq', 'ADMIN', NOW(), NOW());
+VALUES ('adminUser', 'admin@admin.com', '$2a$12$TOB.yolYxRJuGm1IPXH.KOgC4ixjODcyMV7P7mQGViRk4Ns8.l0u6', 'ADMIN', NOW(), NOW());
