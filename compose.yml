@@ -32,7 +32,7 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/app
       SPRING_DATASOURCE_USERNAME: app
       SPRING_DATASOURCE_PASSWORD: app
-      SPRING_MONGO_URL: mongodb://mongo:27017/app?replicaSet=rs0
+      SPRING_DATA_MONGODB_URI: mongodb://mongo:27017/app?replicaSet=rs0
     depends_on:
       db:
         condition: service_healthy

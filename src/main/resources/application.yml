@@ -14,10 +14,6 @@ spring:
     hibernate:
       dialect: org.hibernate.dialect.PostgreSQLDialect
       ddl-auto: none # empeche Hibernate de prendre le dessus sur flyway
-  mongo:
-    url: mongodb://localhost:27017/?replicaSet=rs0
-    db: ttm
-
   servlet:
     multipart:
       max-file-size: 5MB
@@ -26,6 +22,12 @@ spring:
 
   jwt-secret: daf66e01593f61a15b857cf433eee03a005812b31234e149036bbb8dee755dbb
   jwt-expiration-milliseconds: 604800000
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/?replicaSet=rs0
+      db: ttm
+
+
 logging:
   level:
     root: debug
