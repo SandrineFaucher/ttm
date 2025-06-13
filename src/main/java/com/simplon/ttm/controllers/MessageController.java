@@ -10,30 +10,25 @@ import org.bson.Document;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
+
 
 import com.simplon.ttm.dto.SendMessageDto;
-import com.simplon.ttm.models.Message;
 import com.simplon.ttm.models.User;
 import com.simplon.ttm.repositories.UserRepository;
 import com.simplon.ttm.services.MongoService;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @Slf4j
+@RequiredArgsConstructor
 public class MessageController {
 
     private final MongoService mongoService;
     private final SimpMessagingTemplate template;
     private final UserRepository userRepository;
 
-
-    public MessageController(MongoService mongoService, SimpMessagingTemplate template, UserRepository userRepository) {
-        this.mongoService = mongoService;
-        this.template = template;
-        this.userRepository = userRepository;
-    }
     // Map qui permet de conserver une connexion établie entre deux interlocuteurs pour ne pas la répéter
     private final Map<String, Boolean> activeListeners = new ConcurrentHashMap<>();
 
@@ -57,7 +52,7 @@ public class MessageController {
                     .forEach(doc -> {
                         switch (Objects.requireNonNull(doc.getOperationType())) {
                             case INSERT:
-//                              //conversion qui permet de passer l'ObjectId en string vers le front
+                              //conversion qui permet de passer l'ObjectId en string vers le front
                                 Document fullDoc = doc.getFullDocument();
                                 if (fullDoc != null && fullDoc.getObjectId("_id") != null) {
                                     fullDoc.put("_id", fullDoc.getObjectId("_id").toHexString());
@@ -83,44 +78,7 @@ public class MessageController {
                     });
         }
     }
-//@MessageMapping("/requestMessages")
-//public void openMessagePage(SendMessageDto request, Principal auth) {
-//    String username = auth.getName();
-//    User sender = userRepository.findByUsername(username).orElseThrow();
-//    Long senderId = sender.getId();
-//    Long destId = request.getDestId();
-//
-//    var messages = mongoService.getMessagesForConversation(senderId, destId);
-//    template.convertAndSend("/getMessages", messages);
-//
-//    // TEMP : toujours écouter les messages
-//    mongoService.listenForNewMessages(senderId, destId)
-//            .forEach(doc -> {
-//                switch (Objects.requireNonNull(doc.getOperationType())) {
-//                    case INSERT:
-//                        Document fullDoc = doc.getFullDocument();
-//                        if (fullDoc != null && fullDoc.getObjectId("_id") != null) {
-//                            fullDoc.put("_id", fullDoc.getObjectId("_id").toHexString());
-//                        }
-//                        template.convertAndSend("/newMessage", doc.getFullDocument().toJson());
-//                        break;
-//                    case DELETE:
-//                        assert doc.getDocumentKey() != null;
-//                        template.convertAndSend("/deleteMessage", doc.getDocumentKey().get("_id").asObjectId().getValue());
-//                        break;
-//                    case UPDATE:
-//                        assert doc.getUpdateDescription() != null;
-//                        template.convertAndSend("/updateMessage", doc.getUpdateDescription().getUpdatedFields().toJson());
-//                        break;
-//                    case REPLACE:
-//                        assert doc.getFullDocument() != null;
-//                        template.convertAndSend("/updateMessage", doc.getFullDocument().toJson());
-//                        break;
-//                    default:
-//                        log.warn("Not yet implemented OperationType: {}", doc.getOperationType());
-//                }
-//            });
-//}
+
     @MessageMapping("/send")
     public void sendMessage(SendMessageDto message, Principal auth) throws Exception {
         //Récupération de mon user connecté

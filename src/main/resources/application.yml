@@ -27,13 +27,12 @@ spring:
       uri: mongodb://localhost:27017/?replicaSet=rs0
       db: ttm
 
+#logging:
+#  level:
+#    root: debug
+#    org.springframework: debug
 
-logging:
-  level:
-    root: debug
-    org.springframework: debug
-
-debug: true
+#debug: true
 
 server:
   host: http://localhost:5173
