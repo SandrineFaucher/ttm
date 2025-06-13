@@ -1,5 +1,6 @@
 package com.simplon.ttm.config;
 
+import java.net.URI;
 import java.util.List;
 
 import org.bson.Document;
@@ -57,7 +58,7 @@ public class MongoReplicaInitializer {
     public CommandLineRunner initReplicaSetIfNeeded() {
         return args -> {
             String host = MONGO_HOST.replaceFirst("[\\?|&]replicaSet=[a-zA-Z0-9]+&?", "");
-            String mongoHost = host.replace("mongodb://", "");
+            String mongoHost = new URI(host).getHost() + ":" + new URI(host).getPort();
 
             int retries = 10;
             int delay = 3000; // 3 secondes
