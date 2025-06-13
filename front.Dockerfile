@@ -12,7 +12,7 @@ RUN npm run build
 # Étape finale Nginx
 FROM nginx:1.27
 
-COPY nginx.conf.template /etc/nginx/templates/
+COPY nginx.conf.template /etc/nginx/templates/default.conf.template
 COPY --from=build /app/dist /usr/share/nginx/html
 
 EXPOSE 80
