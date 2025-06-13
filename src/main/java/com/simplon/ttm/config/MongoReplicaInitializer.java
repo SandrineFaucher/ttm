@@ -22,7 +22,8 @@ public class MongoReplicaInitializer {
     @Bean
     public CommandLineRunner initReplicaSetIfNeeded() {
         return args -> {
-            try (MongoClient mongoClient = MongoClients.create(MONGO_HOST)) {
+            String host = MONGO_HOST.replaceFirst("[\\?|&]replicaSet=[a-zA-Z0-9]+&?", "");
+            try (MongoClient mongoClient = MongoClients.create(host)) {
                 MongoDatabase adminDb = mongoClient.getDatabase("admin");
 
                 // Je vérifie si le replica est déjà initialisé
