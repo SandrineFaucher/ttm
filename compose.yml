@@ -1,6 +1,5 @@
 services:
   web:
-   # image: registry.nocturlab.fr/sfaucher/sfttmfront:latest
     image: ghcr.io/sfaucher26/ttm/front:latest
     labels:
       - traefik.enable=true
@@ -14,13 +13,8 @@ services:
       - traefik
     depends_on:
       - api
-
   api:
     image: ghcr.io/sfaucher26/ttm/back:latest
-#    labels:
-#      - traefik.enable=true
-#      - traefik.http.routers.sfttm-api.rule=Host(`sfaucherttm.nocturlab.fr`) && PathPrefix(`/api`)
-#      - traefik.http.services.sfttm-api.loadbalancer.server.port=8080
     ports:
       - "8081:80"
     networks:
@@ -39,8 +33,6 @@ services:
       mongo:
         condition: service_healthy
     restart: always
-
-
   db:
     image: postgres:latest
     environment:
