@@ -40,5 +40,29 @@ Seul un administrateur peut créer des comptes.
 
 Le pseudo et mot de passe du premier administrateur peut être transmis sur demande à Sandrine Faucher.
 
+## Page d'accueil ##
 
+![img.png](img.png)
+
+je me connecte 
+
+## Page des profils ##
+
+En fonction de mon role je vois différents profils :
+- si je suis porteur de projet je vois les parrains,
+- si je suis parrain je vois les porteurs de projets,
+- si je suis user ou admin je vois tout le monde
+
+- remplir son profil :
+
+![img_1.png](img_1.png)
+
+## Matchs & messagerie ##
+- si je suis porteur de projet je clic sur l'icone poignée de main de la carte d'un parrain pour créer un match et avoir accès à l'icone de messagerie,
+
+![img_3.png](img_3.png)
+
+- si je suis parrain je clique sur le lien Messagerie dans la navigation pour entrer dans mes conversations avec les porteurs de projet.
+
+![img_2.png](img_2.png)
 
