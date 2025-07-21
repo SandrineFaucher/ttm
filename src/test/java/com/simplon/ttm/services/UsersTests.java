@@ -54,9 +54,9 @@ public class UsersTests {
                 .build();
         RegisterDto godparentDto = RegisterDto.builder()
                 .username("Parain")
-                .password("parain123") // Gardez le mot de passe non encodé pour le DTO
-                .passwordConfirm("parain123") // Confirmez que les mots de passe correspondent
-                .role(UserRole.GODPARENT) // Transmettez le rôle comme chaîne
+                .password("parain123") //  le mot de passe est non encodé pour le DTO
+                .passwordConfirm("parain123") // confirmation du mot de passe
+                .role(UserRole.GODPARENT) // role
                 .build();
 
         // When

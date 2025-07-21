@@ -6,8 +6,9 @@ Afin de contribuer au projet il est possible de cloner celui-ci
 git clone + (lien https en appuyant sur le bouton vert "<> code")
 
 ## Lancer l'application backend ##
-Le backend est une application spring boot avec le gestionnaire de package Gradle.
-- ouvrire le projet dans un editeur de code.
+Le backend est une application spring boot avec le gestionnaire de package Gradle connecté
+à une base de donnée postgres "ttm" (à créer en local)
+- ouvrir le projet dans un editeur de code.
 - En commande de terminal lancer l'application avec cette ligne :
 ./gradlew bootrun
 - afin de tester les endopoints, se loger avec un user existant et récupérer la valeur du JWT pour renseigner le header des autres requetes HTTP :

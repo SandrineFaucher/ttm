@@ -117,7 +117,7 @@ public class UserServiceImpl implements UserService {
 
         List<UserRole> visibleRoles;
 
-        // Déterminer les rôles visibles en fonction du rôle de l'utilisateur connecté
+        // Détermine les rôles visibles en fonction du rôle de l'utilisateur connecté
         switch (currentUser.getRole()) {
             case GODPARENT:
                 visibleRoles = List.of(UserRole.LEADERPROJECT);
@@ -134,7 +134,7 @@ public class UserServiceImpl implements UserService {
                 throw new AccessDeniedException("Role not allowed to view users");
         }
 
-        // Retourner les utilisateurs ayant les rôles visibles
+        // Retourne les utilisateurs ayant les rôles visibles
         return userRepository.findByRoleIn(visibleRoles);
     }
     

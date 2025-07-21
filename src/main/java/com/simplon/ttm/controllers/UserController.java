@@ -45,7 +45,7 @@ public class UserController {
 
     /**
      * @param userUpdateDTO
-     * @return l'utilisateur avec les modifications eu usernme et de l'email
+     * @return l'utilisateur avec les modifications du usernme et de l'email
      */
     @PutMapping("/userUpdate")
     public ResponseEntity<User> updateUser(
