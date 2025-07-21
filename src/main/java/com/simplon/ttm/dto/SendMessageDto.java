@@ -14,4 +14,5 @@ import lombok.Setter;
 public class SendMessageDto {
     private Long destId;
     private String content;
+
 }
