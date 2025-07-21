@@ -21,7 +21,7 @@ public class ProfilDto {
     private String availability;
     //id des sector
     private List<Long> sectors;
-    //id des accompaniement
+    //id des accompaniements
     private List<Long> accompaniements;
     private String content;
     private String city;
