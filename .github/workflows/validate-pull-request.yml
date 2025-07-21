@@ -55,11 +55,19 @@ jobs:
           SPRING_FLYWAY_BASELINE_ON_MIGRATE: true
         run: ./gradlew check --info
 
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+
+      - name: Run tests
+        run: ./gradlew test
+
       - name: Upload test reports
         uses: actions/upload-artifact@v4
         with:
           name: test-report
-          path: ./build/test-results/test/
+          path: |
+            ./build/test-results/test/
+            ./build/reports/tests/test/
           if-no-files-found: warn  # Évite d'échouer si aucun fichier n'est trouvé
           retention-days: 7
           compression-level: 6
@@ -105,9 +113,7 @@ jobs:
       # installer gradle
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
-      # lancer les tests unitaires java
-      - name: Run tests
-        run: ./gradlew test
+
       # lance java en tache de fond
       - name: Start Java in background
         run: ./gradlew bootrun &
