@@ -30,8 +30,7 @@ import com.simplon.ttm.services.FileService;
 import com.simplon.ttm.services.ProfilService;
 import com.simplon.ttm.services.UserService;
 
-
-
+import jakarta.validation.Valid;
 
 @RestController
 public class ProfilController {
@@ -51,7 +50,7 @@ public class ProfilController {
     }
 
     @PostMapping(value = "/profil", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Map<String, Object>> createProfil(@ModelAttribute ProfilDto profilDto,
+    public ResponseEntity<Map<String, Object>> createProfil(@Valid @ModelAttribute ProfilDto profilDto,
             @RequestPart(value = "image", required = false) MultipartFile image) throws IOException {
 
         // Récupération du user authentifié

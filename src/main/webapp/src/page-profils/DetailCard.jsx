@@ -50,7 +50,7 @@ export default function DetailCard(){
             notifySuccess("Votre match est bien enregistré")
 
         } catch (error) {
-            console.error("Erreur lors de l'envoi du match :", error);
+            notifyError("Erreur lors de l'envoi du match :", error);
         }
     };
 

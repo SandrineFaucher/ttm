@@ -42,21 +42,29 @@ export default function FormRegister() {
         }));
     };
     const handleSubmit = async (e) => {
+        // Empêche le comportement par défaut du formulaire (rechargement de la page)
         e.preventDefault();
-        console.log('Form submitted:', formData);
+        //débogage
+        //console.log('Form submitted:', formData);
 
         // Validation des mots de passe
         if (formData.password !== formData.passwordConfirm) {
+            // Affiche une notification d’erreur si les mots de passe ne correspondent pas
             notifyError("Les mots de passe ne correspondent pas !");
+            // Arrête l’exécution de la fonction si la validation échoue
             return;
         }
         try {
             const response = await Register(formData);
+            // Envoie les données du formulaire à la fonction register de l'API
             console.log("Registration successful:", response);
+            // Affiche une notification de succès
             notifySuccess("Utilisateur enregistré avec succès !");
+
         } catch (error) {
             console.error("Erreur lors de l'enregistrement :", error.message || error);
-            notifyError(`Échec de l'enregistrement : ${error.message || "Erreur inconnue."}`);
+            // Affiche une notification d’erreur à l’utilisateur
+            notifyError(`Échec de l'enregistrement : ${error.message || "Erreur lors de l'enregistrement"}`);
         }
     };
 

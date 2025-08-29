@@ -15,7 +15,6 @@ const FormLogin = () => {
     const [formData, setFormData] = useState({
         username: "",
         password: "",
-
     });
 
     const handleChange = (e) => {

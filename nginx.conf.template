@@ -1,30 +1,33 @@
 
 server {
-    listen       80;
-    server_name  _;
+    listen       80;  # Le serveur écoute sur le port 80 (HTTP, non sécurisé)
+    server_name  _;  # Accepte toutes les requêtes quel que soit le nom de domaine (valeur par défaut)
 
     #access_log  /var/log/nginx/host.access.log  main;
 
-    location / {
-        root   /usr/share/nginx/html;
-        index  index.html index.htm;
-        try_files $uri $uri/ /;
-    }
+    # Bloc pour gérer la racine du site (le frontend React)
+        location / {
+            root   /usr/share/nginx/html;  # Répertoire où se trouvent les fichiers statiques (ex : React build)
+            index  index.html index.htm;   # Fichier à servir par défaut si aucun fichier n’est précisé
+            try_files $uri $uri/ /;        # Si le fichier demandé n’existe pas, renvoie vers la racine (utile pour React SPA)
+        }
 
     #error_page  404              /404.html;
 
     # redirect server error pages to the static page /50x.html
     #
-    error_page   500 502 503 504  /50x.html;
-    location = /50x.html {
-        root   /usr/share/nginx/html;
-    }
+    # Gestion des erreurs serveur : affiche une page personnalisée en cas d’erreur 500/502/503/504
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   /usr/share/nginx/html;  # Page d’erreur statique à afficher
+        }
 
     # proxy the PHP scripts to Apache listening on 127.0.0.1:80
     #
-    location /api {
-        proxy_pass   http://${API_HOST};
-    }
+    # Redirection des appels à /api vers le backend (ex : serveur Java)
+        location /api {
+            proxy_pass   http://${API_HOST};  # Redirige vers l'adresse du backend (ex: http://localhost:8080 ou variable d'env)
+        }
 
     # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
     #

@@ -27,6 +27,7 @@ import com.simplon.ttm.services.AuthService;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
@@ -39,8 +40,7 @@ public class AuthController {
     private PasswordEncoder passwordEncoder;
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, String>> login(@RequestBody LoginDto loginDto, HttpServletResponse response) {
-//        String password = passwordEncoder.encode(loginDto.getPassword());
+    public ResponseEntity<Map<String, String>> login(@Valid @RequestBody LoginDto loginDto, HttpServletResponse response) {
         //authentifie un utilisateur et génère un token
         String token = authService.login(loginDto);
 
@@ -49,7 +49,7 @@ public class AuthController {
         cookie.setHttpOnly(true); // Empêche l'accès au cookie via JavaScript (sécurisé contre XSS)
         cookie.setSecure(true); // mettre la sécurité à "true" pour la production
         cookie.setPath("/"); // Le cookie sera envoyé pour toutes les routes
-        cookie.setMaxAge(86400); // Durée du cookie en secondes (1 jour ici, ajuste selon tes besoins)
+        cookie.setMaxAge(86400); // Durée du cookie en secondes (1 jour )
 
         // Ajoute le cookie à la response
         response.addCookie(cookie);

@@ -13,12 +13,12 @@ services:
       - traefik
     depends_on:
       - api
+    restart: always
   api:
     image: ghcr.io/sfaucher26/ttm/back:latest
     ports:
       - "8081:80"
     networks:
-#      - traefik
       - api
       - db
     environment:
@@ -49,6 +49,7 @@ services:
       start_period: 3s
     networks:
       - db
+    restart: always
 
   mongo:
     image: ghcr.io/sfaucher26/ttm/mongo/initmongo:latest
@@ -62,14 +63,18 @@ services:
       - db
     volumes:
       - mongo_data:/data/db
+      - mongo_config:/data/configdb
+    restart: always
 
 volumes:
-  mongo-data:
+  mongo_data:
   pg_data:
+  mongo_config:
 
 networks:
   api:
   db:
+  mongo:
   traefik:
     external: true
     name: traefik_default

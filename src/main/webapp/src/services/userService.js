@@ -17,11 +17,9 @@ export async function Register(formData) {
             body: JSON.stringify(formData),
             credentials: "include"
         });
-
         if (!response.ok) {
             throw new Error(`Erreur HTTP : ${response.status}`);
         }
-
         const data = await response.json();
         console.log("Parsed response JSON:", data);
         return data;
