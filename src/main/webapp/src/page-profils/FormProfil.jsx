@@ -173,20 +173,28 @@ export default function FormProfil () {
                     value={newAvailability}
                     onChange={handleChange}
                     placeholder="Ex : Lundi matin"
+                    ariaDescribedBy="Disponibilité"
                 />
-                <div className="iconAdd" onClick={handleAddAvailability}>
+                <button
+                    type="button"
+                    className="iconAdd"
+                    onClick={handleAddAvailability}
+                    aria-label="Ajouter une disponibilité">
                     <FontAwesomeIcon icon={faPlus} />
-                </div>
+                </button>
             </div>
             <ul>
                 {formData.availability.map((availability, index) => (
                     <li key={index} className="rowWithIcon">
                         {availability}
-                        <div className="iconDelete"
+                        <button
+                            type="button"
+                            className="iconDelete"
                             onClick={() => handleRemoveAvailability(index)}
+                            aria-label={`supprimer la disponibilité ${availability}`}
                         >
                             <FontAwesomeIcon icon={faTrash}  />
-                        </div>
+                        </button>
                     </li>
                 ))}
             </ul>
@@ -221,12 +229,15 @@ export default function FormProfil () {
                 value={formData.city}
                 onChange={handleChange}
                 placeholder="Entrez une ville"
+                ariaDescribedBy="Ville"
             />
             {cities.length > 0 && (
                 <ul className="autocomplete-list">
                     {cities.map((city) => (
-                        <li key={city.code} onClick={() => handleCitySelect(city)}>
+                        <li key={city.code}
+                            onClick={() => handleCitySelect(city)}>
                             {city.nom} ({city.codeDepartement})
+                            tabIndex={0}
                         </li>
                     ))}
                 </ul>

@@ -196,7 +196,7 @@ export async function updateProfil(formData) {
 
 export async function getProfilsByRoles() {
     try {
-        console.log("📡 Envoi de la requête API...");
+        console.log("Envoi de la requête API");
         const response = await fetch("/api/usersProfils/by-role", {
             method: 'GET',
             headers: {
@@ -212,11 +212,8 @@ export async function getProfilsByRoles() {
         }
         const profilsOfUsers = await response.json();
         return profilsOfUsers;
-
     } catch (error) {
-
         console.error("Erreur détaillée :", error);
-
         throw new Error("Failed to fetch profils of users");
     }
 }

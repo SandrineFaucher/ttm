@@ -200,7 +200,8 @@ export default function Messagerie() {
                                     </p>
                                     <div className="message">
                                         <p className="content">{message.content}</p>
-                                        <div  onClick={() => handleDelete(messageId)}><FontAwesomeIcon className="icon-delete" icon={faXmark}/></div>
+                                        <div  onClick={() => handleDelete(messageId)}><FontAwesomeIcon
+                                            className="icon-delete" icon={faXmark}/></div>
                                     </div>
                                 </li>
                             );

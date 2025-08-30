@@ -58,11 +58,9 @@ public class UsersTests {
                 .passwordConfirm("parain123") // confirmation du mot de passe
                 .role(UserRole.GODPARENT) // role
                 .build();
-
         // When
         when(passwordEncoder.encode("parain123")).thenReturn(godparent.getPassword());
         when(userRepository.save(any(User.class))).thenReturn(godparent);
-
         // Then
         User user = userServiceImpl.saveUserWithRole(godparentDto);
         assertNotNull(user); // Vérifie que l'utilisateur n'est pas null

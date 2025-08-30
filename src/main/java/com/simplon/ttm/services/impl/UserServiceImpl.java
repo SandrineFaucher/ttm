@@ -46,7 +46,6 @@ public class UserServiceImpl implements UserService {
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Invalid role: " + user.getRole());
         }
-
         // Création et sauvegarde de l'utilisateur
         User newUser = User.builder()
                 .username(user.getUsername())
@@ -56,6 +55,7 @@ public class UserServiceImpl implements UserService {
                 .build();
         return userRepository.save(newUser);
     }
+
     @Override
     public Optional<User> findByUsername(String username) {
         return userRepository.findByUsername(username);
@@ -133,7 +133,6 @@ public class UserServiceImpl implements UserService {
             default:
                 throw new AccessDeniedException("Role not allowed to view users");
         }
-
         // Retourne les utilisateurs ayant les rôles visibles
         return userRepository.findByRoleIn(visibleRoles);
     }
@@ -158,7 +157,6 @@ public class UserServiceImpl implements UserService {
         if (userId1 == userId2) {
             return false; // Un utilisateur ne peut pas matcher avec lui-même
         }
-
         Optional<User> optionalUser1 = userRepository.findById(userId1);
         Optional<User> optionalUser2 = userRepository.findById(userId2);
 
@@ -174,7 +172,6 @@ public class UserServiceImpl implements UserService {
                 userRepository.save(user1);
                 userRepository.save(user2);
             }
-
             return true;
         }
         return false;

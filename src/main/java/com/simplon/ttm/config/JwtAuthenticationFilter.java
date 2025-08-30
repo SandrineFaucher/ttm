@@ -63,7 +63,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 }
             }
         }
-
         // Sinon, vérifie si le JWT est présent dans un en-tête spécifique
         String jwtToken = request.getHeader("JWT");
         if (StringUtils.hasText(jwtToken)) {

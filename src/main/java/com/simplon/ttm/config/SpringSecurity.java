@@ -31,16 +31,12 @@ public class SpringSecurity {
     private String API_HOST;
 
     private UserDetailsService userDetailsService;
-    private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-
     private JwtAuthenticationFilter jwtAuthenticationFilter;
 
 
     public SpringSecurity(JwtAuthenticationFilter jwtAuthenticationFilter,
-            JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
             UserDetailsService userDetailsService) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
-        this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
         this.userDetailsService = userDetailsService;
     }
     @Bean
