@@ -14,6 +14,16 @@ main{
 aside{
     text-align: center;
 }
+.connection{
+    display: flex;
+    flex-direction: column;
+    margin-top: 40px;
+    align-items: center;
+}
+.btn-accueil{
+    width: max-content;
+}
+
 /* Styles pour les écrans de taille moyenne (tablettes) */
 @media (min-width: 768px) {
     aside{

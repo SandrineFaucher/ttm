@@ -1,0 +1,19 @@
+
+.page-privacy-policy{
+  display: block;
+}
+.page-privacy-policy > h1,h2{
+    text-align: center;
+    color: #e31766;
+}
+.page-privacy-policy > p{
+    text-align: justify;
+}
+
+/* Styles pour les écrans de taille moyenne (tablettes) */
+@media (min-width: 768px) {
+    .page-privacy-policy{
+        width: 50%;
+    }
+
+}

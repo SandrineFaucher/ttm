@@ -13,6 +13,7 @@ import DetailCard from "./page-profils/DetailCard.jsx";
 import {UserProvider} from "./context/UserContext.jsx";
 import {NotificationProvider} from "./context/NotificationContext.jsx";
 import ListOfConversations from "./page-messagerie/ListOfConversations.jsx";
+import PrivacyPolicy from "./page-politique-confidentialite/PrivacyPolicy.jsx";
 
 
 
@@ -34,6 +35,7 @@ export default function App() {
           <Route path="/userProfil" element={<UserProfil/>} />
           <Route path="/detailCard/:id" element={<DetailCard/>} />
           <Route path="/listeOfConversations" element={<ListOfConversations/>} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
         </Route>
       </Routes>
     </UserProvider>
