@@ -17,6 +17,10 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Value("${server.host}")
     private String API_HOST;
 
+    /**
+     *
+     * @param registry
+     */
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
@@ -24,6 +28,11 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.addEndpoint("/wss")
                 .setAllowedOriginPatterns(API_HOST);
     }
+
+    /**
+     *
+     * @param registry
+     */
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         //  Préfixe des @MessageMapping
