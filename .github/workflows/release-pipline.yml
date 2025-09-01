@@ -12,8 +12,10 @@ permissions:
 
 jobs:
   get-version:
-    uses: shiipou/github-actions/.github/workflows/get-version.yml@main
+    name: Get Version
+    uses: lenra-io/github-actions/.github/workflows/get-version.yml@main
     with:
+      changelog-include-hidden-sections: true
       release-branch: 'main'
       prerelease-branches: 'develop'
       
