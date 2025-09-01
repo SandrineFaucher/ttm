@@ -31,7 +31,7 @@ console.log("Image :" ,image)
         </div>
  )
 };
-CustomCard.prototype = {
+CustomCard.propTypes = {
     clickable: PropTypes.bool,
     onClick: PropTypes.func,
     title: PropTypes.string,
