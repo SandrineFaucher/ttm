@@ -1,6 +1,7 @@
 spring:
   application:
     name: trouvetonmatch
+
   datasource:
     driverClassName: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/ttm?charSet=UTF8
@@ -40,3 +41,5 @@ server:
   servlet:
     context-path: /api
 
+file:
+  upload-dir: /app/uploads/profil_images

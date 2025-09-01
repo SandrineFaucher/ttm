@@ -12,24 +12,17 @@ const FormLogin = () => {
     const { notifySuccess, notifyError } = useNotification();
     const navigate = useNavigate();
     const { setAuth } = useContext(AuthContext);
-    const [formData, setFormData] = useState({
-        username: "",
-        password: "",
-    });
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({
-            ...formData,
-            [name]: value,
-        });
-    };
     const handleSubmit = async (e) => {
 
         e.preventDefault();
+        const formdata = new FormData(e.target);
         try {
             // Appelle handleLoginAndAuthenticate pour effectuer les deux étapes : login et récupération des données utilisateur
-            const authenticatedUser = await handleLoginAndAuthenticate(formData);
+            const authenticatedUser = await handleLoginAndAuthenticate({
+                username: formdata.get("username"),
+                password: formdata.get("password"),
+            });
 
             // Une fois l'utilisateur authentifié, mets à jour le contexte
             setAuth(authenticatedUser); // Met à jour le contexte avec l'utilisateur connecté
@@ -47,8 +40,6 @@ const FormLogin = () => {
             <CustomInput
                 label="Pseudo"
                 name="username"
-                value={formData.username}
-                onChange={handleChange}
                 placeholder="Entrez votre pseudo"
                 required
             />
@@ -56,8 +47,6 @@ const FormLogin = () => {
                 label="Mot de passe"
                 type="password"
                 name="password"
-                value={formData.password}
-                onChange={handleChange}
                 placeholder="Entrez votre mot de passe"
                 required
             />

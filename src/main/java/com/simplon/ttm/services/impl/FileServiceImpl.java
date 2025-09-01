@@ -15,6 +15,7 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.rendering.PDFRenderer;
 import org.imgscalr.Scalr;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,11 +23,12 @@ import com.simplon.ttm.services.FileService;
 
 @Service
 public class FileServiceImpl implements FileService {
-    private final String UPLOAD_DIR = "uploads/";
+    @Value("${file.upload-dir}")
+    private final String UPLOADDIR = "uploads/";
 
     public FileServiceImpl() {
         // Crée le dossier d’upload si non existant
-        File directory = new File(UPLOAD_DIR);
+        File directory = new File(UPLOADDIR);
         if (!directory.exists()) {
             directory.mkdirs();
         }
@@ -43,7 +45,7 @@ public class FileServiceImpl implements FileService {
         String uniqueFilename = UUID.randomUUID() + fileExtension;
 
         // Crée le dossier si nécessaire
-        Path directoryPath = Paths.get(UPLOAD_DIR, subDirectory);
+        Path directoryPath = Paths.get(UPLOADDIR, subDirectory);
         Files.createDirectories(directoryPath);
 
         Path filePath = directoryPath.resolve(uniqueFilename);
