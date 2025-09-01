@@ -28,7 +28,12 @@ server {
         location /api {
             proxy_pass   http://${API_HOST};  # Redirige vers l'adresse du backend (ex: http://localhost:8080 ou variable d'env)
         }
-
+        location /api/ws {
+            proxy_pass   http://${API_HOST};
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "upgrade";
+        }
     # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
     #
     #location ~ \.php$ {
