@@ -16,8 +16,6 @@ export default function UserProfil(){
         return <p>Chargement...</p>;
     }
     const isAuthProfil = auth?.profil && Object.keys(auth.profil).length > 0;
-    console.log("Valeur de auth.profil :", auth.profil);
-    console.log("isAuthProfil :", isAuthProfil);
 
     // useEffect qui se déclenche quand le profil change
     // eslint-disable-next-line react-hooks/rules-of-hooks

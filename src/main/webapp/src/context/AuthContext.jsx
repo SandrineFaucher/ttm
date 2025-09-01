@@ -39,7 +39,6 @@ export const AuthProvider = ({ children }) => {
             try {
                 const authenticatedUser = await userService.getAuthenticateUser();
                 setAuth(authenticatedUser); // Met l'utilisateur dans le state
-                console.log("Utilisateur authentifié :", authenticatedUser);
             } catch (error) {
                 console.error("Échec de récupération de l'utilisateur :", error);
                 setAuth(null); // Aucun utilisateur authentifié

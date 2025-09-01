@@ -27,7 +27,6 @@ const FormLogin = () => {
     const handleSubmit = async (e) => {
 
         e.preventDefault();
-        console.log("Form submitted:", formData);
         try {
             // Appelle handleLoginAndAuthenticate pour effectuer les deux étapes : login et récupération des données utilisateur
             const authenticatedUser = await handleLoginAndAuthenticate(formData);
@@ -35,7 +34,6 @@ const FormLogin = () => {
             // Une fois l'utilisateur authentifié, mets à jour le contexte
             setAuth(authenticatedUser); // Met à jour le contexte avec l'utilisateur connecté
 
-            console.log("Login successful:", authenticatedUser);
             notifySuccess("Vous êtes bien connecté !");
             // redirige vers la pages des profils une fois loggé
             navigate("/Profils");
