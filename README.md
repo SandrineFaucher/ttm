@@ -1,9 +1,15 @@
 # Lancement du projet #
 
+## Environnement##
+java 21
+Node 18
+
 ## Récupération du projet ##
 Le repository est, pour l'instant, public.
 Afin de contribuer au projet il est possible de cloner celui-ci
 git clone + (lien https en appuyant sur le bouton vert "<> code")
+
+Il est possible également le forker (Attention il faudra alors modifier le workflow de déploiement pour le relier à un nouveau domaine d'hébergement). 
 
 ## Lancer l'application backend ##
 Le backend est une application spring boot avec le gestionnaire de package Gradle connecté
